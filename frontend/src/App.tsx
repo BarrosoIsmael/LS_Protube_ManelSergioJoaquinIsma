@@ -1,28 +1,33 @@
-import logo from './assets/logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import Header from "./components/Header";
+import Homepage from "./pages/homepage";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import VideoPlayer from "./pages/videoPlayer";
 
-// This is your entry point
-// Feel free to modify ANYTHING in this file
+const App: React.FC = () => {
+  const location = useLocation();
 
-function App() {
+  const isLoginOrRegister = location.pathname === "/login" || location.pathname === "/register";
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {!isLoginOrRegister && <Header />}
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/video/:videoId" element={<VideoPlayer />} />
+      </Routes>
+    </>
   );
-}
+};
 
-export default App;
+const AppWrapper: React.FC = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default AppWrapper;

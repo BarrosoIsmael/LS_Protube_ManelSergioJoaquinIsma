@@ -1,6 +1,11 @@
+sudo apt update
+sudo apt install postgresql postgresql-contrib
 sudo su - postgres
 psql
-postgres=# CREATE USER mydbuser WITH PASSWORD 'mypasswd' CREATEROLE CREATEDB;
-psql -U mydbuser -h 127.0.0.1 -d postgres
+CREATE USER admin WITH PASSWORD '1234' CREATEROLE CREATEDB;
+CREATE DATABASE protube;
 
-CREATE DATABASE mydatabase;
+intellij config:
+ENV_PROTUBE_DB=protube;
+ENV_PROTUBE_DB_USER=admin;
+ENV_PROTUBE_DB_PWD=1234

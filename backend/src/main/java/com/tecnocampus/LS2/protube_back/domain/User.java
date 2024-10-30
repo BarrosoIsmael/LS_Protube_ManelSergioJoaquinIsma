@@ -24,17 +24,14 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
-    // Default constructor
     public User() {
     }
 
-    // Parameterized constructor
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -50,7 +47,6 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-
 
     public String getPassword() {
         return password;
@@ -74,6 +70,14 @@ public class User {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public void addVideo(Video video) {
+        this.videos.add(video);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
     @Override

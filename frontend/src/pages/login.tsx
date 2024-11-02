@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Button, TextField, Typography, Container } from "@mui/material";
+import { Button, TextField, Typography, Container, Box } from "@mui/material";
 import { useState } from "react";
 
 export default function Login() {
@@ -9,9 +9,8 @@ export default function Login() {
   const [error, setError] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
 
-    // Clear previous errors
     setError("");
 
     try {
@@ -27,7 +26,6 @@ export default function Login() {
       });
 
       if (response.ok) {
-        // Redirect to homepage on successful login
         navigate("/");
       } else {
         const errorMessage = await response.text();
@@ -40,46 +38,56 @@ export default function Login() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <header style={{ textAlign: "center", margin: "20px 0" }}>
-        <Link to="/" style={{ fontSize: "24px", fontWeight: "bold", color: "#1D4ED8", textDecoration: "none" }}>
-          Pro Tube
-        </Link>
-      </header>
-      <main>
-        <Typography variant="h5" align="center">Login</Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Username"
-            autoComplete="username"
-            autoFocus
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && <Typography color="error" align="center">{error}</Typography>}
-          <Button type="submit" variant="contained" color="primary" fullWidth>
+    <Box sx={{ backgroundColor: '#1c1c1e', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container component="main" maxWidth="xs" sx={{ backgroundColor: '#2e2e2e', padding: 4, borderRadius: 2, boxShadow: 3 }}>
+        <header style={{ textAlign: "center", marginBottom: "20px" }}>
+          <Link to="/" style={{ fontSize: "24px", fontWeight: "bold", color: "#FF0000", textDecoration: "none", textShadow: '1px 1px 2px #FFFFFF, -1px -1px 2px #FFFFFF, 1px -1px 2px #FFFFFF, -1px 1px 2px #FFFFFF' }}>
+            Pro Tube
+          </Link>
+        </header>
+        <main>
+          <Typography variant="h5" align="center" color="#FFFFFF" sx={{ marginBottom: 2 }}>
             Login
-          </Button>
-          <p style={{ textAlign: "center", marginTop: "10px" }}>
-            Don't have an account? <Link to="/register" style={{ color: "#1D4ED8", textDecoration: "none" }}>Register</Link>
-          </p>
-        </form>
-      </main>
-    </Container>
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              autoComplete="username"
+              autoFocus
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              sx={{ backgroundColor: '#333', borderRadius: 1 }}
+              InputLabelProps={{ style: { color: '#FFFFFF' } }}
+              InputProps={{ style: { color: '#FFFFFF' } }}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="password"
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              sx={{ backgroundColor: '#333', borderRadius: 1 }}
+              InputLabelProps={{ style: { color: '#FFFFFF' } }}
+              InputProps={{ style: { color: '#FFFFFF' } }}
+            />
+            {error && <Typography color="error" align="center" sx={{ marginBottom: 2 }}>{error}</Typography>}
+            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>
+              Login
+            </Button>
+            <Typography align="center" sx={{ marginTop: 2, color: '#FFFFFF' }}>
+              Don't have an account? <Link to="/register" style={{ color: "#1D4ED8", textDecoration: "none" }}>Register</Link>
+            </Typography>
+          </form>
+        </main>
+      </Container>
+    </Box>
   );
 }

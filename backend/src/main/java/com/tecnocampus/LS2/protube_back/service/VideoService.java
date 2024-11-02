@@ -8,6 +8,9 @@ import java.nio.file.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 @Service
 public class VideoService {
@@ -28,6 +31,12 @@ public class VideoService {
                     .map(Path::toString)
                     .collect(Collectors.toList());
         }
+    }
+
+    public byte[] getMiniatureById(Long id) throws IOException {
+        // Ruta donde se almacenan las miniaturas
+        Path path = Paths.get(videoDirectory, id + ".webp");
+        return Files.readAllBytes(path);
     }
 
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import VideoCard from "./../components/VideoCard"; // Asegúrate de que la ruta sea correcta
+import { Container, Typography, Box, Grid } from "@mui/material";
 
 const Homepage: React.FC = () => {
   const [videos, setVideos] = useState<any[]>([]); // Estado para almacenar la lista de videos
@@ -30,20 +31,25 @@ const Homepage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Videos</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {videos.map((video) => (
-          <VideoCard
-            key={video.id}
-            title={video.title}
-            channel={video.channel}
-            thumbnail={video.thumbnailUrl}
-            videoId={video.id} // Asegúrate de que el id sea el correcto
-          />
-        ))}
-      </div>
-    </div>
+    <Box sx={{ backgroundColor: '#1c1c1e', minHeight: '100vh', paddingY: 6 }}>
+      <Container maxWidth="lg">
+        <Typography variant="h4" component="h1" sx={{ color: '#FFFFFF', fontWeight: 'bold', marginBottom: 4 }}>
+          Videos
+        </Typography>
+        <Grid container spacing={4}>
+          {videos.map((video) => (
+            <Grid item xs={12} sm={6} md={4} key={video.id}>
+              <VideoCard
+                title={video.title}
+                channel={video.channel}
+                thumbnail={video.thumbnailUrl}
+                videoId={video.id} // Asegúrate de que el id sea el correcto
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 

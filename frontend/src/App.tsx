@@ -5,10 +5,10 @@ import Homepage from "./pages/homepage";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import VideoPlayer from "./pages/videoPlayer";
+import { AuthProvider } from "./context/AuthContext";
 
 const App: React.FC = () => {
   const location = useLocation();
-
   const isLoginOrRegister = location.pathname === "/login" || location.pathname === "/register";
 
   return (
@@ -25,9 +25,11 @@ const App: React.FC = () => {
 };
 
 const AppWrapper: React.FC = () => (
-  <Router>
-    <App />
-  </Router>
+  <AuthProvider>
+    <Router>
+      <App />
+    </Router>
+  </AuthProvider>
 );
 
 export default AppWrapper;

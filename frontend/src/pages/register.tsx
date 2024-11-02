@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button, TextField, Typography, Container, Box } from "@mui/material";
 import { useState } from "react";
+import { useAuth } from "./../context/AuthContext";
 
 export default function Register() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -26,7 +28,8 @@ export default function Register() {
       });
 
       if (response.ok) {
-        navigate("/");
+        login(username); // Guarda el nombre de usuario en el contexto
+        navigate("/"); // Redirige a la página de inicio
       } else {
         const errorMessage = await response.text();
         setError(errorMessage);

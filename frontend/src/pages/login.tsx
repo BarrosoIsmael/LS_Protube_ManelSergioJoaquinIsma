@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button, TextField, Typography, Container, Box } from "@mui/material";
 import { useState } from "react";
+import { useAuth } from "./../context/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -26,7 +28,8 @@ export default function Login() {
       });
 
       if (response.ok) {
-        navigate("/");
+        login(username); // Guarda el nombre de usuario en el contexto
+        navigate("/"); // Redirige a la página de inicio
       } else {
         const errorMessage = await response.text();
         setError(errorMessage);
@@ -41,7 +44,7 @@ export default function Login() {
     <Box sx={{ backgroundColor: '#1c1c1e', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Container component="main" maxWidth="xs" sx={{ backgroundColor: '#2e2e2e', padding: 4, borderRadius: 2, boxShadow: 3 }}>
         <header style={{ textAlign: "center", marginBottom: "20px" }}>
-          <Link to="/" style={{ fontSize: "24px", fontWeight: "bold", color: "#FF0000", textDecoration: "none", textShadow: '1px 1px 2px #FFFFFF, -1px -1px 2px #FFFFFF, 1px -1px 2px #FFFFFF, -1px 1px 2px #FFFFFF' }}>
+          <Link to="/" style={{ fontSize: "24px", fontWeight: "bold", color: "#FF0000", textDecoration: "none", textShadow: '1px 1px 2px #FFFFFF, -1px -1px 2px #FFFFFF, 1px -1px 2px #FFFFFF' }}>
             Pro Tube
           </Link>
         </header>

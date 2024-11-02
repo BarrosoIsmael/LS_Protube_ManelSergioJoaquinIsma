@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
-import VideoCard from "./../components/VideoCard"; // Asegúrate de que la ruta sea correcta
+import React, { useEffect, useState } from "react";
+import VideoCard from "../components/VideoCard";
+import { Container, Typography, Grid } from "@mui/material";
+import "../App.css"; // Importa el archivo CSS
 
 const Homepage: React.FC = () => {
-  const [videos, setVideos] = useState<any[]>([]); // Estado para almacenar la lista de videos
-  const [loading, setLoading] = useState<boolean>(true); // Estado de carga
+  const [videos, setVideos] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch("/api/videos"); // Ajusta la URL según tu backend
+        const response = await fetch("/api/videos");
         if (response.ok) {
           const data = await response.json();
           setVideos(data);
@@ -26,23 +28,28 @@ const Homepage: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Estado de carga
+    return <div>Loading...</div>;
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Videos</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {videos.map((video) => (
-          <VideoCard
-            key={video.id}
-            title={video.title}
-            channel={video.channel}
-            thumbnail={video.thumbnailUrl}
-            videoId={video.id} // Asegúrate de que el id sea el correcto
-          />
-        ))}
-      </div>
+    <div className="homepage-background">
+      <Container maxWidth="lg">
+        <Typography variant="h4" component="h1" sx={{ color: '#FFFFFF', fontWeight: 'bold', marginBottom: 4 }}>
+          Videos
+        </Typography>
+        <Grid container spacing={4}>
+          {videos.map((video) => (
+            <Grid item xs={12} sm={6} md={4} key={video.id}>
+              <VideoCard
+                title={video.title}
+                channel={video.channel}
+                thumbnail={video.thumbnailUrl}
+                videoId={video.id}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
     </div>
   );
 };

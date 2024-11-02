@@ -40,7 +40,7 @@ public class VideoController {
     @GetMapping("/miniature/{id}")
     public ResponseEntity<byte[]> getMiniatureById(@PathVariable Long id) {
         try {
-            byte[] miniature = videoService.getMiniatureById(id);
+            byte[] miniature = videoService.getMiniatureById(id-1);
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "image/webp");
             return new ResponseEntity<>(miniature, headers, HttpStatus.OK);

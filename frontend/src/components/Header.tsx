@@ -12,7 +12,7 @@ const Header: React.FC = () => (
           variant="h5"
           component={Link}
           to="/"
-          sx={titleStyles} // Usamos sx en lugar de style
+          sx={logoStyles} // Cambiado a sx
         >
           Pro Tube
         </Typography>
@@ -43,22 +43,20 @@ const Header: React.FC = () => (
   </AppBar>
 );
 
-// Estilos en variables para evitar CSS directo
+// Estilos para el fondo gris oscuro del navegador
 const appBarStyles = {
-  backgroundColor: "#000",
+  backgroundColor: "#1c1c1e", // Fondo gris oscuro
   boxShadow: "none",
   borderBottom: "1px solid #333",
 };
 
-const titleStyles = {
-  textDecoration: "none",
+const logoStyles = {
   color: "#FF0000",
-  flexGrow: 1,
   fontWeight: "bold",
+  textDecoration: "none",
   textShadow: "1px 1px 2px #FFFFFF, -1px -1px 2px #FFFFFF, 1px -1px 2px #FFFFFF, -1px 1px 2px #FFFFFF",
-  "&:hover": {
-    color: "#FF5555", // Un cambio de color en hover para mejor feedback visual
-  },
+  fontSize: "24px",
+  flexGrow: 1,
 };
 
 const buttonContainerStyles = {

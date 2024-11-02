@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
-import VideoCard from "./../components/VideoCard"; // Asegúrate de que la ruta sea correcta
-import { Container, Typography, Box, Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import VideoCard from "../components/VideoCard";
+import { Container, Typography, Grid } from "@mui/material";
+import "../App.css"; // Importa el archivo CSS
 
 const Homepage: React.FC = () => {
-  const [videos, setVideos] = useState<any[]>([]); // Estado para almacenar la lista de videos
-  const [loading, setLoading] = useState<boolean>(true); // Estado de carga
+  const [videos, setVideos] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch("/api/videos"); // Ajusta la URL según tu backend
+        const response = await fetch("/api/videos");
         if (response.ok) {
           const data = await response.json();
           setVideos(data);
@@ -27,11 +28,11 @@ const Homepage: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Estado de carga
+    return <div>Loading...</div>;
   }
 
   return (
-    <Box sx={{ backgroundColor: '#1c1c1e', minHeight: '100vh', paddingY: 6 }}>
+    <div className="homepage-background">
       <Container maxWidth="lg">
         <Typography variant="h4" component="h1" sx={{ color: '#FFFFFF', fontWeight: 'bold', marginBottom: 4 }}>
           Videos
@@ -43,13 +44,13 @@ const Homepage: React.FC = () => {
                 title={video.title}
                 channel={video.channel}
                 thumbnail={video.thumbnailUrl}
-                videoId={video.id} // Asegúrate de que el id sea el correcto
+                videoId={video.id}
               />
             </Grid>
           ))}
         </Grid>
       </Container>
-    </Box>
+    </div>
   );
 };
 

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
+import "../App.css"; // Importa el archivo CSS
 
 const Register: React.FC = () => {
-  const navigate = useNavigate(); // Hook para redirigir al usuario
+  const navigate = useNavigate();
   const [error, setError] = useState("");
 
   const handleRegister = async (username: string, password: string) => {
@@ -15,17 +16,18 @@ const Register: React.FC = () => {
         },
         body: new URLSearchParams({ username, password }),
       });
-      if (response.ok) {
-        navigate("/"); // Redirige a la página de inicio si el registro es exitoso
-      } else {
-        setError(await response.text());
-      }
+      if (response.ok) navigate("/");
+      else setError(await response.text());
     } catch (err) {
       setError("An error occurred while registering. Please try again.");
     }
   };
 
-  return <AuthForm title="Register" buttonText="Register" onSubmit={handleRegister} error={error} />;
+  return (
+    <div className="auth-background">
+      <AuthForm title="Register" buttonText="Register" onSubmit={handleRegister} error={error} />
+    </div>
+  );
 };
 
 export default Register;

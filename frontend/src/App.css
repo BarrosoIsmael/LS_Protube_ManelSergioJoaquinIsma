@@ -36,4 +36,19 @@
       transform: rotate(360deg);
     }
   }
+
+  .homepage-background {
+    background-color: #000; 
+    min-height: 100vh;
+  }
+  
+
+  .auth-background {
+    background-color: #000;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
   

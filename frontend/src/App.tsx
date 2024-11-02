@@ -8,7 +8,6 @@ import VideoPlayer from "./pages/videoPlayer";
 
 const App: React.FC = () => {
   const location = useLocation();
-
   const isLoginOrRegister = location.pathname === "/login" || location.pathname === "/register";
 
   return (

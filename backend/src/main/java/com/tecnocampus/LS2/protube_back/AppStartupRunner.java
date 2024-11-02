@@ -72,12 +72,20 @@ public class AppStartupRunner implements ApplicationRunner {
 
         try (Stream<Path> paths = Files.walk(videoDirPath)) {
             List<Path> sortedPaths = paths.filter(Files::isRegularFile)
-                    .sorted()
+                    .filter(path -> path.toString().endsWith(".json")) // Asegúrate de que sea un archivo JSON
+                    .sorted(Comparator.comparingInt(this::extractNumberFromFileName))
                     .toList();
             for (Path path : sortedPaths) {
                 processJsonFile(path);
             }
         }
+    }
+
+
+    private int extractNumberFromFileName(Path path) {
+        String fileName = path.getFileName().toString();
+        String numberPart = fileName.replaceAll("\\D", ""); // Remove non-numeric characters
+        return numberPart.isEmpty() ? 0 : Integer.parseInt(numberPart);
     }
 
     private void processJsonFile(Path filePath) {
@@ -94,7 +102,7 @@ public class AppStartupRunner implements ApplicationRunner {
     }
 
     private void saveVideoData(VideoJson videoJson) {
-        // Create or find the user
+
         User user = userRepository.findByUsername(videoJson.getUser())
                 .orElseGet(() -> {
                     User newUser = new User(videoJson.getUser(), "0000");
@@ -102,21 +110,26 @@ public class AppStartupRunner implements ApplicationRunner {
                     return newUser;
                 });
 
-        // Create or find the category
         Category category = categoryRepository.findByName(videoJson.getMeta().getCategories().get(0))
                 .orElseGet(() -> {
                     Category newCategory = new Category(videoJson.getMeta().getCategories().get(0));
                     categoryRepository.save(newCategory);
                     return newCategory;
                 });
+        
+        Video video = new Video(
+                videoJson.getWidth(),
+                videoJson.getHeight(),
+                videoJson.getDuration(),
+                videoJson.getTitle(),
+                user,
+                videoJson.getMeta().getDescription(),
+                videoJson.getMeta().getTags(),
+                category
+        );
 
-        // Create the video
-        Video video = new Video(videoJson.getWidth(), videoJson.getHeight(), videoJson.getDuration(),
-                videoJson.getTitle(), user, videoJson.getMeta().getDescription(), videoJson.getMeta().getTags(), category);
-        //video.setId(videoJson.getId());
         videoRepository.save(video);
 
-        // Create comments
         if (videoJson.getMeta().getComments() != null) {
             for (VideoJson.CommentJson commentJson : videoJson.getMeta().getComments()) {
                 User commentUser = userRepository.findByUsername(commentJson.getAuthor())
@@ -131,4 +144,5 @@ public class AppStartupRunner implements ApplicationRunner {
             }
         }
     }
+
 }

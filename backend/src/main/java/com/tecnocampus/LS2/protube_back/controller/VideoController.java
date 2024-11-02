@@ -27,16 +27,7 @@ public class VideoController {
     public List<String> getAllVideos() throws IOException {
         return videoService.getAllVideos();
     }
-
-    /*@GetMapping("/miniature/{id}")
-    public ResponseEntity<byte[]> getMiniatureById(@PathVariable Long id) {
-        try {
-            byte[] miniature = videoService.getMiniatureById(id);
-            return new ResponseEntity<>(miniature, HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }*/
+    
     @GetMapping("/miniature/{id}")
     public ResponseEntity<byte[]> getMiniatureById(@PathVariable Long id) {
         try {

@@ -83,7 +83,7 @@ const containerStyles = {
   mt: 8,
 };
 
-const headerStyles = {
+const headerStyles: React.CSSProperties = {
   textAlign: "center",
   marginBottom: "20px",
 };

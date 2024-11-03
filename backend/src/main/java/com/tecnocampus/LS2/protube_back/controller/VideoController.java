@@ -27,11 +27,6 @@ public class VideoController {
 
     @Autowired
     private VideoService videoService;
-
-    @GetMapping("/getAllVideos")
-    public List<String> getAllVideos() throws IOException {
-        return videoService.getAllVideos();
-    }
     
     @GetMapping("/miniature/{id}")
     public ResponseEntity<byte[]> getMiniatureById(@PathVariable Long id) {
@@ -50,6 +45,7 @@ public class VideoController {
         Optional<Video> video = videoService.getVideoInfoById(id);
         if (video.isPresent()) {
             Map<String, String> response = new HashMap<>();
+            response.put("id", String.valueOf(id));
             response.put("title", video.get().getTitle());
             response.put("user", video.get().getUser().getUsername());
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -57,4 +53,11 @@ public class VideoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/allVideosInfo")
+    public ResponseEntity<List<Map<String, String>>> getAllVideosInfo() {
+        List<Map<String, String>> videosInfo = videoService.getAllVideosInfo();
+        return new ResponseEntity<>(videosInfo, HttpStatus.OK);
+    }
+
 }

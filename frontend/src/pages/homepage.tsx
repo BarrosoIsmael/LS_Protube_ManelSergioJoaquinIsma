@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import VideoCard from "../components/VideoCard";
 import { Container, Typography, Grid } from "@mui/material";
-import "../App.css"; // Importa el archivo CSS
+import "../App.css";
 
 const Homepage: React.FC = () => {
   const [videos, setVideos] = useState<any[]>([]);
@@ -10,15 +10,16 @@ const Homepage: React.FC = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch("/api/videos");
-        if (response.ok) {
-          const data = await response.json();
-          setVideos(data);
+        const videoInfoResponse = await fetch("http://localhost:8080/api/videos/allVideosInfo");
+        
+        if (videoInfoResponse.ok) {
+          const videosInfo = await videoInfoResponse.json();
+          setVideos(videosInfo);
         } else {
-          console.error("Error fetching videos:", response.statusText);
+          console.error("Error fetching all videos info");
         }
       } catch (error) {
-        console.error("Error fetching videos:", error);
+        console.error("Error fetching video data:", error);
       } finally {
         setLoading(false);
       }
@@ -39,12 +40,11 @@ const Homepage: React.FC = () => {
         </Typography>
         <Grid container spacing={4}>
           {videos.map((video) => (
-            <Grid item xs={12} sm={6} md={4} key={video.id}>
+            <Grid item xs={12} sm={6} md={3} key={video.id}>
               <VideoCard
                 title={video.title}
-                channel={video.channel}
-                thumbnail={video.thumbnailUrl}
-                videoId={video.id}
+                user={video.user}
+                id={video.id.toString()}
               />
             </Grid>
           ))}

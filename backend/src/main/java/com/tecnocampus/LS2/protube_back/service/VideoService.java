@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,23 +27,7 @@ public class VideoService {
     @Autowired
     private VideoRepository videoRepository;
 
-    public List<String> getAllVideos() throws IOException {
-        Path videoDirPath = Paths.get(videoDirectory);
-
-        if (!Files.exists(videoDirPath) || !Files.isDirectory(videoDirPath)) {
-            throw new IOException("Directorio de videos no encontrado o no es un directorio válido: " + videoDirectory);
-        }
-
-        try (Stream<Path> paths = Files.walk(videoDirPath)) {
-            return paths
-                    .filter(Files::isRegularFile)
-                    .map(Path::toString)
-                    .collect(Collectors.toList());
-        }
-    }
-
     public byte[] getMiniatureById(Long id) throws IOException {
-        // Ruta donde se almacenan las miniaturas
         Path path = Paths.get(videoDirectory, id + ".webp");
         return Files.readAllBytes(path);
     }
@@ -50,4 +36,13 @@ public class VideoService {
         return videoRepository.findById(id);
     }
 
+    public List<Map<String, String>> getAllVideosInfo() {
+        return videoRepository.findAll().stream().map(video -> {
+            Map<String, String> videoInfo = new HashMap<>();
+            videoInfo.put("id", String.valueOf(video.getId()));
+            videoInfo.put("title", video.getTitle());
+            videoInfo.put("user", video.getUser().getUsername());
+            return videoInfo;
+        }).collect(Collectors.toList());
+    }
 }

@@ -60,7 +60,15 @@ public class AppStartupRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        loadInitialJSONData();
+        if (areTablesEmpty()) {
+            loadInitialJSONData();
+        } else {
+            LOG.info("Las tablas ya existen y no están vacías. No se cargará la data inicial.");
+        }
+    }
+
+    private boolean areTablesEmpty() {
+        return userRepository.count() == 0 && videoRepository.count() == 0 && commentRepository.count() == 0 && categoryRepository.count() == 0;
     }
 
     private void loadInitialJSONData() throws IOException {

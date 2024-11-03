@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import VideoCard from "../components/VideoCard";
-import { Container, Typography, Grid } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import "../App.css";
 
 const Homepage: React.FC = () => {
@@ -35,20 +35,19 @@ const Homepage: React.FC = () => {
   return (
     <div className="homepage-background">
       <Container maxWidth="lg">
-        <Typography variant="h4" component="h1" sx={{ color: '#FFFFFF', fontWeight: 'bold', marginBottom: 4 }}>
-          Videos
-        </Typography>
-        <Grid container spacing={4}>
-          {videos.map((video) => (
-            <Grid item xs={12} sm={6} md={3} key={video.id}>
-              <VideoCard
-                title={video.title}
-                user={video.user}
-                id={video.id.toString()}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        <Box sx={{ backgroundColor: 'black', marginTop: 4 }}>
+          <Grid container spacing={4}>
+            {videos.map((video) => (
+              <Grid item xs={12} sm={6} md={3} key={video.id}>
+                <VideoCard
+                  title={video.title}
+                  user={video.user}
+                  id={video.id.toString()}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Container>
     </div>
   );

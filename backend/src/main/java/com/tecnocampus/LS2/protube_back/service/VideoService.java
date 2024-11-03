@@ -1,5 +1,6 @@
 package com.tecnocampus.LS2.protube_back.service;
 
+import com.tecnocampus.LS2.protube_back.VideoJson;
 import com.tecnocampus.LS2.protube_back.domain.Video;
 import com.tecnocampus.LS2.protube_back.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +46,35 @@ public class VideoService {
             return videoInfo;
         }).collect(Collectors.toList());
     }
+
+    public Optional<VideoJson> getVideoById(Long id) {
+        Optional<Video> video = videoRepository.findById(id);
+        if (video.isPresent()) {
+            Video v = video.get();
+            VideoJson videoJson = new VideoJson();
+            videoJson.setId(v.getId());
+            videoJson.setWidth(v.getWidth());
+            videoJson.setHeight(v.getHeight());
+            videoJson.setDuration(v.getDuration());
+            videoJson.setTitle(v.getTitle());
+            videoJson.setUser(v.getUser().getUsername());
+
+            VideoJson.Meta meta = new VideoJson.Meta();
+            meta.setDescription(v.getDescription());
+            meta.setCategories(List.of(v.getCategory().getName()));
+            meta.setTags(v.getTags());
+            meta.setComments(v.getComments().stream().map(comment -> {
+                VideoJson.CommentJson commentJson = new VideoJson.CommentJson();
+                commentJson.setText(comment.getText());
+                commentJson.setAuthor(comment.getUser().getUsername());
+                return commentJson;
+            }).collect(Collectors.toList()));
+
+            videoJson.setMeta(meta);
+            return Optional.of(videoJson);
+        } else {
+            return Optional.empty();
+        }
+    }
+
 }

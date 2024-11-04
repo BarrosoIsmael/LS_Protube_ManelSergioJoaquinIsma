@@ -5,6 +5,7 @@ const VideoPlayer: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
   const [videoData, setVideoData] = useState<any>(null);
   const [comments, setComments] = useState<any[]>([]);
+  const [descriptionVisible, setDescriptionVisible] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,8 +58,26 @@ const VideoPlayer: React.FC = () => {
           </div>
 
           <h2 className="text-xl font-bold">{videoData.title}</h2>
-          <p className="text-gray-400">{videoData.description}</p>
-
+          <p className="text-gray-400">Category: {videoData.meta.categories.join(", ")}</p>
+          <div>
+            <button
+              className="text-gray-400 bg-gray-800 p-2 rounded"
+              onClick={() => setDescriptionVisible(!descriptionVisible)}
+            >
+              Description {descriptionVisible ? "▲" : "▼"}
+            </button>
+            <br />
+            {descriptionVisible && (
+              <>
+                <p className="text-gray-400">{videoData.meta.description}</p>
+                <br />
+                <p className="text-gray-400">
+                  {videoData.meta.tags.map((tag: string) => `#${tag}`).join(" ")}
+                </p>
+              </>
+            )}
+          </div>
+          <br />
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Comments</h3>
             <br />

@@ -66,7 +66,7 @@ const VideoPlayer: React.FC = () => {
             ) : (
               comments.map((comment) => (
                 <div key={comment.id} className="border-b pb-2">
-                  <p className="font-semibold">{comment.username}</p>
+                  <p className="font-semibold">{comment.author}</p>
                   <p>{comment.text}</p>
                 </div>
               ))

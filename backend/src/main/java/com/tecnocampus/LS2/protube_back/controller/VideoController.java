@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -66,6 +67,22 @@ public class VideoController {
         Optional<VideoJson> video = videoService.getVideoById(id);
         if (video.isPresent()) {
             return new ResponseEntity<>(video.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<VideoJson.CommentJson>> getCommentsByVideoId(@PathVariable Long id) {
+        Optional<Video> video = videoService.getVideoInfoById(id);
+        if (video.isPresent()) {
+            List<VideoJson.CommentJson> comments = video.get().getComments().stream().map(comment -> {
+                VideoJson.CommentJson commentJson = new VideoJson.CommentJson();
+                commentJson.setText(comment.getText());
+                commentJson.setAuthor(comment.getUser().getUsername());
+                return commentJson;
+            }).collect(Collectors.toList());
+            return new ResponseEntity<>(comments, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

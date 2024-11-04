@@ -69,6 +69,7 @@ const VideoPlayer: React.FC = () => {
             <br />
             {descriptionVisible && (
               <>
+                <br />
                 <p className="text-gray-400">{videoData.meta.description}</p>
                 <br />
                 <p className="text-gray-400">

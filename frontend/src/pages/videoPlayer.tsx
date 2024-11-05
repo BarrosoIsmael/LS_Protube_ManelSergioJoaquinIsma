@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams} from "react-router-dom";
 
 const VideoPlayer: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
@@ -38,14 +38,7 @@ const VideoPlayer: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
-      <header className="sticky top-0 z-10 bg-black border-b border-gray-700">
-        <div className="container flex items-center justify-between h-14 px-4">
-          <Link to="/" className="text-2xl font-bold text-blue-600">
-            Pro Tube
-          </Link>
-        </div>
-      </header>
-
+      <br />
       <main className="flex-1 container px-4 py-6">
         <div className="w-full max-w-lg mx-auto space-y-4">
           <div className="w-full h-screen">

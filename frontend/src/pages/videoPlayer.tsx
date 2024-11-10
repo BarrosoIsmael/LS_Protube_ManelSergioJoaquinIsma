@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams} from "react-router-dom";
+import { Card, CardContent } from '@mui/material';
 
 const VideoPlayer: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
@@ -52,7 +53,8 @@ const VideoPlayer: React.FC = () => {
 
           <h2 className="text-xl font-bold">{videoData.title}</h2>
           <p className="text-gray-400">Category: {videoData.meta.categories.join(", ")}</p>
-          <div>
+          <Card sx={{ width: '100%', maxWidth: '48rem', p: 4, bgcolor: 'grey.900', color: 'white' }}>
+            <CardContent>
             <button
               className="text-gray-400 bg-gray-800 p-2 rounded"
               onClick={() => setDescriptionVisible(!descriptionVisible)}
@@ -70,7 +72,8 @@ const VideoPlayer: React.FC = () => {
                 </p>
               </>
             )}
-          </div>
+            </CardContent>
+          </Card>
           <br />
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Comments</h3>

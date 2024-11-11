@@ -43,7 +43,6 @@
   min-height: 100vh;
 }
 
-
 .auth-background {
   background-color: #000;
   min-height: 100vh;
@@ -98,4 +97,41 @@
   font-size: 0.875rem;
   color: #ffffff;
   margin: 0;
+}
+
+.user-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #282c34;
+  border: 1px solid #61dafb;
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.user-button:hover .user-dropdown,
+.user-button:focus .user-dropdown {
+  display: block;
+}
+
+.user-dropdown a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 8px 16px;
+}
+
+.user-dropdown a:hover {
+  background-color: #61dafb;
 }

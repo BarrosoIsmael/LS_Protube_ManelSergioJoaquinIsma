@@ -41,6 +41,10 @@ const VideoPlayer: React.FC = () => {
     fetchData();
   }, [videoId]);
 
+  const formatComment = (comment: string) => {
+    return comment.replace(/\n/g, '<br />').replace(/\u00a0/g, '&nbsp;');
+  };
+
   if (!videoData) {
     return <div>Loading...</div>;
   }
@@ -72,30 +76,29 @@ const VideoPlayer: React.FC = () => {
                 <>
                   <br />
                   <br />
-                  <p className="text-gray-400">{videoData.meta.description}</p>
+                  <p>{videoData.meta.description}</p>
                   <br />
-                  <p className="text-gray-400">
-                    {videoData.meta.tags.map((tag: string) => `#${tag}`).join(" ")}
+                  <p>
+                    {videoData.meta.tags.map((tag: string, index: number) => (
+                      <span key={index}>#{tag}{index < videoData.meta.tags.length - 1 ? ', ' : ''}</span>
+                    ))}
                   </p>
                 </>
               )}
             </CardContent>
           </Card>
-          <br />
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Comments</h3>
-            <br />
-            {comments.length === 0 ? (
-              <p>No comments yet.</p>
-            ) : (
-              comments.map((comment) => (
-                <div key={comment.id} className="pb-2">
-                  <p className="font-semibold"><i>{comment.author}</i></p>
-                  <p>{comment.text}</p>
-                  <hr className="border-gray-700" />
-                </div>
-              ))
-            )}
+
+          <br /> {/* Añadir un salto de línea debajo del Card de la descripción */}
+
+          <div className="comments-section">
+            <h3 className="text-lg font-bold">Comments</h3>
+            {comments.map((comment, index) => (
+              <div key={index} className="comment bg-gray-800 p-2 rounded my-2">
+                <p className="text-gray-400 text-sm">{comment.author}</p>
+                <p dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }} />
+                <hr className="my-2 border-gray-600" /> {/* Línea horizontal divisoria */}
+              </div>
+            ))}
           </div>
         </div>
       </main>

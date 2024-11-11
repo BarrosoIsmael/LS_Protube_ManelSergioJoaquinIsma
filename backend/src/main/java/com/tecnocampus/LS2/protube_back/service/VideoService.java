@@ -77,4 +77,9 @@ public class VideoService {
         }
     }
 
+    public byte[] getVideoMP4ById(Long id) throws IOException {
+        Path path = Paths.get(videoDirectory, id + ".mp4");
+        return Files.readAllBytes(path);
+    }
+
 }

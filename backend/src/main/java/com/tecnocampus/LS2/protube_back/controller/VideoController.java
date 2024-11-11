@@ -88,4 +88,16 @@ public class VideoController {
         }
     }
 
+    @GetMapping("/video/{id}")
+    public ResponseEntity<byte[]> getVideoMP4ById(@PathVariable Long id) {
+        try {
+            byte[] video = videoService.getVideoMP4ById(id-1);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "video/mp4");
+            return new ResponseEntity<>(video, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

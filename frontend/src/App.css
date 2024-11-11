@@ -84,7 +84,7 @@
   font-size: 1rem;
   font-weight: 600;
   margin: 8px 0 4px;
-  color: #333;
+  color: #ffffff;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -96,6 +96,6 @@
 
 .video-card-content p {
   font-size: 0.875rem;
-  color: #777;
+  color: #ffffff;
   margin: 0;
 }

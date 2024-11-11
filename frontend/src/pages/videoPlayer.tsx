@@ -53,17 +53,17 @@ const VideoPlayer: React.FC = () => {
 
           <h2 className="text-xl font-bold">{videoData.title}</h2>
           <p className="text-gray-400">Category: {videoData.meta.categories.join(", ")}</p>
-          <Card sx={{ width: '100%', maxWidth: '48rem', p: 4, bgcolor: 'grey.900', color: 'white' }}>
-            <CardContent>
+          <Card sx={{ width: '100%', maxWidth: '52rem', bgcolor: 'grey.900', color: 'white' }}>
+            <CardContent sx={{ p: 2 }}>
             <button
               className="text-gray-400 bg-gray-800 p-2 rounded"
               onClick={() => setDescriptionVisible(!descriptionVisible)}
             >
               Description {descriptionVisible ? "▲" : "▼"}
             </button>
-            <br />
             {descriptionVisible && (
               <>
+                <br />
                 <br />
                 <p className="text-gray-400">{videoData.meta.description}</p>
                 <br />

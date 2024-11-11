@@ -7,6 +7,7 @@ const VideoPlayer: React.FC = () => {
   const [videoData, setVideoData] = useState<any>(null);
   const [comments, setComments] = useState<any[]>([]);
   const [descriptionVisible, setDescriptionVisible] = useState<boolean>(false);
+  const [videoMP4, setVideoMP4] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,6 +15,7 @@ const VideoPlayer: React.FC = () => {
         try {
           const videoResponse = await fetch(`/api/videos/${videoId}`);
           const commentsResponse = await fetch(`/api/videos/${videoId}/comments`);
+          const videoMP4Response = await fetch(`/api/videos/video/${videoId}`);
 
           if (videoResponse.ok) {
             const videoJson = await videoResponse.json();
@@ -23,6 +25,12 @@ const VideoPlayer: React.FC = () => {
           if (commentsResponse.ok) {
             const commentsJson = await commentsResponse.json();
             setComments(commentsJson);
+          }
+
+          if (videoMP4Response.ok) {
+            const videoBlob = await videoMP4Response.blob();
+            const videoUrl = URL.createObjectURL(videoBlob);
+            setVideoMP4(videoUrl);
           }
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -44,20 +52,19 @@ const VideoPlayer: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <br />
-      <main className="flex-1 container px-4 py-6">
-        <div className="w-full max-w-lg mx-auto space-y-4">
-          <div className="w-full h-screen">
+      <main className="flex-1 container px-4 py-6 mx-auto" style={{ maxWidth: "1200px" }}>
+        <div className="space-y-4">
+          <div>
             <video
-              className="w-full h-full"
+              style={{ width: "100%" }}
               controls
-              src={videoData.videoUrl}
-              poster={videoData.thumbnailUrl}
+              src={videoMP4}
             />
           </div>
 
           <h2 className="text-xl font-bold">{videoData.title}</h2>
           <p className="text-gray-400">Category: {videoData.meta.categories.join(", ")}</p>
-          <Card sx={{ width: '100%', maxWidth: '52rem', bgcolor: 'grey.900', color: 'white' }}>
+          <Card sx={{ width: '100%', bgcolor: 'grey.900', color: 'white' }}>
             <CardContent sx={{ p: 2 }}>
               <button
                 className="text-gray-400 bg-gray-800 p-2 rounded"

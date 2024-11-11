@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
+import { useAuth } from "../context/AuthContext";
 import "../App.css"; // Importa el archivo CSS
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [error, setError] = useState("");
 
   const handleRegister = async (username: string, password: string) => {
@@ -16,8 +18,12 @@ const Register: React.FC = () => {
         },
         body: new URLSearchParams({ username, password }),
       });
-      if (response.ok) navigate("/");
-      else setError(await response.text());
+      if (response.ok) {
+        login(username); // Iniciar sesión automáticamente después de registrarse
+        navigate("/");
+      } else {
+        setError(await response.text());
+      }
     } catch (err) {
       setError("An error occurred while registering. Please try again.");
     }

@@ -4,12 +4,15 @@ import { Card, CardContent } from '@mui/material';
 import { getEnv } from "../utils/Env";
 import Avatar from '@mui/material/Avatar';
 import { useAuth } from "../context/AuthContext";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
-// Interfaz para definir el tipo de cada comentario
 interface Comment {
   author: string;
   text: string;
   avatarColor?: string;
+  likes: number;
+  dislikes: number;
 }
 
 // Función para generar un color aleatorio
@@ -38,9 +41,11 @@ const VideoPlayer: React.FC = () => {
   const [descriptionVisible, setDescriptionVisible] = useState<boolean>(false);
   const [videoMP4, setVideoMP4] = useState<string>("");
   const [newComment, setNewComment] = useState<string>("");
+  const [videoLikes, setVideoLikes] = useState<number>(0);
+  const [videoDislikes, setVideoDislikes] = useState<number>(0);
 
   const { user } = useAuth();
-  const [userAvatarColor] = useState<string>(getRandomColor()); // Asigna el color del avatar una vez al cargar el componente
+  const [userAvatarColor] = useState<string>(getRandomColor());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,6 +66,8 @@ const VideoPlayer: React.FC = () => {
               commentsJson.map((comment) => ({
                 ...comment,
                 avatarColor: getRandomColor(),
+                likes: 0,
+                dislikes: 0,
               }))
             );
           }
@@ -89,10 +96,27 @@ const VideoPlayer: React.FC = () => {
         author: user || "Anonymous",
         text: newComment,
         avatarColor: userAvatarColor,
+        likes: 0,
+        dislikes: 0,
       };
       setComments([newCommentData, ...comments]);
       setNewComment("");
     }
+  };
+
+  const handleVideoLike = () => setVideoLikes(videoLikes + 1);
+  const handleVideoDislike = () => setVideoDislikes(videoDislikes + 1);
+
+  const handleCommentLike = (index: number) => {
+    const updatedComments = [...comments];
+    updatedComments[index].likes += 1;
+    setComments(updatedComments);
+  };
+
+  const handleCommentDislike = (index: number) => {
+    const updatedComments = [...comments];
+    updatedComments[index].dislikes += 1;
+    setComments(updatedComments);
   };
 
   const truncateDescription = (text: string) => {
@@ -137,6 +161,17 @@ const VideoPlayer: React.FC = () => {
             </CardContent>
           </Card>
 
+          <div className="video-likes-dislikes flex items-center space-x-4">
+            <button onClick={handleVideoLike} className="flex items-center bg-black text-white p-2 rounded">
+              <ThumbUpIcon fontSize="small" />
+              <span className="ml-1">{videoLikes}</span>
+            </button>
+            <button onClick={handleVideoDislike} className="flex items-center bg-black text-white p-2 rounded">
+              <ThumbDownIcon fontSize="small" />
+              <span className="ml-1">{videoDislikes}</span>
+            </button>
+          </div>
+
           <div className="comments-section mt-4">
             <h3 className="text-lg font-bold">{comments.length} Comments</h3>
             <br />
@@ -180,6 +215,16 @@ const VideoPlayer: React.FC = () => {
                     <div>
                       <p className="italic">@{comment.author}</p>
                       <h6 className="font-bold text-lg" dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }}></h6>
+                      <div className="comment-likes-dislikes flex items-center space-x-2">
+                        <button onClick={() => handleCommentLike(index)} className="flex items-center text-gray-400">
+                          <ThumbUpIcon fontSize="small" />
+                          <span className="ml-1">{comment.likes}</span>
+                        </button>
+                        <button onClick={() => handleCommentDislike(index)} className="flex items-center text-gray-400">
+                          <ThumbDownIcon fontSize="small" />
+                          <span className="ml-1">{comment.dislikes}</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                   {index < comments.length - 1 && <hr className="my-4 border-gray-700" />}

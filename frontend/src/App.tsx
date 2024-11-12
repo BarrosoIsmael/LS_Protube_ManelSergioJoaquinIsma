@@ -6,6 +6,7 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import VideoPlayer from "./pages/videoPlayer";
 import { AuthProvider } from "./context/AuthContext";
+import ScrollToTopButton from "./components/ScrollToTopButton";
 import "./App.css";
 
 const App: React.FC = () => {
@@ -14,17 +15,24 @@ const App: React.FC = () => {
 
   return (
     <>
+      {/* Mostrar el Header solo si no estamos en las páginas de login o register */}
       {!isLoginOrRegister && <Header />}
+      
+      {/* Rutas de la aplicación */}
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/video/:videoId" element={<VideoPlayer />} />
       </Routes>
+
+      {/* Botón flotante para volver al inicio */}
+      <ScrollToTopButton />
     </>
   );
 };
 
+// Envuelve `App` con `Router` y `AuthProvider`
 const AppWrapper: React.FC = () => (
   <Router>
     <AuthProvider>

@@ -1,6 +1,26 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Card, CardContent } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+
+// Función para generar un color aleatorio
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
+// Función para determinar si un color es claro u oscuro
+const isColorDark = (color: string) => {
+  const r = parseInt(color.slice(1, 3), 16);
+  const g = parseInt(color.slice(3, 5), 16);
+  const b = parseInt(color.slice(5, 7), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness < 128;
+};
 
 const VideoPlayer: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
@@ -45,13 +65,17 @@ const VideoPlayer: React.FC = () => {
     return comment.replace(/\n/g, '<br />').replace(/\u00a0/g, '&nbsp;');
   };
 
+  // Función para truncar la descripción a 3 líneas aproximadas
+  const truncateDescription = (text: string) => {
+    return text.length > 300 ? text.slice(0, 300) + '...' : text;
+  };
+
   if (!videoData) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
-      <br />
       <main className="flex-1 container px-4 py-6 mx-auto" style={{ maxWidth: "1200px" }}>
         <div className="space-y-4">
           <div>
@@ -64,41 +88,45 @@ const VideoPlayer: React.FC = () => {
 
           <h2 className="text-xl font-bold">{videoData.title}</h2>
           <p className="text-gray-400">Category: {videoData.meta.categories.join(", ")}</p>
-          <Card sx={{ width: '100%', bgcolor: 'grey.900', color: 'white' }}>
-            <CardContent sx={{ p: 2 }}>
-              <button
-                className="text-gray-400 bg-gray-800 p-2 rounded"
-                onClick={() => setDescriptionVisible(!descriptionVisible)}
-              >
-                Description {descriptionVisible ? "▲" : "▼"}
-              </button>
-              {descriptionVisible && (
-                <>
-                  <br />
-                  <br />
-                  <p>{videoData.meta.description}</p>
-                  <br />
-                  <p>
-                    {videoData.meta.tags.map((tag: string, index: number) => (
-                      <span key={index}>#{tag}{index < videoData.meta.tags.length - 1 ? ', ' : ''}</span>
-                    ))}
-                  </p>
-                </>
-              )}
+
+          <Card 
+            sx={{ bgcolor: 'grey.900', color: 'white', padding: '16px', marginTop: '10px', cursor: 'pointer' }}
+            onClick={() => setDescriptionVisible(!descriptionVisible)}
+          >
+            <CardContent sx={{ paddingTop: '8px' }}>
+              <p>
+                {descriptionVisible
+                  ? <>
+                      {videoData.meta.description}
+                      <br /><br />
+                      {videoData.meta.tags.map((tag: string, index: number) => (
+                        <span key={index}>#{tag}{index < videoData.meta.tags.length - 1 ? ', ' : ''}</span>
+                      ))}
+                    </>
+                  : truncateDescription(videoData.meta.description)}
+              </p>
             </CardContent>
           </Card>
 
-          <br /> {/* Añadir un salto de línea debajo del Card de la descripción */}
-
-          <div className="comments-section">
+          <div className="comments-section mt-4">
             <h3 className="text-lg font-bold">Comments</h3>
-            {comments.map((comment, index) => (
-              <div key={index} className="comment bg-gray-800 p-2 rounded my-2">
-                <p className="text-gray-400 text-sm">{comment.author}</p>
-                <p dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }} />
-                <hr className="my-2 border-gray-600" /> {/* Línea horizontal divisoria */}
-              </div>
-            ))}
+            <br />
+            {comments.map((comment, index) => {
+              const avatarColor = getRandomColor();
+              const textColor = isColorDark(avatarColor) ? 'white' : 'black';
+              return (
+                <div key={index}>
+                  <div className="comment flex items-start space-x-4">
+                    <Avatar sx={{ bgcolor: avatarColor, color: textColor }}>{comment.author.charAt(0)}</Avatar>
+                    <div>
+                      <p className="italic">@{comment.author}</p>
+                      <h6 className="font-bold text-lg" dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }}></h6>
+                    </div>
+                  </div>
+                  {index < comments.length - 1 && <hr className="my-4 border-gray-700" />}
+                </div>
+              );
+            })}
           </div>
         </div>
       </main>

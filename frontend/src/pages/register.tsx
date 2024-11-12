@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
 import { useAuth } from "../context/AuthContext";
-import "../App.css"; // Importa el archivo CSS
 import { getEnv } from "../utils/Env";
 
 const Register: React.FC = () => {

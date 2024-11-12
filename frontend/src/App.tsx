@@ -6,6 +6,7 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import VideoPlayer from "./pages/videoPlayer";
 import { AuthProvider } from "./context/AuthContext";
+import "./App.css";
 
 const App: React.FC = () => {
   const location = useLocation();

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Card, CardContent } from '@mui/material';
+
+import { getEnv } from "../utils/Env";
 import Avatar from '@mui/material/Avatar';
 
 // Función para generar un color aleatorio
@@ -33,9 +35,9 @@ const VideoPlayer: React.FC = () => {
     const fetchData = async () => {
       if (videoId) {
         try {
-          const videoResponse = await fetch(`/api/videos/${videoId}`);
-          const commentsResponse = await fetch(`/api/videos/${videoId}/comments`);
-          const videoMP4Response = await fetch(`/api/videos/video/${videoId}`);
+          const videoResponse = await fetch(getEnv().API_BASE_URL + `/videos/${videoId}`);
+          const commentsResponse = await fetch(getEnv().API_BASE_URL + `/videos/${videoId}/comments`);
+          const videoMP4Response = await fetch(getEnv().API_BASE_URL + `/videos/video/${videoId}`);
 
           if (videoResponse.ok) {
             const videoJson = await videoResponse.json();

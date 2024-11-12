@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Card, CardContent } from '@mui/material';
-
 import { getEnv } from "../utils/Env";
 import Avatar from '@mui/material/Avatar';
+import { useAuth } from "../context/AuthContext";
+
+// Interfaz para definir el tipo de cada comentario
+interface Comment {
+  author: string;
+  text: string;
+  avatarColor?: string;
+}
 
 // Función para generar un color aleatorio
 const getRandomColor = () => {
@@ -27,9 +34,13 @@ const isColorDark = (color: string) => {
 const VideoPlayer: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
   const [videoData, setVideoData] = useState<any>(null);
-  const [comments, setComments] = useState<any[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [descriptionVisible, setDescriptionVisible] = useState<boolean>(false);
   const [videoMP4, setVideoMP4] = useState<string>("");
+  const [newComment, setNewComment] = useState<string>("");
+
+  const { user } = useAuth();
+  const [userAvatarColor] = useState<string>(getRandomColor()); // Asigna el color del avatar una vez al cargar el componente
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,8 +56,13 @@ const VideoPlayer: React.FC = () => {
           }
 
           if (commentsResponse.ok) {
-            const commentsJson = await commentsResponse.json();
-            setComments(commentsJson);
+            const commentsJson: Comment[] = await commentsResponse.json();
+            setComments(
+              commentsJson.map((comment) => ({
+                ...comment,
+                avatarColor: getRandomColor(),
+              }))
+            );
           }
 
           if (videoMP4Response.ok) {
@@ -67,7 +83,18 @@ const VideoPlayer: React.FC = () => {
     return comment.replace(/\n/g, '<br />').replace(/\u00a0/g, '&nbsp;');
   };
 
-  // Función para truncar la descripción a 3 líneas aproximadas
+  const handleAddComment = () => {
+    if (newComment.trim() !== "") {
+      const newCommentData: Comment = {
+        author: user || "Anonymous",
+        text: newComment,
+        avatarColor: userAvatarColor,
+      };
+      setComments([newCommentData, ...comments]);
+      setNewComment("");
+    }
+  };
+
   const truncateDescription = (text: string) => {
     return text.length > 300 ? text.slice(0, 300) + '...' : text;
   };
@@ -111,15 +138,45 @@ const VideoPlayer: React.FC = () => {
           </Card>
 
           <div className="comments-section mt-4">
-            <h3 className="text-lg font-bold">Comments</h3>
+            <h3 className="text-lg font-bold">{comments.length} Comments</h3>
+            <br />
+            {user ? (
+              <div className="add-comment flex items-start space-x-4">
+                <Avatar sx={{ bgcolor: userAvatarColor, color: 'white' }}>{user.charAt(0)}</Avatar>
+                <div className="flex-1">
+                  <p>Add a comment</p>
+                  <input
+                    type="text"
+                    className="w-full p-2 rounded"
+                    placeholder="Write a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    style={{ backgroundColor: "#424242", color: "white" }}
+                  />
+                  <button
+                    className="mt-2 px-4 py-2 rounded"
+                    onClick={handleAddComment}
+                    style={{ backgroundColor: "#424242", color: "white" }}
+                  >
+                    Comment
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="add-comment flex items-start space-x-4">
+                <Avatar sx={{ bgcolor: 'black', color: 'white' }} />
+                <div className="flex-1">
+                  <p>Sign in to add a comment</p>
+                </div>
+              </div>
+            )}
             <br />
             {comments.map((comment, index) => {
-              const avatarColor = getRandomColor();
-              const textColor = isColorDark(avatarColor) ? 'white' : 'black';
+              const textColor = isColorDark(comment.avatarColor || '#000') ? 'white' : 'black';
               return (
                 <div key={index}>
                   <div className="comment flex items-start space-x-4">
-                    <Avatar sx={{ bgcolor: avatarColor, color: textColor }}>{comment.author.charAt(0)}</Avatar>
+                    <Avatar sx={{ bgcolor: comment.avatarColor, color: textColor }}>{comment.author.charAt(0)}</Avatar>
                     <div>
                       <p className="italic">@{comment.author}</p>
                       <h6 className="font-bold text-lg" dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }}></h6>

@@ -7,6 +7,7 @@ import Register from "./pages/register";
 import VideoPlayer from "./pages/videoPlayer";
 import { AuthProvider } from "./context/AuthContext";
 import ScrollToTopButton from "./components/ScrollToTopButton";
+import "./App.css";
 
 const App: React.FC = () => {
   const location = useLocation();

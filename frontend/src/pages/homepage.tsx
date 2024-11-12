@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import VideoCard from "../components/VideoCard";
 import { Box, Container, Grid } from "@mui/material";
-import "../App.css";
+import "./homepage.css";
 import { getEnv } from "../utils/Env";
 
 const Homepage: React.FC = () => {

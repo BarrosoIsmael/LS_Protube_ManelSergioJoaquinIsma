@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
 import { useAuth } from "../context/AuthContext";
 import "../App.css"; // Importa el archivo CSS
+import { getEnv } from "../utils/Env";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const Login: React.FC = () => {
 
   const handleLogin = async (username: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:8080/api/users/login", {
+      const response = await fetch(getEnv().API_BASE_URL + "/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -19,7 +20,7 @@ const Login: React.FC = () => {
         body: new URLSearchParams({ username, password }),
       });
       if (response.ok) {
-        login(username); // Iniciar sesión
+        login(username);
         navigate("/");
       } else {
         setError(await response.text());

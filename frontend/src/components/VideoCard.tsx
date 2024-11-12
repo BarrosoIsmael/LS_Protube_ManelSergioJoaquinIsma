@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { getEnv } from "../utils/Env";
 
 interface VideoCardProps {
@@ -8,8 +9,14 @@ interface VideoCardProps {
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ title, user, id }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/video/${id}`);
+  };
+
   return (
-    <Link to={`/video/${id}`} className="video-card">
+    <div onClick={handleClick} className="video-card">
       <div className="video-card-image">
         <img src={getEnv().API_BASE_URL + `/videos/miniature/${id}`} alt={title} />
       </div>
@@ -17,7 +24,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ title, user, id }) => {
         <h3>{title}</h3>
         <p>{user}</p>
       </div>
-    </Link>
+    </div>
   );
 };
 

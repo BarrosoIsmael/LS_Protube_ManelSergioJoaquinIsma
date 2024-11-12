@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import VideoCard from "../components/VideoCard";
 import { Box, Container, Grid } from "@mui/material";
 import "../App.css";
+import { getEnv } from "../utils/Env";
 
 const Homepage: React.FC = () => {
   const [videos, setVideos] = useState<any[]>([]);
@@ -10,7 +11,7 @@ const Homepage: React.FC = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const videoInfoResponse = await fetch("http://localhost:8080/api/videos/allVideosInfo");
+        const videoInfoResponse = await fetch(getEnv().API_BASE_URL + "/videos/allVideosInfo");
         
         if (videoInfoResponse.ok) {
           const videosInfo = await videoInfoResponse.json();

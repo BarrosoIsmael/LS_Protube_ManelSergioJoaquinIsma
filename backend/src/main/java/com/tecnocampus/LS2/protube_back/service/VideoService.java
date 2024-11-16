@@ -1,7 +1,11 @@
 package com.tecnocampus.LS2.protube_back.service;
 
 import com.tecnocampus.LS2.protube_back.VideoJson;
+import com.tecnocampus.LS2.protube_back.domain.Comment;
+import com.tecnocampus.LS2.protube_back.domain.User;
 import com.tecnocampus.LS2.protube_back.domain.Video;
+import com.tecnocampus.LS2.protube_back.repository.CommentRepository;
+import com.tecnocampus.LS2.protube_back.repository.UserRepository;
 import com.tecnocampus.LS2.protube_back.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +31,12 @@ public class VideoService {
 
     @Autowired
     private VideoRepository videoRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     public byte[] getMiniatureById(Long id) throws IOException {
         Path path = Paths.get(videoDirectory, id + ".webp");
@@ -80,6 +90,20 @@ public class VideoService {
     public byte[] getVideoMP4ById(Long id) throws IOException {
         Path path = Paths.get(videoDirectory, id + ".mp4");
         return Files.readAllBytes(path);
+    }
+
+    public boolean addCommentToVideo(Long videoId, String text, String username) {
+        Optional<Video> videoOpt = videoRepository.findById(videoId);
+        Optional<User> userOpt = userRepository.findByUsername(username);
+
+        if (videoOpt.isPresent() && userOpt.isPresent()) {
+            Video video = videoOpt.get();
+            User user = userOpt.get();
+            Comment comment = new Comment(video, text, user);
+            commentRepository.save(comment);
+            return true;
+        }
+        return false;
     }
 
 }

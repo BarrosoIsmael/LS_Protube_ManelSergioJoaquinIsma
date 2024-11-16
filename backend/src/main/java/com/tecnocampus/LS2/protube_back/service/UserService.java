@@ -31,4 +31,8 @@ public class UserService {
         }
         return Optional.empty();
     }
+
+    public Optional<User> verifyNewUser(String username) {
+        return userRepository.findByUsername(username);
+    }
 }

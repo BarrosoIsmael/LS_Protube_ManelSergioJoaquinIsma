@@ -22,7 +22,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestParam String username, @RequestParam String password) {
-        Optional<User> existingUser = userService.verifyUser(username, password);
+        Optional<User> existingUser = userService.verifyNewUser(username);
         if (existingUser.isPresent()) {
             return new ResponseEntity<>("Username already exists.", HttpStatus.CONFLICT);
         }

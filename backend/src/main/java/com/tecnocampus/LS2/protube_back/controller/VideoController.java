@@ -103,4 +103,13 @@ public class VideoController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/{id}/addComment")
+    public ResponseEntity<String> addCommentToVideo(@PathVariable Long id, @RequestParam String text, @RequestParam String username) {
+        boolean success = videoService.addCommentToVideo(id, text, username);
+        if (success) {
+            return new ResponseEntity<>("Comment added successfully!", HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Failed to add comment.", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

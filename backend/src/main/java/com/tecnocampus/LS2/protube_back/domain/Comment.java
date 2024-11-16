@@ -22,6 +22,9 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
+    private int likes;
+
     public Comment() {
     }
 
@@ -29,6 +32,7 @@ public class Comment {
         this.video = video;
         this.text = text;
         this.user = user;
+        this.likes = 0;
     }
 
     public Long getId() {
@@ -61,6 +65,22 @@ public class Comment {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public void addLike() {
+        this.likes++;
+    }
+
+    public void addDislike() {
+        this.likes--;
     }
 
     @Override

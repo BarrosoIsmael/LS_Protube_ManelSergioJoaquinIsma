@@ -60,10 +60,10 @@ public class VideoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VideoJson> getVideoById(@PathVariable Long id) {
-        Optional<VideoJson> video = videoService.getVideoById(id);
-        if (video.isPresent()) {
-            return new ResponseEntity<>(video.get(), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getVideoById(@PathVariable Long id) {
+        Map<String, Object> video = videoService.getVideoById(id);
+        if (video != null) {
+            return new ResponseEntity<>(video, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -95,6 +95,12 @@ public class VideoController {
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/{id}/like")
+    public ResponseEntity<Void> updateLikeStatus(@PathVariable Long id, @RequestParam boolean isLike) {
+        videoService.updateLikeStatus(id, isLike);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{id}/addComment")

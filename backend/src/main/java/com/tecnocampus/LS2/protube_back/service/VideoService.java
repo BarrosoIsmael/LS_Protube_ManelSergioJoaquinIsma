@@ -10,6 +10,7 @@ import com.tecnocampus.LS2.protube_back.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -57,39 +58,39 @@ public class VideoService {
         }).collect(Collectors.toList());
     }
 
-    public Optional<VideoJson> getVideoById(Long id) {
-        Optional<Video> video = videoRepository.findById(id);
-        if (video.isPresent()) {
-            Video v = video.get();
-            VideoJson videoJson = new VideoJson();
-            videoJson.setId(v.getId());
-            videoJson.setWidth(v.getWidth());
-            videoJson.setHeight(v.getHeight());
-            videoJson.setDuration(v.getDuration());
-            videoJson.setTitle(v.getTitle());
-            videoJson.setUser(v.getUser().getUsername());
-
-            VideoJson.Meta meta = new VideoJson.Meta();
-            meta.setDescription(v.getDescription());
-            meta.setCategories(List.of(v.getCategory().getName()));
-            meta.setTags(v.getTags());
-            meta.setComments(v.getComments().stream().map(comment -> {
-                VideoJson.CommentJson commentJson = new VideoJson.CommentJson();
-                commentJson.setText(comment.getText());
-                commentJson.setAuthor(comment.getUser().getUsername());
-                return commentJson;
-            }).collect(Collectors.toList()));
-
-            videoJson.setMeta(meta);
-            return Optional.of(videoJson);
+    public Map<String, Object> getVideoById(Long id) {
+        Optional<Video> videoOpt = videoRepository.findById(id);
+        if (videoOpt.isPresent()) {
+            Video video = videoOpt.get();
+            Map<String, Object> response = new HashMap<>();
+            response.put("title", video.getTitle());
+            response.put("user", video.getUser().getUsername());
+            response.put("description", video.getDescription());
+            response.put("tags", video.getTags());
+            response.put("category", video.getCategory().getName());
+            response.put("likes", video.getLikes());
+            return response;
         } else {
-            return Optional.empty();
+            return null;
         }
     }
 
     public byte[] getVideoMP4ById(Long id) throws IOException {
         Path path = Paths.get(videoDirectory, id + ".mp4");
         return Files.readAllBytes(path);
+    }
+
+    @Transactional
+    public void updateLikeStatus(Long videoId, boolean isLike) {
+        Optional<Video> videoOpt = videoRepository.findById(videoId);
+        if (videoOpt.isPresent()) {
+            Video video = videoOpt.get();
+            if (isLike) {
+                video.addLike();
+            } else {
+                video.addDislike();
+            }
+        }
     }
 
     public boolean addCommentToVideo(Long videoId, String text, String username) {
@@ -105,5 +106,4 @@ public class VideoService {
         }
         return false;
     }
-
 }

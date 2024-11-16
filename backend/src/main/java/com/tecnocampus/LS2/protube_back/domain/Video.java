@@ -40,6 +40,9 @@ public class Video {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(nullable = false)
+    private int likes;
+
     public Video() {
     }
 
@@ -52,6 +55,7 @@ public class Video {
         this.description = description;
         this.tags = tags;
         this.category = category;
+        this.likes = 0;
     }
 
     public Long getId() {
@@ -134,6 +138,14 @@ public class Video {
         this.category = category;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
     public void addComment(Comment comment) {
         this.comments.add(comment);
     }
@@ -144,6 +156,14 @@ public class Video {
 
     public void removeComment(Comment comment) {
         this.comments.remove(comment);
+    }
+
+    public void addLike() {
+        this.likes++;
+    }
+
+    public void addDislike() {
+        this.likes--;
     }
 
     @Override

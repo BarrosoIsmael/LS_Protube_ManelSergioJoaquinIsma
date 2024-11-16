@@ -89,7 +89,7 @@ const VideoPlayer: React.FC = () => {
           </div>
 
           <h2 className="text-xl font-bold">{videoData.title}</h2>
-          <p className="text-gray-400">Category: {videoData.meta.categories.join(", ")}</p>
+          <p className="text-gray-400">Category: {videoData.category}</p>
 
           <Card 
             sx={{ bgcolor: 'grey.900', color: 'white', padding: '16px', marginTop: '10px', cursor: 'pointer' }}
@@ -99,13 +99,13 @@ const VideoPlayer: React.FC = () => {
               <p>
                 {descriptionVisible
                   ? <>
-                      {videoData.meta.description}
+                      {videoData.description}
                       <br /><br />
-                      {videoData.meta.tags.map((tag: string, index: number) => (
-                        <span key={index}>#{tag}{index < videoData.meta.tags.length - 1 ? ', ' : ''}</span>
+                      {videoData.tags.map((tag: string, index: number) => (
+                        <span key={index}>#{tag}{index < videoData.tags.length - 1 ? ', ' : ''}</span>
                       ))}
                     </>
-                  : truncateDescription(videoData.meta.description)}
+                  : truncateDescription(videoData.description)}
               </p>
             </CardContent>
           </Card>

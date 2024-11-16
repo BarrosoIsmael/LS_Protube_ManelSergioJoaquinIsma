@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -63,10 +60,10 @@ public class VideoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VideoJson> getVideoById(@PathVariable Long id) {
-        Optional<VideoJson> video = videoService.getVideoById(id);
-        if (video.isPresent()) {
-            return new ResponseEntity<>(video.get(), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getVideoById(@PathVariable Long id) {
+        Map<String, Object> video = videoService.getVideoById(id);
+        if (video != null) {
+            return new ResponseEntity<>(video, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -98,6 +95,12 @@ public class VideoController {
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/{id}/like")
+    public ResponseEntity<Void> updateLikeStatus(@PathVariable Long id, @RequestParam boolean isLike) {
+        videoService.updateLikeStatus(id, isLike);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -100,4 +97,13 @@ public class VideoController {
         }
     }
 
+    @PostMapping("/{id}/addComment")
+    public ResponseEntity<String> addCommentToVideo(@PathVariable Long id, @RequestParam String text, @RequestParam String username) {
+        boolean success = videoService.addCommentToVideo(id, text, username);
+        if (success) {
+            return new ResponseEntity<>("Comment added successfully!", HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Failed to add comment.", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

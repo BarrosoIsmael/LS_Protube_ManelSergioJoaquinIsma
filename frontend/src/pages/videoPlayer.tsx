@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { Card, CardContent } from '@mui/material';
 import { getEnv } from "../utils/Env";
 import Avatar from '@mui/material/Avatar';
-import { useAuth } from "../context/AuthContext";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
@@ -44,9 +43,6 @@ const VideoPlayer: React.FC = () => {
   const [videoLikes, setVideoLikes] = useState<number>(0);
   const [videoDislikes, setVideoDislikes] = useState<number>(0);
 
-  const { user } = useAuth();
-  const [userAvatarColor] = useState<string>(getRandomColor());
-
   useEffect(() => {
     const fetchData = async () => {
       if (videoId) {
@@ -61,15 +57,13 @@ const VideoPlayer: React.FC = () => {
           }
 
           if (commentsResponse.ok) {
-            const commentsJson: Comment[] = await commentsResponse.json();
-            setComments(
-              commentsJson.map((comment) => ({
-                ...comment,
-                avatarColor: getRandomColor(),
-                likes: 0,
-                dislikes: 0,
-              }))
-            );
+            const commentsJson = await commentsResponse.json();
+            setComments(commentsJson.map((comment: any) => ({
+              ...comment,
+              avatarColor: getRandomColor(),
+              likes: 0,
+              dislikes: 0,
+            })));
           }
 
           if (videoMP4Response.ok) {
@@ -93,9 +87,9 @@ const VideoPlayer: React.FC = () => {
   const handleAddComment = () => {
     if (newComment.trim() !== "") {
       const newCommentData: Comment = {
-        author: user || "Anonymous",
+        author: "Anonymous", // En el main actual no se maneja autenticación de usuario
         text: newComment,
-        avatarColor: userAvatarColor,
+        avatarColor: getRandomColor(),
         likes: 0,
         dislikes: 0,
       };
@@ -132,141 +126,87 @@ const VideoPlayer: React.FC = () => {
       <main className="flex-1 container px-4 py-6 mx-auto" style={{ maxWidth: "1200px" }}>
         <div className="space-y-4">
           <div>
-            <video
-              style={{ width: "100%" }}
-              controls
-              src={videoMP4}
-            />
+            <video style={{ width: "100%" }} controls src={videoMP4} />
           </div>
 
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">{videoData.title}</h2>
-            <div className="flex items-center space-x-4" style={{ display: "inline-flex" }}>
-              <div
-                onClick={handleVideoLike}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  cursor: "pointer",
-                }}
-              >
+            <div className="flex items-center space-x-4">
+              <div onClick={handleVideoLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
                 <ThumbUpIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoLikes}</span>
               </div>
-              <div
-                onClick={handleVideoDislike}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  marginLeft: "10px",
-                  cursor: "pointer",
-                }}
-              >
+              <div onClick={handleVideoDislike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
                 <ThumbDownIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoDislikes}</span>
               </div>
             </div>
           </div>
 
-          <p className="text-gray-400">Category: {videoData.meta.categories.join(", ")}</p>
-
-          <Card 
+          <Card
             sx={{ bgcolor: 'grey.900', color: 'white', padding: '16px', marginTop: '10px', cursor: 'pointer' }}
             onClick={() => setDescriptionVisible(!descriptionVisible)}
           >
-            <CardContent sx={{ paddingTop: '8px' }}>
+            <CardContent>
               <p>
                 {descriptionVisible
                   ? <>
-                      {videoData.meta.description}
-                      <br /><br />
-                      {videoData.meta.tags.map((tag: string, index: number) => (
-                        <span key={index}>#{tag}{index < videoData.meta.tags.length - 1 ? ', ' : ''}</span>
+                      {videoData.description}
+                      <br />
+                      <br />
+                      {videoData.tags.map((tag: string, index: number) => (
+                        <span key={index}>#{tag}{index < videoData.tags.length - 1 ? ', ' : ''}</span>
                       ))}
                     </>
-                  : truncateDescription(videoData.meta.description)}
+                  : truncateDescription(videoData.description)}
               </p>
             </CardContent>
           </Card>
 
           <div className="comments-section mt-4">
-            <h3 className="text-lg font-bold">{comments.length} Comments</h3>
+            <h3 className="text-lg font-bold">Comments</h3>
             <br />
-            {user ? (
-              <div className="add-comment flex items-start space-x-4">
-                <Avatar sx={{ bgcolor: userAvatarColor, color: 'white' }}>{user.charAt(0)}</Avatar>
-                <div className="flex-1">
-                  <p>Add a comment</p>
-                  <input
-                    type="text"
-                    className="w-full p-2 rounded"
-                    placeholder="Write a comment..."
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    style={{ backgroundColor: "#424242", color: "white" }}
-                  />
-                  <button
-                    className="mt-2 px-4 py-2 rounded"
-                    onClick={handleAddComment}
-                    style={{ backgroundColor: "#424242", color: "white" }}
-                  >
-                    Comment
-                  </button>
-                </div>
+            <div className="add-comment flex items-start space-x-4">
+              <Avatar sx={{ bgcolor: getRandomColor(), color: 'white' }} />
+              <div className="flex-1">
+                <input
+                  type="text"
+                  className="w-full p-2 rounded"
+                  placeholder="Write a comment..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  style={{ backgroundColor: "#424242", color: "white" }}
+                />
+                <button
+                  onClick={handleAddComment}
+                  style={{ marginTop: "10px", backgroundColor: "#424242", color: "white", padding: "8px", borderRadius: "4px" }}
+                >
+                  Add Comment
+                </button>
               </div>
-            ) : (
-              <div className="add-comment flex items-start space-x-4">
-                <Avatar sx={{ bgcolor: 'black', color: 'white' }} />
-                <div className="flex-1">
-                  <p>Sign in to add a comment</p>
-                </div>
-              </div>
-            )}
+            </div>
             <br />
-            {comments.map((comment, index) => {
-              const textColor = isColorDark(comment.avatarColor || '#000') ? 'white' : 'black';
-              return (
-                <div key={index}>
-                  <div className="comment flex items-start space-x-4">
-                    <Avatar sx={{ bgcolor: comment.avatarColor, color: textColor }}>{comment.author.charAt(0)}</Avatar>
-                    <div>
-                      <p className="italic">@{comment.author}</p>
-                      <h6 className="font-bold text-lg" dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }} />
-                      <div className="flex space-x-4" style={{ display: "flex", alignItems: "center" }}>
-                        <div
-                          onClick={() => handleCommentLike(index)}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "4px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          <ThumbUpIcon fontSize="small" sx={{ color: "gray" }} />
-                          <span style={{ color: "gray" }}>{comment.likes}</span>
-                        </div>
-                        <div
-                          onClick={() => handleCommentDislike(index)}
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            marginLeft:"10px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          <ThumbDownIcon fontSize="small" sx={{ color: "gray" }} />
-                          <span style={{ color: "gray" }}>{comment.dislikes}</span>
-                        </div>
-                      </div>
+            {comments.map((comment, index) => (
+              <div key={index} className="flex items-start space-x-4">
+                <Avatar sx={{ bgcolor: comment.avatarColor, color: isColorDark(comment.avatarColor) ? 'white' : 'black' }}>
+                  {comment.author.charAt(0)}
+                </Avatar>
+                <div>
+                  <p className="italic">@{comment.author}</p>
+                  <h6 dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }} />
+                  <div className="flex space-x-4">
+                    <div onClick={() => handleCommentLike(index)} style={{ cursor: "pointer" }}>
+                      <ThumbUpIcon fontSize="small" sx={{ color: "gray" }} />
+                      <span style={{ color: "gray" }}>{comment.likes}</span>
+                    </div>
+                    <div onClick={() => handleCommentDislike(index)} style={{ cursor: "pointer" }}>
+                      <ThumbDownIcon fontSize="small" sx={{ color: "gray" }} />
+                      <span style={{ color: "gray" }}>{comment.dislikes}</span>
                     </div>
                   </div>
-                  {index < comments.length - 1 && <hr />} {/* Línea divisoria entre comentarios */}
-                  <br />
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </main>

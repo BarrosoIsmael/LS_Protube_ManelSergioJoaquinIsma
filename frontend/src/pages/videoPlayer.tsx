@@ -213,24 +213,43 @@ const VideoPlayer: React.FC = () => {
             </div>
             <br />
             {comments.map((comment, index) => (
-              <div key={index} className="flex items-start space-x-4">
-                <Avatar sx={{ bgcolor: comment.avatarColor, color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black' }}>
-                  {comment.author.charAt(0)}
-                </Avatar>
-                <div>
-                  <p className="italic">@{comment.author}</p>
-                  <h6 dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }} />
-                  <div className="flex space-x-4">
-                    <div onClick={() => handleCommentLike(index)} style={{ cursor: "pointer" }}>
-                      <ThumbUpIcon fontSize="small" sx={{ color: "gray" }} />
-                      <span style={{ color: "gray" }}>{comment.likes}</span>
-                    </div>
-                    <div onClick={() => handleCommentDislike(index)} style={{ cursor: "pointer" }}>
-                      <ThumbDownIcon fontSize="small" sx={{ color: "gray" }} />
-                      <span style={{ color: "gray" }}>{comment.dislikes}</span>
+              <div key={index} className="comment-container">
+                <div className="flex items-start space-x-4">
+                  <Avatar
+                    sx={{
+                      bgcolor: comment.avatarColor,
+                      color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black',
+                    }}
+                  >
+                    {comment.author.charAt(0)}
+                  </Avatar>
+                  <div className="comment-content flex-1">
+                    <p className="italic">@{comment.author}</p>
+                    <h6
+                      dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }}
+                    />
+                    <div
+                      className="flex items-center space-x-4 mt-2"
+                      style={{ display: 'flex', justifyContent: 'start', gap: '10px' }}
+                    >
+                      <div
+                        onClick={() => handleCommentLike(index)}
+                        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                      >
+                        <ThumbUpIcon fontSize="small" sx={{ color: 'gray' }} />
+                        <span style={{ color: 'gray', marginLeft: '4px' }}>{comment.likes}</span>
+                      </div>
+                      <div
+                        onClick={() => handleCommentDislike(index)}
+                        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                      >
+                        <ThumbDownIcon fontSize="small" sx={{ color: 'gray' }} />
+                        <span style={{ color: 'gray', marginLeft: '4px' }}>{comment.dislikes}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <hr style={{ borderColor: "#424242", margin: "16px 0" }} />
               </div>
             ))}
           </div>

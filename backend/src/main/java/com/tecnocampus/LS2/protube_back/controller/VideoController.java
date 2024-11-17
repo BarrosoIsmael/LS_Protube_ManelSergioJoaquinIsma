@@ -123,4 +123,14 @@ public class VideoController {
             return new ResponseEntity<>("Failed to upload image.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/uploadVideo")
+    public ResponseEntity<String> uploadVideo(@RequestParam("file") MultipartFile file) {
+        try {
+            videoService.saveVideo(file);
+            return new ResponseEntity<>("Video uploaded successfully!", HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to upload video.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -15,7 +15,6 @@ interface Comment {
   dislikes: number;
 }
 
-// Función para generar un color aleatorio
 const getRandomColor = () => {
   const letters = '0123456789ABCDEF';
   let color = '#';
@@ -25,7 +24,6 @@ const getRandomColor = () => {
   return color;
 };
 
-// Función para determinar si un color es claro u oscuro
 const isColorDark = (color: string) => {
   const r = parseInt(color.slice(1, 3), 16);
   const g = parseInt(color.slice(3, 5), 16);
@@ -88,7 +86,6 @@ const VideoPlayer: React.FC = () => {
 
   const handleAddComment = async () => {
     if (!user) {
-      alert("You must be logged in to add a comment.");
       return;
     }
 
@@ -190,22 +187,27 @@ const VideoPlayer: React.FC = () => {
             <h3 className="text-lg font-bold">Comments</h3>
             <br />
             <div className="add-comment flex items-start space-x-4">
-              <Avatar sx={{ bgcolor: getRandomColor(), color: 'white' }} />
+              <Avatar sx={{ bgcolor: user ? getRandomColor() : 'grey.700', color: user ? (isColorDark(getRandomColor()) ? 'white' : 'black') : 'white' }}>
+                {user ? user.charAt(0) : null}
+              </Avatar>
               <div className="flex-1">
                 <input
                   type="text"
                   className="w-full p-2 rounded"
-                  placeholder="Write a comment..."
+                  placeholder={user ? "Write a comment..." : "You must be logged in to add a comment."}
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   style={{ backgroundColor: "#424242", color: "white" }}
+                  disabled={!user}
                 />
-                <button
-                  onClick={handleAddComment}
-                  style={{ marginTop: "10px", backgroundColor: "#424242", color: "white", padding: "8px", borderRadius: "4px" }}
-                >
-                  Add Comment
-                </button>
+                {user && (
+                  <button
+                    onClick={handleAddComment}
+                    style={{ marginTop: "10px", backgroundColor: "#424242", color: "white", padding: "8px", borderRadius: "4px" }}
+                  >
+                    Add Comment
+                  </button>
+                )}
               </div>
             </div>
             <br />

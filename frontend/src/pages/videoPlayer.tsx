@@ -153,7 +153,7 @@ const VideoPlayer: React.FC = () => {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">{videoData.title}</h2>
             <div className="flex items-center space-x-4">
-              <div onClick={handleVideoLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
+              <div onClick={handleVideoLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "16px"}}>
                 <ThumbUpIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoLikes}</span>
               </div>

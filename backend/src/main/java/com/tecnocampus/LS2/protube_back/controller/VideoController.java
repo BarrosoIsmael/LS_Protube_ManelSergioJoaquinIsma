@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -110,6 +111,16 @@ public class VideoController {
             return new ResponseEntity<>("Comment added successfully!", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Failed to add comment.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/uploadImage")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        try {
+            videoService.saveImage(file);
+            return new ResponseEntity<>("Image uploaded successfully!", HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to upload image.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

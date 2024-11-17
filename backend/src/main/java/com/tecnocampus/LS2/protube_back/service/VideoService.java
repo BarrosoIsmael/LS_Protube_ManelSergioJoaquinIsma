@@ -1,6 +1,5 @@
 package com.tecnocampus.LS2.protube_back.service;
 
-import com.tecnocampus.LS2.protube_back.VideoJson;
 import com.tecnocampus.LS2.protube_back.domain.Comment;
 import com.tecnocampus.LS2.protube_back.domain.User;
 import com.tecnocampus.LS2.protube_back.domain.Video;
@@ -11,18 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.*;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.IOException;
 
 @Service
 public class VideoService {
@@ -105,5 +101,23 @@ public class VideoService {
             return true;
         }
         return false;
+    }
+
+    private Long getLastWebpId() throws IOException {
+        try (Stream<Path> paths = Files.list(Paths.get(videoDirectory))) {
+            return paths
+                    .filter(path -> path.toString().endsWith(".webp"))
+                    .map(path -> path.getFileName().toString().replace(".webp", ""))
+                    .mapToLong(Long::parseLong)
+                    .max()
+                    .orElse(0L);
+        }
+    }
+
+    public void saveImage(MultipartFile file) throws IOException {
+        Long newId = getLastWebpId() + 1;
+        Path newPath = Paths.get(videoDirectory, newId + ".webp");
+
+        Files.copy(file.getInputStream(), newPath, StandardCopyOption.REPLACE_EXISTING);
     }
 }

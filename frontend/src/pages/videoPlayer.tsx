@@ -139,7 +139,37 @@ const VideoPlayer: React.FC = () => {
             />
           </div>
 
-          <h2 className="text-xl font-bold">{videoData.title}</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">{videoData.title}</h2>
+            <div className="flex items-center space-x-4" style={{ display: "inline-flex" }}>
+              <div
+                onClick={handleVideoLike}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                <ThumbUpIcon fontSize="small" sx={{ color: "white" }} />
+                <span style={{ color: "white" }}>{videoLikes}</span>
+              </div>
+              <div
+                onClick={handleVideoDislike}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  marginLeft: "10px",
+                  cursor: "pointer",
+                }}
+              >
+                <ThumbDownIcon fontSize="small" sx={{ color: "white" }} />
+                <span style={{ color: "white" }}>{videoDislikes}</span>
+              </div>
+            </div>
+          </div>
+
           <p className="text-gray-400">Category: {videoData.meta.categories.join(", ")}</p>
 
           <Card 
@@ -160,17 +190,6 @@ const VideoPlayer: React.FC = () => {
               </p>
             </CardContent>
           </Card>
-
-          <div className="video-likes-dislikes flex items-center space-x-4">
-            <button onClick={handleVideoLike} className="flex items-center bg-black text-white p-2 rounded">
-              <ThumbUpIcon fontSize="small" />
-              <span className="ml-1">{videoLikes}</span>
-            </button>
-            <button onClick={handleVideoDislike} className="flex items-center bg-black text-white p-2 rounded">
-              <ThumbDownIcon fontSize="small" />
-              <span className="ml-1">{videoDislikes}</span>
-            </button>
-          </div>
 
           <div className="comments-section mt-4">
             <h3 className="text-lg font-bold">{comments.length} Comments</h3>
@@ -214,20 +233,37 @@ const VideoPlayer: React.FC = () => {
                     <Avatar sx={{ bgcolor: comment.avatarColor, color: textColor }}>{comment.author.charAt(0)}</Avatar>
                     <div>
                       <p className="italic">@{comment.author}</p>
-                      <h6 className="font-bold text-lg" dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }}></h6>
-                      <div className="comment-likes-dislikes flex items-center space-x-2">
-                        <button onClick={() => handleCommentLike(index)} className="flex items-center text-gray-400">
-                          <ThumbUpIcon fontSize="small" />
-                          <span className="ml-1">{comment.likes}</span>
-                        </button>
-                        <button onClick={() => handleCommentDislike(index)} className="flex items-center text-gray-400">
-                          <ThumbDownIcon fontSize="small" />
-                          <span className="ml-1">{comment.dislikes}</span>
-                        </button>
+                      <h6 className="font-bold text-lg" dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }} />
+                      <div className="flex space-x-4" style={{ display: "flex", alignItems: "center" }}>
+                        <div
+                          onClick={() => handleCommentLike(index)}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <ThumbUpIcon fontSize="small" sx={{ color: "gray" }} />
+                          <span style={{ color: "gray" }}>{comment.likes}</span>
+                        </div>
+                        <div
+                          onClick={() => handleCommentDislike(index)}
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            marginLeft:"10px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <ThumbDownIcon fontSize="small" sx={{ color: "gray" }} />
+                          <span style={{ color: "gray" }}>{comment.dislikes}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  {index < comments.length - 1 && <hr className="my-4 border-gray-700" />}
+                  {index < comments.length - 1 && <hr />} {/* Línea divisoria entre comentarios */}
+                  <br />
                 </div>
               );
             })}

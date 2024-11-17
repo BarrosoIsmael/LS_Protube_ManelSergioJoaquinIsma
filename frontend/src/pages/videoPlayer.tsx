@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Card, CardContent } from '@mui/material';
 import { getEnv } from "../utils/Env";
@@ -42,6 +42,7 @@ const VideoPlayer: React.FC = () => {
   const [videoLikes, setVideoLikes] = useState<number>(0);
   const [videoDislikes, setVideoDislikes] = useState<number>(0);
   const { user } = useAuth(); // Usa el contexto de autenticación
+  const avatarColorRef = useRef<string>(getRandomColor());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -103,7 +104,7 @@ const VideoPlayer: React.FC = () => {
           const newCommentData: Comment = {
             author: user, // Usa el nombre de usuario del contexto de autenticación
             text: newComment,
-            avatarColor: getRandomColor(),
+            avatarColor: avatarColorRef.current,
             likes: 0,
             dislikes: 0,
           };
@@ -187,7 +188,7 @@ const VideoPlayer: React.FC = () => {
             <h3 className="text-lg font-bold">Comments</h3>
             <br />
             <div className="add-comment flex items-start space-x-4">
-              <Avatar sx={{ bgcolor: user ? getRandomColor() : 'grey.700', color: user ? (isColorDark(getRandomColor()) ? 'white' : 'black') : 'white' }}>
+              <Avatar sx={{ bgcolor: user ? avatarColorRef.current : 'grey.700', color: user ? (isColorDark(avatarColorRef.current) ? 'white' : 'black') : 'white' }}>
                 {user ? user.charAt(0) : null}
               </Avatar>
               <div className="flex-1">
@@ -197,7 +198,7 @@ const VideoPlayer: React.FC = () => {
                   placeholder={user ? "Write a comment..." : "You must be logged in to add a comment."}
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  style={{ backgroundColor: "#424242", color: "white" }}
+                  style={{ backgroundColor: "#424242", color: "white", minWidth: "350px" }}
                   disabled={!user}
                 />
                 {user && (

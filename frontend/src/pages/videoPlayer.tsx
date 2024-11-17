@@ -5,6 +5,7 @@ import { getEnv } from "../utils/Env";
 import Avatar from '@mui/material/Avatar';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { useAuth } from "../context/AuthContext"; // Importa el contexto de autenticación
 
 interface Comment {
   author: string;
@@ -42,6 +43,7 @@ const VideoPlayer: React.FC = () => {
   const [newComment, setNewComment] = useState<string>("");
   const [videoLikes, setVideoLikes] = useState<number>(0);
   const [videoDislikes, setVideoDislikes] = useState<number>(0);
+  const { user } = useAuth(); // Usa el contexto de autenticación
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,17 +86,38 @@ const VideoPlayer: React.FC = () => {
     return comment.replace(/\n/g, '<br />').replace(/\u00a0/g, '&nbsp;');
   };
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
+    if (!user) {
+      alert("You must be logged in to add a comment.");
+      return;
+    }
+
     if (newComment.trim() !== "") {
-      const newCommentData: Comment = {
-        author: "Anonymous", // En el main actual no se maneja autenticación de usuario
-        text: newComment,
-        avatarColor: getRandomColor(),
-        likes: 0,
-        dislikes: 0,
-      };
-      setComments([newCommentData, ...comments]);
-      setNewComment("");
+      try {
+        const response = await fetch(getEnv().API_BASE_URL + `/videos/${videoId}/addComment`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({ text: newComment, username: user }),
+        });
+
+        if (response.ok) {
+          const newCommentData: Comment = {
+            author: user, // Usa el nombre de usuario del contexto de autenticación
+            text: newComment,
+            avatarColor: getRandomColor(),
+            likes: 0,
+            dislikes: 0,
+          };
+          setComments([newCommentData, ...comments]);
+          setNewComment("");
+        } else {
+          console.error("Failed to add comment");
+        }
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
     }
   };
 

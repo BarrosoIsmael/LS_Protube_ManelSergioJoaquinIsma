@@ -40,8 +40,29 @@ public class VideoService {
         return Files.readAllBytes(path);
     }
 
-    public Optional<Video> getVideoInfoById(Long id) {
-        return videoRepository.findById(id);
+    public Map<String, String> getVideoInfoById(Long id) {
+        Optional<Video> videoOpt = videoRepository.findById(id);
+        if (videoOpt.isPresent()) {
+            Video video = videoOpt.get();
+            Map<String, String> response = new HashMap<>();
+            response.put("id", String.valueOf(id));
+            response.put("title", video.getTitle());
+            response.put("user", video.getUser().getUsername());
+            return response;
+        } else {
+            return Collections.emptyMap();
+        }
+    }
+
+    public List<Map<String, Object>> getCommentsByVideoId(Long id) {
+        Optional<Video> videoOpt = videoRepository.findById(id);
+        return videoOpt.map(video -> video.getComments().stream().map(comment -> {
+            Map<String, Object> commentInfo = new HashMap<>();
+            commentInfo.put("text", comment.getText());
+            commentInfo.put("author", comment.getUser().getUsername());
+            commentInfo.put("likes", comment.getLikes());
+            return commentInfo;
+        }).collect(Collectors.toList())).orElse(Collections.emptyList());
     }
 
     public List<Map<String, String>> getAllVideosInfo() {

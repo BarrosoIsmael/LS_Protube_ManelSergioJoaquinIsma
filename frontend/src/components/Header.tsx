@@ -75,7 +75,7 @@ const Header: React.FC = () => {
                   {/* Opción de Subir Video */}
                   <MenuItem
                     component={Link}
-                    to="/upload" // Ruta hacia la subida de videos
+                    to="/uploadvideo" // Ruta hacia la subida de videos
                     onClick={handleMenuClose}
                   >
                     Subir Video

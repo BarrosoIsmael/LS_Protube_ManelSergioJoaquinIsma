@@ -47,14 +47,16 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public List<Map<String, String>> getAllCommentsByUsername(String username) {
+    public List<Map<String, Object>> getAllCommentsByUsername(String username) {
         Optional<User> userOpt = userRepository.findByUsername(username);
         if (userOpt.isPresent()) {
             Long userId = userOpt.get().getId();
             return commentRepository.findByUserId(userId).stream().map(comment -> {
-                Map<String, String> commentInfo = new HashMap<>();
+                Map<String, Object> commentInfo = new HashMap<>();
                 commentInfo.put("text", comment.getText());
                 commentInfo.put("user", comment.getUser().getUsername());
+                commentInfo.put("likes", comment.getLikes());
+                commentInfo.put("dislikes", comment.getDislikes());
                 return commentInfo;
             }).collect(Collectors.toList());
         }
@@ -67,6 +69,7 @@ public class UserService {
             Long userId = userOpt.get().getId();
             return videoRepository.findByUserId(userId).stream().map(video -> {
                 Map<String, String> videoInfo = new HashMap<>();
+                videoInfo.put("id", String.valueOf(video.getId()));
                 videoInfo.put("title", video.getTitle());
                 return videoInfo;
             }).collect(Collectors.toList());

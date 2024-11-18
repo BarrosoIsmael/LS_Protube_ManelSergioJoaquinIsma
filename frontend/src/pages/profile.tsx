@@ -1,97 +1,123 @@
-import React from "react";
-import { Container, Box, Typography, Grid, Paper, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Container, Box, Typography, Grid, Paper, IconButton } from "@mui/material";
+import { getEnv } from "../utils/Env";
+import { useAuth } from "../context/AuthContext";
+import VideoCard from "../components/VideoCard";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Comment from "../components/Comment";
 
 const Profile: React.FC = () => {
+  const [videos, setVideos] = useState<any[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchVideosAndComments = async () => {
+      try {
+        const videoInfoResponse = await fetch(getEnv().API_BASE_URL + `/users/${user}/videos`);	
+        const commentsResponse = await fetch(getEnv().API_BASE_URL + `/users/${user}/comments`);
+        
+        if (videoInfoResponse.ok) {
+          const videosInfo = await videoInfoResponse.json();
+          setVideos(videosInfo);
+        } else {
+          setVideos([]);
+        }
+        
+        if (commentsResponse.ok) {
+          const commentsJson = await commentsResponse.json();
+          console.log("Comments:", commentsJson);
+        } else {
+          setComments([]);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchVideosAndComments();
+  }, [user]);
+
+  const handleEditComment = (index: number) => {
+    // Lógica para editar el comentario
+    console.log(`Edit comment at index ${index}`);
+  };
+
+  const handleDeleteComment = (index: number) => {
+    // Lógica para borrar el comentario
+    console.log(`Delete comment at index ${index}`);
+  };
+
+
   return (
     <Container maxWidth="lg" sx={{ marginTop: "20px" }}>
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        {/* Título de la página */}
         <Typography variant="h4" component="h1" gutterBottom>
           Mi Perfil
         </Typography>
-
-        {/* Información de usuario */}
-        <Paper sx={{ width: "100%", padding: "20px", marginBottom: "20px" }}>
+        <Paper sx={{ bgcolor: 'grey.900', color: 'white', width: "100%", padding: "20px", marginBottom: "20px" }}>
           <Typography variant="h6" gutterBottom>
             Información del usuario
           </Typography>
-          <Typography variant="body1" color="textSecondary">
-            Nombre de usuario: <strong>Usuario123</strong>
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            Correo electrónico: <strong>usuario123@mail.com</strong>
+          <Typography variant="body1">
+            Nombre de usuario: {user}
           </Typography>
         </Paper>
-
-        {/* Sección de Videos Subidos */}
         <Box sx={{ width: "100%", marginBottom: "20px" }}>
           <Typography variant="h5" gutterBottom>
             Videos Subidos
           </Typography>
-          <Grid container spacing={2}>
-            {/* Aquí irán los videos cuando se integren los datos */}
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper sx={{ padding: "15px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <Typography variant="h6">Video 1</Typography>
-                <Button variant="outlined" component={Link} to="/video/1" sx={{ marginTop: "10px" }}>
-                  Ver Video
-                </Button>
-              </Paper>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper sx={{ padding: "15px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <Typography variant="h6">Video 2</Typography>
-                <Button variant="outlined" component={Link} to="/video/2" sx={{ marginTop: "10px" }}>
-                  Ver Video
-                </Button>
-              </Paper>
-            </Grid>
-
-            {/* Video 3 */}
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper sx={{ padding: "15px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <Typography variant="h6">Video 3</Typography>
-                <Button variant="outlined" component={Link} to="/video/3" sx={{ marginTop: "10px" }}>
-                  Ver Video
-                </Button>
-              </Paper>
-            </Grid>
-          </Grid>
+          {videos.length === 0 ? (
+            <div>No hay videos</div>
+          ) : (
+            <Container maxWidth="lg">
+              <Box sx={{ backgroundColor: 'black', marginTop: 4 }}>
+                <Grid container spacing={4}>
+                  {videos.map((video) => (
+                    <Grid item xs={12} sm={6} md={3} key={video.id}>
+                      <VideoCard
+                        title={video.title}
+                        user={""}
+                        id={video.id.toString()}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            </Container>
+          )}
         </Box>
-
-        {/* Sección de Comentarios */}
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", marginBottom: "20px", marginTop: "20px"}}>
           <Typography variant="h5" gutterBottom>
             Mis Comentarios
           </Typography>
-          <Grid container spacing={2}>
-            {/* Aquí irán los comentarios cuando se integren los datos */}
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper sx={{ padding: "15px" }}>
-                <Typography variant="body1" color="textSecondary">
-                  Comentario en Video 1: <strong>¡Gran video!</strong>
-                </Typography>
-              </Paper>
+          {comments.length === 0 ? (
+            <div style={{ marginBottom: "20px" }}>No hay comentarios</div>
+          ) : (
+            <Grid container spacing={2} direction="column" marginBottom={'16px'}>
+              {comments.map((comment, index) => (
+                <div key={index} className="comment-container" style={{ marginTop: "30px", marginLeft: '30px' }}>
+                  <div className="flex items-start space-x-4">
+                    <Comment
+                      key={index}
+                      comment={comment}
+                      index={index}
+                      comments={comments}
+                      setComments={setComments}
+                    />
+                    <IconButton onClick={() => handleEditComment(index)}>
+                      <EditIcon fontSize="small" sx={{ color: 'white' }} />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteComment(index)}>
+                      <DeleteIcon fontSize="small" sx={{ color: 'white' }} />
+                    </IconButton>
+                  </div>
+                  <hr/>
+                </div>
+              ))}
             </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper sx={{ padding: "15px" }}>
-                <Typography variant="body1" color="textSecondary">
-                  Comentario en Video 2: <strong>Muy informativo, gracias.</strong>
-                </Typography>
-              </Paper>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper sx={{ padding: "15px" }}>
-                <Typography variant="body1" color="textSecondary">
-                  Comentario en Video 3: <strong>Excelente contenido, sigue así.</strong>
-                </Typography>
-              </Paper>
-            </Grid>
-          </Grid>
+          )}
         </Box>
       </Box>
     </Container>
@@ -99,4 +125,3 @@ const Profile: React.FC = () => {
 };
 
 export default Profile;
-    

@@ -61,6 +61,7 @@ public class VideoService {
             commentInfo.put("text", comment.getText());
             commentInfo.put("author", comment.getUser().getUsername());
             commentInfo.put("likes", comment.getLikes());
+            commentInfo.put("dislikes", comment.getDislikes());
             return commentInfo;
         }).collect(Collectors.toList())).orElse(Collections.emptyList());
     }
@@ -86,6 +87,7 @@ public class VideoService {
             response.put("tags", video.getTags());
             response.put("category", video.getCategory().getName());
             response.put("likes", video.getLikes());
+            response.put("dislikes", video.getDislikes());
             return response;
         } else {
             return null;

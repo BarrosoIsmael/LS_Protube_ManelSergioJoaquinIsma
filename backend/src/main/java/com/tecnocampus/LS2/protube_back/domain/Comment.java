@@ -25,6 +25,9 @@ public class Comment {
     @Column(nullable = false)
     private int likes;
 
+    @Column(nullable = false)
+    private int dislikes;
+
     public Comment() {
     }
 
@@ -33,6 +36,7 @@ public class Comment {
         this.text = text;
         this.user = user;
         this.likes = 0;
+        this.dislikes = 0;
     }
 
     public Long getId() {
@@ -75,12 +79,20 @@ public class Comment {
         this.likes = likes;
     }
 
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+
     public void addLike() {
         this.likes++;
     }
 
     public void addDislike() {
-        this.likes--;
+        this.dislikes++;
     }
 
     @Override

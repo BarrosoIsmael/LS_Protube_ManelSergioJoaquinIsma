@@ -6,6 +6,7 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import VideoPlayer from "./pages/videoPlayer";
 import UploadVideo from "./pages/UploadVideo";
+import Profile from "./pages/profile";
 import { AuthProvider } from "./context/AuthContext";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import "./App.css";
@@ -28,6 +29,7 @@ const App: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/video/:videoId" element={<VideoPlayer />} />
         <Route path="/uploadvideo" element={<UploadVideo />} /> {/* Ruta para UploadVideo */}
+        <Route path="/profile" element={<Profile />} /> {/* Nueva ruta para Perfil */}
       </Routes>
 
       {/* Botón flotante para volver al inicio */}

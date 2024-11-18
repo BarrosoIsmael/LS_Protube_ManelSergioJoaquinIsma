@@ -42,16 +42,11 @@ public class VideoController {
 
     @GetMapping("/info/{id}")
     public ResponseEntity<Map<String, String>> getVideoInfoById(@PathVariable Long id) {
-        Optional<Video> video = videoService.getVideoInfoById(id);
-        if (video.isPresent()) {
-            Map<String, String> response = new HashMap<>();
-            response.put("id", String.valueOf(id));
-            response.put("title", video.get().getTitle());
-            response.put("user", video.get().getUser().getUsername());
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
+        Map<String, String> response = videoService.getVideoInfoById(id);
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/allVideosInfo")
@@ -71,19 +66,12 @@ public class VideoController {
     }
 
     @GetMapping("/{id}/comments")
-    public ResponseEntity<List<VideoJson.CommentJson>> getCommentsByVideoId(@PathVariable Long id) {
-        Optional<Video> video = videoService.getVideoInfoById(id);
-        if (video.isPresent()) {
-            List<VideoJson.CommentJson> comments = video.get().getComments().stream().map(comment -> {
-                VideoJson.CommentJson commentJson = new VideoJson.CommentJson();
-                commentJson.setText(comment.getText());
-                commentJson.setAuthor(comment.getUser().getUsername());
-                return commentJson;
-            }).collect(Collectors.toList());
-            return new ResponseEntity<>(comments, HttpStatus.OK);
-        } else {
+    public ResponseEntity<List<Map<String, Object>>> getCommentsByVideoId(@PathVariable Long id) {
+        List<Map<String, Object>> comments = videoService.getCommentsByVideoId(id);
+        if (comments.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     @GetMapping("/video/{id}")

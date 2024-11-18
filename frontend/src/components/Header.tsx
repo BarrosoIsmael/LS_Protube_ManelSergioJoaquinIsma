@@ -63,6 +63,25 @@ const Header: React.FC = () => {
                     horizontal: "right",
                   }}
                 >
+                  {/* Opción de Perfil */}
+                  <MenuItem
+                    component={Link}
+                    to="/profile" // Ruta hacia el perfil
+                    onClick={handleMenuClose}
+                  >
+                    Perfil
+                  </MenuItem>
+
+                  {/* Opción de Subir Video */}
+                  <MenuItem
+                    component={Link}
+                    to="/upload" // Ruta hacia la subida de videos
+                    onClick={handleMenuClose}
+                  >
+                    Subir Video
+                  </MenuItem>
+
+                  {/* Opción de Cerrar sesión */}
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </>

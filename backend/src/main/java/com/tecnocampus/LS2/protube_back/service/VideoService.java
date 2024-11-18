@@ -54,6 +54,16 @@ public class VideoService {
         }
     }
 
+    public List<Map<String, String>> getAllVideosInfo() {
+        return videoRepository.findAll().stream().map(video -> {
+            Map<String, String> videoInfo = new HashMap<>();
+            videoInfo.put("id", String.valueOf(video.getId()));
+            videoInfo.put("title", video.getTitle());
+            videoInfo.put("user", video.getUser().getUsername());
+            return videoInfo;
+        }).collect(Collectors.toList());
+    }
+
     public List<Map<String, Object>> getCommentsByVideoId(Long id) {
         Optional<Video> videoOpt = videoRepository.findById(id);
         return videoOpt.map(video -> video.getComments().stream().map(comment -> {
@@ -64,16 +74,6 @@ public class VideoService {
             commentInfo.put("dislikes", comment.getDislikes());
             return commentInfo;
         }).collect(Collectors.toList())).orElse(Collections.emptyList());
-    }
-
-    public List<Map<String, String>> getAllVideosInfo() {
-        return videoRepository.findAll().stream().map(video -> {
-            Map<String, String> videoInfo = new HashMap<>();
-            videoInfo.put("id", String.valueOf(video.getId()));
-            videoInfo.put("title", video.getTitle());
-            videoInfo.put("user", video.getUser().getUsername());
-            return videoInfo;
-        }).collect(Collectors.toList());
     }
 
     public Map<String, Object> getVideoById(Long id) {

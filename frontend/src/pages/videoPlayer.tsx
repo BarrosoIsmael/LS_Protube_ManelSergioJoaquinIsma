@@ -5,7 +5,9 @@ import { getEnv } from "../utils/Env";
 import Avatar from '@mui/material/Avatar';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import { useAuth } from "../context/AuthContext"; // Importa el contexto de autenticación
+import { useAuth } from "../context/AuthContext";
+import {getRandomColor, isColorDark } from '../utils/commentUtils';
+import Comment from "../components/Comment";
 
 interface Comment {
   author: string;
@@ -14,23 +16,6 @@ interface Comment {
   likes: number;
   dislikes: number;
 }
-
-const getRandomColor = () => {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
-
-const isColorDark = (color: string) => {
-  const r = parseInt(color.slice(1, 3), 16);
-  const g = parseInt(color.slice(3, 5), 16);
-  const b = parseInt(color.slice(5, 7), 16);
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  return brightness < 128;
-};
 
 const VideoPlayer: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
@@ -41,7 +26,7 @@ const VideoPlayer: React.FC = () => {
   const [newComment, setNewComment] = useState<string>("");
   const [videoLikes, setVideoLikes] = useState<number>(0);
   const [videoDislikes, setVideoDislikes] = useState<number>(0);
-  const { user } = useAuth(); // Usa el contexto de autenticación
+  const { user } = useAuth();
   const avatarColorRef = useRef<string>(getRandomColor());
 
   useEffect(() => {
@@ -81,10 +66,6 @@ const VideoPlayer: React.FC = () => {
     fetchData();
   }, [videoId]);
 
-  const formatComment = (comment: string) => {
-    return comment.replace(/\n/g, '<br />').replace(/\u00a0/g, '&nbsp;');
-  };
-
   const handleAddComment = async () => {
     if (!user) {
       return;
@@ -121,18 +102,6 @@ const VideoPlayer: React.FC = () => {
 
   const handleVideoLike = () => setVideoLikes(videoLikes + 1);
   const handleVideoDislike = () => setVideoDislikes(videoDislikes + 1);
-
-  const handleCommentLike = (index: number) => {
-    const updatedComments = [...comments];
-    updatedComments[index].likes += 1;
-    setComments(updatedComments);
-  };
-
-  const handleCommentDislike = (index: number) => {
-    const updatedComments = [...comments];
-    updatedComments[index].dislikes += 1;
-    setComments(updatedComments);
-  };
 
   const truncateDescription = (text: string) => {
     return text.length > 300 ? text.slice(0, 300) + '...' : text;
@@ -219,37 +188,21 @@ const VideoPlayer: React.FC = () => {
                     sx={{
                       bgcolor: comment.avatarColor,
                       color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black',
+                      marginBottom: "5px"
                     }}
                   >
                     {comment.author.charAt(0)}
                   </Avatar>
-                  <div className="comment-content flex-1">
-                    <p className="italic">@{comment.author}</p>
-                    <h6
-                      dangerouslySetInnerHTML={{ __html: formatComment(comment.text) }}
-                    />
-                    <div
-                      className="flex items-center space-x-4 mt-2"
-                      style={{ display: 'flex', justifyContent: 'start', gap: '10px' }}
-                    >
-                      <div
-                        onClick={() => handleCommentLike(index)}
-                        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-                      >
-                        <ThumbUpIcon fontSize="small" sx={{ color: 'gray' }} />
-                        <span style={{ color: 'gray', marginLeft: '4px' }}>{comment.likes}</span>
-                      </div>
-                      <div
-                        onClick={() => handleCommentDislike(index)}
-                        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-                      >
-                        <ThumbDownIcon fontSize="small" sx={{ color: 'gray' }} />
-                        <span style={{ color: 'gray', marginLeft: '4px' }}>{comment.dislikes}</span>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="italic">@{comment.author}</p>
+                  <Comment
+                    key={index}
+                    comment={comment}
+                    index={index}
+                    comments={comments}
+                    setComments={setComments}
+                  />
                 </div>
-                <hr style={{ borderColor: "#424242", margin: "16px 0" }} />
+                <hr/>
               </div>
             ))}
           </div>

@@ -50,4 +50,13 @@ public class UserController {
         }
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
+
+    @GetMapping("/{username}/videos")
+    public ResponseEntity<List<Map<String, String>>> getAllVideosByUsername(@PathVariable String username) {
+        List<Map<String, String>> comments = userService.getAllVideosByUsername(username);
+        if (comments.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
 }

@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -38,5 +40,14 @@ public class UserController {
             return new ResponseEntity<>("User logged in successfully!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Invalid credentials.", HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/{username}/comments")
+    public ResponseEntity<List<Map<String, String>>> getAllCommentsByUsername(@PathVariable String username) {
+        List<Map<String, String>> comments = userService.getAllCommentsByUsername(username);
+        if (comments.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 }

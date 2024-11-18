@@ -43,6 +43,9 @@ public class Video {
     @Column(nullable = false)
     private int likes;
 
+    @Column(nullable = false)
+    private int dislikes;
+
     public Video() {
     }
 
@@ -56,6 +59,7 @@ public class Video {
         this.tags = tags;
         this.category = category;
         this.likes = 0;
+        this.dislikes = 0;
     }
 
     public Long getId() {
@@ -146,6 +150,14 @@ public class Video {
         this.likes = likes;
     }
 
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+
     public void addComment(Comment comment) {
         this.comments.add(comment);
     }
@@ -163,7 +175,7 @@ public class Video {
     }
 
     public void addDislike() {
-        this.likes--;
+        this.dislikes++;
     }
 
     @Override

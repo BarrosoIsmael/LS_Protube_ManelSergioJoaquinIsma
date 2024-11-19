@@ -1,8 +1,10 @@
 package com.tecnocampus.LS2.protube_back.service;
 
+import com.tecnocampus.LS2.protube_back.domain.Category;
 import com.tecnocampus.LS2.protube_back.domain.Comment;
 import com.tecnocampus.LS2.protube_back.domain.User;
 import com.tecnocampus.LS2.protube_back.domain.Video;
+import com.tecnocampus.LS2.protube_back.repository.CategoryRepository;
 import com.tecnocampus.LS2.protube_back.repository.CommentRepository;
 import com.tecnocampus.LS2.protube_back.repository.UserRepository;
 import com.tecnocampus.LS2.protube_back.repository.VideoRepository;
@@ -34,6 +36,9 @@ public class VideoService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public byte[] getMiniatureById(Long id) throws IOException {
         Path path = Paths.get(videoDirectory, id + ".webp");
@@ -160,5 +165,37 @@ public class VideoService {
         Path newPath = Paths.get(videoDirectory, newId + ".mp4");
 
         Files.copy(file.getInputStream(), newPath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    public void uploadNewVideo(String title, String description, String category, String username) throws Exception {
+        try {
+            // Buscar o crear la categoría
+            Category videoCategory = categoryRepository.findByName(category)
+                    .orElseGet(() -> {
+                        Category newCategory = new Category();
+                        newCategory.setName(category);
+                        categoryRepository.save(newCategory);
+                        return newCategory;
+                    });
+
+            // Buscar el usuario por username
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Crear el nuevo video
+            Video newVideo = new Video();
+            newVideo.setTitle(title);
+            newVideo.setDescription(description);
+            newVideo.setCategory(videoCategory);
+            newVideo.setUser(user);
+            newVideo.setDuration(null);
+            newVideo.setWidth(null);
+            newVideo.setHeight(null);
+
+            // Guardar el video en la base de datos
+            videoRepository.save(newVideo);
+        } catch (Exception e) {
+            throw new Exception("Error uploading new video: " + e.getMessage(), e);
+        }
     }
 }

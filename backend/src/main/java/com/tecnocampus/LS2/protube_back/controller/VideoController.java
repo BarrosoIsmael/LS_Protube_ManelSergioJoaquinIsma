@@ -121,4 +121,20 @@ public class VideoController {
             return new ResponseEntity<>("Failed to upload video.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/uploadNewVideo")
+    public ResponseEntity<String> uploadNewVideo(
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam String category,
+            @RequestParam String username) {
+        try {
+            videoService.uploadNewVideo(title, description, category, username);
+            return new ResponseEntity<>("Video uploaded successfully!", HttpStatus.CREATED);
+        } catch (Exception e) {
+            // Registrar el error para obtener más detalles
+            e.printStackTrace();
+            return new ResponseEntity<>("Failed to upload video.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -49,8 +49,8 @@ public class UserController {
     }
 
     @GetMapping("/{username}/videos")
-    public ResponseEntity<List<Map<String, String>>> getAllVideosByUsername(@PathVariable String username) {
-        List<Map<String, String>> comments = userService.getAllVideosByUsername(username);
+    public ResponseEntity<List<Map<String, Object>>> getAllVideosByUsername(@PathVariable String username) {
+        List<Map<String, Object>> comments = userService.getAllVideosByUsername(username);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 }

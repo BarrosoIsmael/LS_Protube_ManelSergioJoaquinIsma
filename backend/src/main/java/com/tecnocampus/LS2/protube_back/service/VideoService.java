@@ -40,12 +40,12 @@ public class VideoService {
         return Files.readAllBytes(path);
     }
 
-    public Map<String, String> getVideoInfoById(Long id) {
+    public Map<String, Object> getVideoInfoById(Long id) {
         Optional<Video> videoOpt = videoRepository.findById(id);
         if (videoOpt.isPresent()) {
             Video video = videoOpt.get();
-            Map<String, String> response = new HashMap<>();
-            response.put("id", String.valueOf(id));
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", id);
             response.put("title", video.getTitle());
             response.put("user", video.getUser().getUsername());
             return response;
@@ -54,10 +54,10 @@ public class VideoService {
         }
     }
 
-    public List<Map<String, String>> getAllVideosInfo() {
+    public List<Map<String, Object>> getAllVideosInfo() {
         return videoRepository.findAll().stream().map(video -> {
-            Map<String, String> videoInfo = new HashMap<>();
-            videoInfo.put("id", String.valueOf(video.getId()));
+            Map<String, Object> videoInfo = new HashMap<>();
+            videoInfo.put("id", video.getId());
             videoInfo.put("title", video.getTitle());
             videoInfo.put("user", video.getUser().getUsername());
             return videoInfo;

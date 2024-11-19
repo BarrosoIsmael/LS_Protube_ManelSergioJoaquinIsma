@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import "./UploadVideo.css"; // Importa el CSS
+import { useAuth } from "../context/AuthContext";
+import "./UploadVideo.css";
 
 const UploadVideo: React.FC = () => {
+  const { user } = useAuth();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [category, setCategory] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
   const [uploadStatus, setUploadStatus] = useState<string>("");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +17,7 @@ const UploadVideo: React.FC = () => {
   };
 
   const handleUpload = async () => {
-    if (!selectedFile || !title || !description || !category || !username) {
+    if (!selectedFile || !title || !description || !category || !user) {
       setUploadStatus("Please fill out all fields and select a file to upload.");
       return;
     }
@@ -26,7 +27,7 @@ const UploadVideo: React.FC = () => {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("category", category);
-    formData.append("username", username);
+    formData.append("username", user);
 
     try {
       setUploadStatus("Uploading...");
@@ -73,15 +74,6 @@ const UploadVideo: React.FC = () => {
             type="text"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </label>

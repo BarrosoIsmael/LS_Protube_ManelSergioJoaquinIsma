@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Card, CardContent } from '@mui/material';
-import { getEnv } from "../utils/Env";
 import Avatar from '@mui/material/Avatar';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { useAuth } from "../context/AuthContext";
-import {getRandomColor, isColorDark } from '../utils/commentUtils';
+import { getEnv } from "../utils/Env";
+import { getRandomColor, isColorDark } from '../utils/commentUtils';
 import Comment from "../components/Comment";
 
 interface Comment {
@@ -40,31 +40,59 @@ const VideoPlayer: React.FC = () => {
           if (videoResponse.ok) {
             const videoJson = await videoResponse.json();
             setVideoData(videoJson);
+            setVideoLikes(videoJson.likes);
+            setVideoDislikes(videoJson.dislikes);
           }
 
           if (commentsResponse.ok) {
             const commentsJson = await commentsResponse.json();
             setComments(commentsJson.map((comment: any) => ({
-              ...comment,
-              avatarColor: getRandomColor(),
-              likes: 0,
-              dislikes: 0,
+              author: comment.author,
+              text: comment.text,
+              avatarColor: comment.avatarColor,
+              likes: comment.likes,
+              dislikes: comment.dislikes,
             })));
           }
 
           if (videoMP4Response.ok) {
             const videoBlob = await videoMP4Response.blob();
-            const videoUrl = URL.createObjectURL(videoBlob);
-            setVideoMP4(videoUrl);
+            setVideoMP4(URL.createObjectURL(videoBlob));
           }
         } catch (error) {
-          console.error("Error fetching data:", error);
+          console.error('Error fetching video data:', error);
         }
       }
     };
 
     fetchData();
   }, [videoId]);
+
+  const handleLike = async () => {
+    try {
+      const response = await fetch(getEnv().API_BASE_URL + `/videos/${videoId}/like?isLike=true`, {
+        method: 'POST',
+      });
+      if (response.ok) {
+        setVideoLikes(videoLikes + 1);
+      }
+    } catch (error) {
+      console.error('Error liking the video:', error);
+    }
+  };
+
+  const handleDislike = async () => {
+    try {
+      const response = await fetch(getEnv().API_BASE_URL + `/videos/${videoId}/like?isLike=false`, {
+        method: 'POST',
+      });
+      if (response.ok) {
+        setVideoDislikes(videoDislikes + 1);
+      }
+    } catch (error) {
+      console.error('Error disliking the video:', error);
+    }
+  };
 
   const handleAddComment = async () => {
     if (!user) {
@@ -83,7 +111,7 @@ const VideoPlayer: React.FC = () => {
 
         if (response.ok) {
           const newCommentData: Comment = {
-            author: user, // Usa el nombre de usuario del contexto de autenticación
+            author: user, 
             text: newComment,
             avatarColor: avatarColorRef.current,
             likes: 0,
@@ -99,9 +127,6 @@ const VideoPlayer: React.FC = () => {
       }
     }
   };
-
-  const handleVideoLike = () => setVideoLikes(videoLikes + 1);
-  const handleVideoDislike = () => setVideoDislikes(videoDislikes + 1);
 
   const truncateDescription = (text: string) => {
     return text.length > 300 ? text.slice(0, 300) + '...' : text;
@@ -122,11 +147,11 @@ const VideoPlayer: React.FC = () => {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">{videoData.title}</h2>
             <div className="flex items-center space-x-4">
-              <div onClick={handleVideoLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "16px"}}>
+              <div onClick={handleLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "16px"}}>
                 <ThumbUpIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoLikes}</span>
               </div>
-              <div onClick={handleVideoDislike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
+              <div onClick={handleDislike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
                 <ThumbDownIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoDislikes}</span>
               </div>

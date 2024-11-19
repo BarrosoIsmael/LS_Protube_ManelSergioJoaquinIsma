@@ -132,9 +132,18 @@ public class VideoController {
             videoService.uploadNewVideo(title, description, category, username);
             return new ResponseEntity<>("Video uploaded successfully!", HttpStatus.CREATED);
         } catch (Exception e) {
-            // Registrar el error para obtener más detalles
             e.printStackTrace();
             return new ResponseEntity<>("Failed to upload video.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/{id}/edit")
+    public ResponseEntity<String> editVideoById(@PathVariable Long id, @RequestParam String title, @RequestParam String description, @RequestParam String category) {
+        boolean success = videoService.editVideoById(id, title, description, category);
+        if (success) {
+            return new ResponseEntity<>("Video edited successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to edit video.", HttpStatus.BAD_REQUEST);
         }
     }
 }

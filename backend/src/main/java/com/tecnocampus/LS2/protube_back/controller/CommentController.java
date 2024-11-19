@@ -20,8 +20,8 @@ public class CommentController {
     }
 
     @PostMapping("/{id}/edit")
-    public ResponseEntity<String> editCommentById(@PathVariable Long id, @RequestParam String newText) {
-        boolean success = commentService.editCommentById(id, newText);
+    public ResponseEntity<String> editCommentById(@PathVariable Long id, @RequestParam String text) {
+        boolean success = commentService.editCommentById(id, text);
         if (success) {
             return new ResponseEntity<>("Comment edited successfully!", HttpStatus.OK);
         } else {

@@ -41,8 +41,8 @@ public class VideoController {
     }
 
     @GetMapping("/info/{id}")
-    public ResponseEntity<Map<String, String>> getVideoInfoById(@PathVariable Long id) {
-        Map<String, String> response = videoService.getVideoInfoById(id);
+    public ResponseEntity<Map<String, Object>> getVideoInfoById(@PathVariable Long id) {
+        Map<String, Object> response = videoService.getVideoInfoById(id);
         if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -50,8 +50,8 @@ public class VideoController {
     }
 
     @GetMapping("/allVideosInfo")
-    public ResponseEntity<List<Map<String, String>>> getAllVideosInfo() {
-        List<Map<String, String>> videosInfo = videoService.getAllVideosInfo();
+    public ResponseEntity<List<Map<String, Object>>> getAllVideosInfo() {
+        List<Map<String, Object>> videosInfo = videoService.getAllVideosInfo();
         return new ResponseEntity<>(videosInfo, HttpStatus.OK);
     }
 
@@ -69,7 +69,7 @@ public class VideoController {
     public ResponseEntity<List<Map<String, Object>>> getCommentsByVideoId(@PathVariable Long id) {
         List<Map<String, Object>> comments = videoService.getCommentsByVideoId(id);
         if (comments.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);//asi petara, poner como el get de perfil
         }
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }

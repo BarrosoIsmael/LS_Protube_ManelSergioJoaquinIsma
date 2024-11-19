@@ -53,6 +53,7 @@ public class UserService {
             Long userId = userOpt.get().getId();
             return commentRepository.findByUserId(userId).stream().map(comment -> {
                 Map<String, Object> commentInfo = new HashMap<>();
+                commentInfo.put("id", comment.getId());
                 commentInfo.put("text", comment.getText());
                 commentInfo.put("user", comment.getUser().getUsername());
                 commentInfo.put("likes", comment.getLikes());
@@ -63,13 +64,13 @@ public class UserService {
         return List.of();
     }
 
-    public List<Map<String, String>> getAllVideosByUsername(String username) {
+    public List<Map<String, Object>> getAllVideosByUsername(String username) {
         Optional<User> userOpt = userRepository.findByUsername(username);
         if (userOpt.isPresent()) {
             Long userId = userOpt.get().getId();
             return videoRepository.findByUserId(userId).stream().map(video -> {
-                Map<String, String> videoInfo = new HashMap<>();
-                videoInfo.put("id", String.valueOf(video.getId()));
+                Map<String, Object> videoInfo = new HashMap<>();
+                videoInfo.put("id", video.getId());
                 videoInfo.put("title", video.getTitle());
                 return videoInfo;
             }).collect(Collectors.toList());

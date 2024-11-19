@@ -18,4 +18,14 @@ public class CommentController {
         commentService.updateLikeStatus(id, isLike);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/{id}/edit")
+    public ResponseEntity<String> editCommentById(@PathVariable Long id, @RequestParam String newText) {
+        boolean success = commentService.editCommentById(id, newText);
+        if (success) {
+            return new ResponseEntity<>("Comment edited successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to edit comment.", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

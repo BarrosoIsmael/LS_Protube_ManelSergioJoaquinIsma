@@ -26,4 +26,15 @@ public class CommentService {
             }
         }
     }
+
+    @Transactional
+    public boolean editCommentById(Long commentId, String newText) {
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+        if (commentOpt.isPresent()) {
+            Comment comment = commentOpt.get();
+            comment.setText(newText);
+            return true;
+        }
+        return false;
+    }
 }

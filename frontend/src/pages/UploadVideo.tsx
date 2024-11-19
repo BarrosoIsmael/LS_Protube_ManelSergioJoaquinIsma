@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./UploadVideo.css"; // Importa el CSS
 
 const UploadVideo: React.FC = () => {
@@ -31,12 +30,12 @@ const UploadVideo: React.FC = () => {
 
     try {
       setUploadStatus("Uploading...");
-      const response = await axios.post("/api/videos/uploadNewVideo", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const response = await fetch("/api/videos/uploadNewVideo", {
+        method: "POST",
+        body: formData,
       });
-      if (response.status === 201) {
+
+      if (response.ok) {
         setUploadStatus("Video uploaded successfully!");
       } else {
         setUploadStatus("Failed to upload the video.");

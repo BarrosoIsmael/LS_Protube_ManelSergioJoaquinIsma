@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Typography, Button, Container, Box, Menu, MenuItem } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Icono de usuario
@@ -9,6 +9,7 @@ import { useAuth } from "../context/AuthContext";
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate(); // Hook para redireccionar
 
   // Función para abrir el menú
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -20,10 +21,11 @@ const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
-  // Función para cerrar sesión y cerrar el menú
+  // Función para cerrar sesión y redirigir a la homepage
   const handleLogout = () => {
     logout();
     handleMenuClose();
+    navigate("/"); // Redirige a la página inicial
   };
 
   return (
@@ -82,7 +84,7 @@ const Header: React.FC = () => {
                   </MenuItem>
 
                   {/* Opción de Cerrar sesión */}
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>Cerrar Sesión</MenuItem>
                 </Menu>
               </>
             ) : (

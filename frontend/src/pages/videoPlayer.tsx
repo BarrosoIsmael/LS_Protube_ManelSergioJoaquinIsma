@@ -26,6 +26,7 @@ const VideoPlayer: React.FC = () => {
   const [newComment, setNewComment] = useState<string>("");
   const [videoLikes, setVideoLikes] = useState<number>(0);
   const [videoDislikes, setVideoDislikes] = useState<number>(0);
+  const [userLikeStatus, setUserLikeStatus] = useState<'like' | 'dislike' | null>(null);
   const { user } = useAuth();
   const avatarColorRef = useRef<string>(getRandomColor());
 
@@ -69,12 +70,33 @@ const VideoPlayer: React.FC = () => {
   }, [videoId]);
 
   const handleLike = async () => {
+    if (!user) {
+      console.error('User must be logged in to like the video');
+      return;
+    }
+
     try {
+      let newLikes = videoLikes;
+      let newDislikes = videoDislikes;
+
+      if (userLikeStatus === 'like') {
+        newLikes -= 1;
+        setUserLikeStatus(null);
+      } else {
+        if (userLikeStatus === 'dislike') {
+          newDislikes -= 1;
+        }
+        newLikes += 1;
+        setUserLikeStatus('like');
+      }
+
       const response = await fetch(getEnv().API_BASE_URL + `/videos/${videoId}/like?isLike=true`, {
         method: 'POST',
       });
+
       if (response.ok) {
-        setVideoLikes(videoLikes + 1);
+        setVideoLikes(newLikes);
+        setVideoDislikes(newDislikes);
       }
     } catch (error) {
       console.error('Error liking the video:', error);
@@ -82,12 +104,32 @@ const VideoPlayer: React.FC = () => {
   };
 
   const handleDislike = async () => {
+    if (!user) {
+      return;
+    }
+
     try {
+      let newLikes = videoLikes;
+      let newDislikes = videoDislikes;
+
+      if (userLikeStatus === 'dislike') {
+        newDislikes -= 1;
+        setUserLikeStatus(null);
+      } else {
+        if (userLikeStatus === 'like') {
+          newLikes -= 1;
+        }
+        newDislikes += 1;
+        setUserLikeStatus('dislike');
+      }
+
       const response = await fetch(getEnv().API_BASE_URL + `/videos/${videoId}/like?isLike=false`, {
         method: 'POST',
       });
+
       if (response.ok) {
-        setVideoDislikes(videoDislikes + 1);
+        setVideoLikes(newLikes);
+        setVideoDislikes(newDislikes);
       }
     } catch (error) {
       console.error('Error disliking the video:', error);
@@ -147,11 +189,11 @@ const VideoPlayer: React.FC = () => {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">{videoData.title}</h2>
             <div className="flex items-center space-x-4">
-              <div onClick={handleLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "16px"}}>
+              <div onClick={handleLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "16px", backgroundColor: userLikeStatus === 'like' ? 'green' : 'initial' }}>
                 <ThumbUpIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoLikes}</span>
               </div>
-              <div onClick={handleDislike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
+              <div onClick={handleDislike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", backgroundColor: userLikeStatus === 'dislike' ? 'red' : 'initial' }}>
                 <ThumbDownIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoDislikes}</span>
               </div>

@@ -28,11 +28,11 @@ public class CommentService {
     }
 
     @Transactional
-    public boolean editCommentById(Long commentId, String newText) {
+    public boolean editCommentById(Long commentId, String text) {
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
         if (commentOpt.isPresent()) {
             Comment comment = commentOpt.get();
-            comment.setText(newText);
+            comment.setText(text);
             return true;
         }
         return false;

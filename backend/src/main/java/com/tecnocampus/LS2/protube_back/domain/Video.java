@@ -11,14 +11,14 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private int width;
+    @Column(nullable = true)
+    private Integer width;
 
-    @Column(nullable = false)
-    private int height;
+    @Column(nullable = true)
+    private Integer height;
 
-    @Column(nullable = false)
-    private float duration;
+    @Column(nullable = true)
+    private Float duration;
 
     @Column(nullable = false)
     private String title;
@@ -66,27 +66,27 @@ public class Video {
         this.id = id;
     }
 
-    public int getWidth() {
+    public Integer getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(Integer width) {
         this.width = width;
     }
 
-    public int getHeight() {
+    public Integer getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(Integer height) {
         this.height = height;
     }
 
-    public float getDuration() {
+    public Float getDuration() {
         return duration;
     }
 
-    public void setDuration(float duration) {
+    public void setDuration(Float duration) {
         this.duration = duration;
     }
 

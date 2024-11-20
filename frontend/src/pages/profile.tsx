@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Box, Typography, Grid, Paper, IconButton } from "@mui/material";
+import { Container, Box, Typography, Grid, Paper, IconButton, Snackbar } from "@mui/material";
 import { getEnv } from "../utils/Env";
 import { useAuth } from "../context/AuthContext";
 import VideoCard from "../components/VideoCard";
@@ -7,12 +7,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Comment from "../components/Comment";
 import EditCommentDialog from "../components/EditCommentDialog";
+import DeleteCommentDialog from "../components/DeleteCommentDialog";
 import "./profile.css";
 
 const Profile: React.FC = () => {
   const [videos, setVideos] = useState<any[]>([]);
   const [comments, setComments] = useState<any[]>([]);
   const [editCommentId, setEditCommentId] = useState<number | null>(null);
+  const [deleteCommentId, setDeleteCommentId] = useState<number | null>(null);
+  const [editSnackbarOpen, setEditSnackbarOpen] = useState(false);
+  const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -47,11 +51,15 @@ const Profile: React.FC = () => {
   };
 
   const handleDeleteComment = (index: number) => {
-    console.log(`Delete comment at index ${index}`);
+    setDeleteCommentId(comments[index].id);
   };
 
   const handleCloseEditDialog = () => {
     setEditCommentId(null);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteCommentId(null);
   };
 
   const handleUpdateComments = async () => {
@@ -60,6 +68,16 @@ const Profile: React.FC = () => {
       const commentsJson = await commentsResponse.json();
       setComments(commentsJson);
     }
+  };
+
+  const handleEditSuccess = () => {
+    setEditSnackbarOpen(true);
+    handleUpdateComments();
+  };
+
+  const handleDeleteSuccess = () => {
+    setDeleteSnackbarOpen(true);
+    handleUpdateComments();
   };
 
   return (
@@ -130,9 +148,29 @@ const Profile: React.FC = () => {
           open={editCommentId !== null}
           commentId={editCommentId}
           onClose={handleCloseEditDialog}
-          onUpdate={handleUpdateComments}
+          onUpdate={handleEditSuccess}
         />
       )}
+      {deleteCommentId !== null && (
+        <DeleteCommentDialog
+          open={deleteCommentId !== null}
+          commentId={deleteCommentId}
+          onClose={handleCloseDeleteDialog}
+          onDelete={handleDeleteSuccess}
+        />
+      )}
+      <Snackbar
+        open={editSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setEditSnackbarOpen(false)}
+        message="Comentario editado con éxito"
+      />
+      <Snackbar
+        open={deleteSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setDeleteSnackbarOpen(false)}
+        message="Comentario eliminado con éxito"
+      />
     </Container>
   );
 };

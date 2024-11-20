@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, Snackbar } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
 import { getEnv } from "../utils/Env";
 
 interface EditCommentDialogProps {
@@ -11,7 +11,6 @@ interface EditCommentDialogProps {
 
 const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ open, commentId, onClose, onUpdate }) => {
   const [commentText, setCommentText] = useState("");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     const fetchCommentText = async () => {
@@ -41,7 +40,6 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ open, commentId, 
       });
 
       if (response.ok) {
-        setSnackbarOpen(true);
         onUpdate();
         onClose();
       }
@@ -51,32 +49,24 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ open, commentId, 
   };
 
   return (
-    <>
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Editar Comentario</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Comentario"
-            type="text"
-            fullWidth
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleUpdateComment}>Actualizar comentario</Button>
-        </DialogActions>
-      </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-        message="Comentario editado con éxito"
-      />
-    </>
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Editar Comentario</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Comentario"
+          type="text"
+          fullWidth
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancelar</Button>
+        <Button onClick={handleUpdateComment}>Actualizar comentario</Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

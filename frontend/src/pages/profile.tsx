@@ -6,11 +6,13 @@ import VideoCard from "../components/VideoCard";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Comment from "../components/Comment";
+import EditCommentDialog from "../components/EditCommentDialog";
 import "./profile.css";
 
 const Profile: React.FC = () => {
   const [videos, setVideos] = useState<any[]>([]);
   const [comments, setComments] = useState<any[]>([]);
+  const [editCommentId, setEditCommentId] = useState<number | null>(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -41,11 +43,23 @@ const Profile: React.FC = () => {
   }, [user]);
 
   const handleEditComment = (index: number) => {
-    console.log(`Edit comment at index ${index}`);
+    setEditCommentId(comments[index].id);
   };
 
   const handleDeleteComment = (index: number) => {
     console.log(`Delete comment at index ${index}`);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditCommentId(null);
+  };
+
+  const handleUpdateComments = async () => {
+    const commentsResponse = await fetch(getEnv().API_BASE_URL + `/users/${user}/comments`);
+    if (commentsResponse.ok) {
+      const commentsJson = await commentsResponse.json();
+      setComments(commentsJson);
+    }
   };
 
   return (
@@ -88,25 +102,37 @@ const Profile: React.FC = () => {
           ) : (
             <Grid container spacing={2} direction="column">
               {comments.map((comment, index) => (
-                <Box key={index} className="comment-item">
-                  <Comment
-                    comment={comment}
-                    index={index}
-                    comments={comments}
-                    setComments={setComments}
-                  />
-                  <IconButton onClick={() => handleEditComment(index)}>
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteComment(index)}>
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
+                <Box key={index} className="comment-item" display="flex" alignItems="center">
+                  <Box flexGrow={1}>
+                    <Comment
+                      comment={comment}
+                      index={index}
+                      comments={comments}
+                      setComments={setComments}
+                    />
+                  </Box>
+                  <Box display="flex" flexDirection="column">
+                    <IconButton onClick={() => handleEditComment(index)}>
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteComment(index)}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
                 </Box>
               ))}
             </Grid>
           )}
         </Box>
       </Box>
+      {editCommentId !== null && (
+        <EditCommentDialog
+          open={editCommentId !== null}
+          commentId={editCommentId}
+          onClose={handleCloseEditDialog}
+          onUpdate={handleUpdateComments}
+        />
+      )}
     </Container>
   );
 };

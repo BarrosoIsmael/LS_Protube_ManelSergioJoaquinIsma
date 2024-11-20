@@ -224,9 +224,11 @@ const VideoPlayer: React.FC = () => {
             <h3 className="text-lg font-bold">Comments</h3>
             <br />
             <div className="add-comment flex items-start space-x-4">
-              <Avatar sx={{ bgcolor: user ? avatarColorRef.current : 'grey.700', color: user ? (isColorDark(avatarColorRef.current) ? 'white' : 'black') : 'white' }}>
-                {user ? user.charAt(0) : null}
-              </Avatar>
+              {user && (
+                <Avatar sx={{ bgcolor: avatarColorRef.current, color: isColorDark(avatarColorRef.current) ? 'white' : 'black' }}>
+                  {user.charAt(0)}
+                </Avatar>
+              )}
               <div className="flex-1">
                 <input
                   type="text"
@@ -237,6 +239,11 @@ const VideoPlayer: React.FC = () => {
                   style={{ backgroundColor: "#424242", color: "white", minWidth: "350px" }}
                   disabled={!user}
                 />
+                <style>{`
+                  input::placeholder {
+                    color: white;
+                  }
+                `}</style>
                 {user && (
                   <button
                     onClick={handleAddComment}

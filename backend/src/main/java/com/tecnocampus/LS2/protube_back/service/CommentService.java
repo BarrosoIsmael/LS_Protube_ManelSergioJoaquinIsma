@@ -43,4 +43,13 @@ public class CommentService {
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
         return commentOpt.map(Comment::getText);
     }
+
+    @Transactional
+    public boolean deleteCommentById(Long commentId) {
+        if (commentRepository.existsById(commentId)) {
+            commentRepository.deleteById(commentId);
+            return true;
+        }
+        return false;
+    }
 }

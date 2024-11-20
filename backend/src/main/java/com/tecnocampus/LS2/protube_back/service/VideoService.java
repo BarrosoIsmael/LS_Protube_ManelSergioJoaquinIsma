@@ -73,6 +73,7 @@ public class VideoService {
         Optional<Video> videoOpt = videoRepository.findById(id);
         return videoOpt.map(video -> video.getComments().stream().map(comment -> {
             Map<String, Object> commentInfo = new HashMap<>();
+            commentInfo.put("id", comment.getId());
             commentInfo.put("text", comment.getText());
             commentInfo.put("author", comment.getUser().getUsername());
             commentInfo.put("likes", comment.getLikes());

@@ -37,4 +37,10 @@ public class CommentService {
         }
         return false;
     }
+
+    @Transactional
+    public Optional<String> getCommentTextById(Long commentId) {
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+        return commentOpt.map(Comment::getText);
+    }
 }

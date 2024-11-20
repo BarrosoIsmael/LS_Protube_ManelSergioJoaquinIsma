@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
@@ -27,5 +29,13 @@ public class CommentController {
         } else {
             return new ResponseEntity<>("Failed to edit comment.", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/{id}/text")
+    public ResponseEntity<String> getCommentTextById(@PathVariable Long id) {
+        Optional<String> commentText = commentService.getCommentTextById(id);
+        return commentText.map(s ->
+                new ResponseEntity<>(s, HttpStatus.OK)).orElseGet(() ->
+                new ResponseEntity<>("Comment not found.", HttpStatus.NOT_FOUND));
     }
 }

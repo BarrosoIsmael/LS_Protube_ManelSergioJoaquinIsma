@@ -76,8 +76,6 @@ public class VideoService {
             commentInfo.put("id", comment.getId());
             commentInfo.put("text", comment.getText());
             commentInfo.put("author", comment.getUser().getUsername());
-            commentInfo.put("likes", comment.getLikes());
-            commentInfo.put("dislikes", comment.getDislikes());
             return commentInfo;
         }).collect(Collectors.toList())).orElse(Collections.emptyList());
     }

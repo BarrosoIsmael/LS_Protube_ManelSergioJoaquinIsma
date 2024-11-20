@@ -15,12 +15,6 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @PostMapping("/{id}/like")
-    public ResponseEntity<Void> updateLikeStatus(@PathVariable Long id, @RequestParam boolean isLike) {
-        commentService.updateLikeStatus(id, isLike);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @PostMapping("/{id}/edit")
     public ResponseEntity<String> editCommentById(@PathVariable Long id, @RequestParam String text) {
         boolean success = commentService.editCommentById(id, text);

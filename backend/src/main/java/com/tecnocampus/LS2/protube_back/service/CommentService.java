@@ -15,19 +15,6 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     @Transactional
-    public void updateLikeStatus(Long commentId, boolean isLike) {
-        Optional<Comment> commentOpt = commentRepository.findById(commentId);
-        if (commentOpt.isPresent()) {
-            Comment comment = commentOpt.get();
-            if (isLike) {
-                comment.addLike();
-            } else {
-                comment.addDislike();
-            }
-        }
-    }
-
-    @Transactional
     public boolean editCommentById(Long commentId, String text) {
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
         if (commentOpt.isPresent()) {

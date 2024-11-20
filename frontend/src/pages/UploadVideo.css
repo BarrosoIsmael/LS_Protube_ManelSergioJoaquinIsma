@@ -1,0 +1,82 @@
+.upload-video-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #555;
+    border-radius: 8px;
+    background-color: #2c2c2c;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    font-family: Arial, sans-serif;
+    color: #f1f1f1;
+  }
+  
+  .upload-video-container h2 {
+    text-align: center;
+    font-size: 1.5em;
+    color: #f9f9f9;
+  }
+  
+  .upload-video-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .upload-video-container label {
+    font-size: 1rem;
+    color: #ccc;
+  }
+  
+  .upload-video-container input[type="text"],
+  .upload-video-container textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #f9f9f9;
+    background-color: #1c1c1c;
+  }
+  
+  .upload-video-container textarea {
+    height: 80px;
+    resize: none;
+  }
+  
+  .upload-video-container input[type="file"] {
+    padding: 5px;
+    font-size: 1rem;
+    color: #ccc;
+  }
+  
+  .upload-video-container button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .upload-video-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .upload-video-container p {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #ccc;
+  }
+  
+  .upload-video-container p.upload-status {
+    font-weight: bold;
+    color: #28a745;
+  }
+  
+  .upload-video-container p.upload-error {
+    font-weight: bold;
+    color: #dc3545;
+  }
+  

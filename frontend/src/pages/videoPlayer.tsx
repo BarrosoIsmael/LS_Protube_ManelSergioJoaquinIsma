@@ -13,8 +13,6 @@ interface Comment {
   author: string;
   text: string;
   avatarColor?: string;
-  likes: number;
-  dislikes: number;
 }
 
 const VideoPlayer: React.FC = () => {
@@ -156,8 +154,6 @@ const VideoPlayer: React.FC = () => {
             author: user, 
             text: newComment,
             avatarColor: avatarColorRef.current,
-            likes: 0,
-            dislikes: 0,
           };
           setComments([newCommentData, ...comments]);
           setNewComment("");

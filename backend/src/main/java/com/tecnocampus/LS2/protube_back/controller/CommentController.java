@@ -38,4 +38,14 @@ public class CommentController {
                 new ResponseEntity<>(s, HttpStatus.OK)).orElseGet(() ->
                 new ResponseEntity<>("Comment not found.", HttpStatus.NOT_FOUND));
     }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> deleteCommentById(@PathVariable Long id) {
+        boolean success = commentService.deleteCommentById(id);
+        if (success) {
+            return new ResponseEntity<>("Comment deleted successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to delete comment.", HttpStatus.NOT_FOUND);
+        }
+    }
 }

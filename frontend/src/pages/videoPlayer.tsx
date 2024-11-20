@@ -50,7 +50,7 @@ const VideoPlayer: React.FC = () => {
             setComments(commentsJson.map((comment: any) => ({
               author: comment.author,
               text: comment.text,
-              avatarColor: comment.avatarColor,
+              avatarColor: comment.avatarColor || getRandomColor(),
               likes: comment.likes,
               dislikes: comment.dislikes,
             })));

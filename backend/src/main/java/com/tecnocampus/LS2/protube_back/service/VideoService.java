@@ -224,4 +224,20 @@ public class VideoService {
         }
         return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
     }
+
+    @Transactional
+    public boolean deleteVideoById(Long videoId) {
+        if (videoRepository.existsById(videoId)) {
+            videoRepository.deleteById(videoId);
+            try {
+                Files.deleteIfExists(Paths.get(videoDirectory, (videoId-1) + ".webp"));
+                Files.deleteIfExists(Paths.get(videoDirectory, (videoId-1) + ".mp4"));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
 }

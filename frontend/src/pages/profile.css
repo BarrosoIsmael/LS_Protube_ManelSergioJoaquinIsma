@@ -40,3 +40,18 @@
   margin-left: 10px;
   color: #ffffff;
 }
+
+.video-icon-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.video-icon-buttons .MuiIconButton-root {
+  color: white;
+  margin-right: 8px;
+}
+
+.video-icon-buttons .MuiIconButton-root:last-child {
+  margin-right: 0;
+}

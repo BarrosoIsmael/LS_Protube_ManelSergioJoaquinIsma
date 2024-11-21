@@ -240,4 +240,18 @@ public class VideoService {
         }
         return false;
     }
+
+    public Map<String, Object> getVideoDetailsById(Long id) {
+        Optional<Video> videoOpt = videoRepository.findById(id);
+        if (videoOpt.isPresent()) {
+            Video video = videoOpt.get();
+            Map<String, Object> response = new HashMap<>();
+            response.put("title", video.getTitle());
+            response.put("description", video.getDescription() != null ? video.getDescription() : "");
+            response.put("category", video.getCategory() != null ? video.getCategory().getName() : "");
+            return response;
+        } else {
+            return null;
+        }
+    }
 }

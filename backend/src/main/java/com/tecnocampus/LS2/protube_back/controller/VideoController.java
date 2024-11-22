@@ -156,4 +156,14 @@ public class VideoController {
             return new ResponseEntity<>("Failed to delete video.", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/{id}/details")
+    public ResponseEntity<Map<String, Object>> getVideoDetailsById(@PathVariable Long id) {
+        Map<String, Object> videoDetails = videoService.getVideoDetailsById(id);
+        if (videoDetails != null) {
+            return new ResponseEntity<>(videoDetails, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

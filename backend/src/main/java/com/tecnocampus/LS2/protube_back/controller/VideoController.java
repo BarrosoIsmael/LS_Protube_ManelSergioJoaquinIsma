@@ -146,4 +146,14 @@ public class VideoController {
             return new ResponseEntity<>("Failed to edit video.", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> deleteVideoById(@PathVariable Long id) {
+        boolean success = videoService.deleteVideoById(id);
+        if (success) {
+            return new ResponseEntity<>("Video deleted successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to delete video.", HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -1,9 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { Card, CardContent } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { Card, CardContent, Avatar, Typography } from '@mui/material';
+import { ThumbUp as ThumbUpIcon, ThumbDown as ThumbDownIcon } from '@mui/icons-material';
 import { useAuth } from "../context/AuthContext";
 import { getEnv } from "../utils/Env";
 import { getRandomColor, isColorDark } from '../utils/commentUtils';
@@ -48,10 +46,10 @@ const VideoPlayer: React.FC = () => {
             setComments(commentsJson.map((comment: any) => ({
               author: comment.author,
               text: comment.text,
-              avatarColor: comment.avatarColor || getRandomColor(),
-              likes: comment.likes,
-              dislikes: comment.dislikes,
+              avatarColor: comment.avatarColor || getRandomColor()
             })));
+          } else {
+            setComments([]);
           }
 
           if (videoMP4Response.ok) {
@@ -251,30 +249,43 @@ const VideoPlayer: React.FC = () => {
               </div>
             </div>
             <br />
-            {comments.map((comment, index) => (
-              <div key={index} className="comment-container">
+            {comments.length === 0 ? (
+                <Typography 
+                align="center" 
+                variant="h6" 
+                sx={{ paddingTop: "30px", fontSize: "2rem" }}
+                >
+                No comments yet
+                </Typography>
+            ) : (
+              <>
+              {comments.map((comment, index) => (
+                <div key={index} className="comment-container">
                 <div className="flex items-start space-x-4">
                   <Avatar
-                    sx={{
-                      bgcolor: comment.avatarColor,
-                      color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black',
-                      marginBottom: "5px"
-                    }}
+                  sx={{
+                    bgcolor: comment.avatarColor,
+                    color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black',
+                    marginBottom: "5px"
+                  }}
                   >
-                    {comment.author.charAt(0)}
+                  {comment.author.charAt(0)}
                   </Avatar>
                   <p className="italic">@{comment.author}</p>
                   <Comment
-                    key={index}
-                    comment={comment}
-                    index={index}
-                    comments={comments}
-                    setComments={setComments}
+                  key={index}
+                  comment={comment}
+                  index={index}
+                  comments={comments}
+                  setComments={setComments}
                   />
                 </div>
                 <hr/>
-              </div>
-            ))}
+                </div>
+              ))}
+              </>
+            )}
+            
           </div>
         </div>
       </main>

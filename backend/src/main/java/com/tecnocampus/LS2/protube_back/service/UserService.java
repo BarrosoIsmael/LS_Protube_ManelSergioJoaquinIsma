@@ -74,4 +74,9 @@ public class UserService {
         }
         return List.of();
     }
+
+    public void deleteUserByUsername(String username) {
+        Optional<User> userOpt = userRepository.findByUsername(username);
+        userOpt.ifPresent(userRepository::delete);
+    }
 }

@@ -4,10 +4,10 @@ import AuthForm from "../AuthForm";
 test("renders AuthForm correctly", () => {
   render(<AuthForm title="Login" buttonText="Login" onSubmit={() => {}} />);
 
-  expect(screen.getByText(/login/i)).toBeInTheDocument(); // Verifica el título
-  expect(screen.getByLabelText(/username/i)).toBeInTheDocument(); // Verifica el campo de usuario
-  expect(screen.getByLabelText(/password/i)).toBeInTheDocument(); // Verifica el campo de contraseña
-  expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument(); // Verifica el botón de envío
+  expect(screen.getByText(/login/i)).toBeInTheDocument(); 
+  expect(screen.getByLabelText(/username/i)).toBeInTheDocument(); 
+  expect(screen.getByLabelText(/password/i)).toBeInTheDocument(); 
+  expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument(); 
 });
 
 test("calls onSubmit with username and password", () => {

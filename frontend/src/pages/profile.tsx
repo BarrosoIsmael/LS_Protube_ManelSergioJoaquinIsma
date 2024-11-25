@@ -124,22 +124,22 @@ const Profile: React.FC = () => {
     <Container maxWidth="lg" className="profile-container">
       <Box className="profile-box">
         <Typography variant="h4" component="h1" className="profile-title">
-          Mi Perfil
+          My Profile
         </Typography>
 
         <Paper className="user-info-paper">
           <Typography variant="h6" gutterBottom>
-            Información del usuario
+            User information
           </Typography>
-          <Typography variant="body1">Nombre de usuario: {user}</Typography>
+          <Typography variant="body1">Username: {user}</Typography>
         </Paper>
 
         <Box className="section">
           <Typography variant="h5" gutterBottom>
-            Videos Subidos
+            Uploaded Videos
           </Typography>
           {videos.length === 0 ? (
-            <Typography>No hay videos</Typography>
+            <Typography>There are no videos</Typography>
           ) : (
             <Grid container spacing={4}>
               {videos.map((video, index) => (
@@ -161,10 +161,10 @@ const Profile: React.FC = () => {
 
         <Box className="section">
           <Typography variant="h5" gutterBottom>
-            Mis Comentarios
+            My Comments
           </Typography>
           {comments.length === 0 ? (
-            <Typography>No hay comentarios</Typography>
+            <Typography>No comments</Typography>
           ) : (
             <Grid container spacing={2} direction="column">
               {comments.map((comment, index) => (
@@ -227,25 +227,25 @@ const Profile: React.FC = () => {
         open={editSnackbarOpen}
         autoHideDuration={6000}
         onClose={() => setEditSnackbarOpen(false)}
-        message="Comentario editado con éxito"
+        message="Comment edited successfully"
       />
       <Snackbar
         open={deleteSnackbarOpen}
         autoHideDuration={6000}
         onClose={() => setDeleteSnackbarOpen(false)}
-        message="Comentario eliminado con éxito"
+        message="Comment successfully deleted"
       />
       <Snackbar
         open={editVideoSnackbarOpen}
         autoHideDuration={6000}
         onClose={() => setEditVideoSnackbarOpen(false)}
-        message="Video editado con éxito"
+        message="Successfully edited video"
       />
       <Snackbar
         open={deleteVideoSnackbarOpen}
         autoHideDuration={6000}
         onClose={() => setDeleteVideoSnackbarOpen(false)}
-        message="Video eliminado con éxito"
+        message="Video successfully deleted"
       />
     </Container>
   );

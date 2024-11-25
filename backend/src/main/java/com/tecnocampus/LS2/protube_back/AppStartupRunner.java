@@ -80,7 +80,7 @@ public class AppStartupRunner implements ApplicationRunner {
 
         try (Stream<Path> paths = Files.walk(videoDirPath)) {
             List<Path> sortedPaths = paths.filter(Files::isRegularFile)
-                    .filter(path -> path.toString().endsWith(".json")) // Asegúrate de que sea un archivo JSON
+                    .filter(path -> path.toString().endsWith(".json"))
                     .sorted(Comparator.comparingInt(this::extractNumberFromFileName))
                     .toList();
             for (Path path : sortedPaths) {
@@ -92,7 +92,7 @@ public class AppStartupRunner implements ApplicationRunner {
 
     private int extractNumberFromFileName(Path path) {
         String fileName = path.getFileName().toString();
-        String numberPart = fileName.replaceAll("\\D", ""); // Remove non-numeric characters
+        String numberPart = fileName.replaceAll("\\D", "");
         return numberPart.isEmpty() ? 0 : Integer.parseInt(numberPart);
     }
 

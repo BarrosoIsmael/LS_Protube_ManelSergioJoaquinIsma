@@ -33,11 +33,11 @@ const ScrollToTopButton: React.FC = () => {
   );
 };
 
-// Cambia la posición a la esquina inferior derecha
+
 const fabStyle = {
   position: "fixed",
   bottom: 16,
-  right: 16, // Cambiado a 'right' para posicionar a la derecha
+  right: 16, 
 };
 
 export default ScrollToTopButton;

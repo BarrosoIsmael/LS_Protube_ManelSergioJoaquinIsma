@@ -61,7 +61,7 @@ const EditVideoDialog: React.FC<EditVideoDialogProps> = ({ open, videoId, onClos
         <TextField
           autoFocus
           margin="dense"
-          label="Título"
+          label="Title"
           type="text"
           fullWidth
           value={title}
@@ -69,7 +69,7 @@ const EditVideoDialog: React.FC<EditVideoDialogProps> = ({ open, videoId, onClos
         />
         <TextField
           margin="dense"
-          label="Descripción"
+          label="Description"
           type="text"
           fullWidth
           value={description}
@@ -77,7 +77,7 @@ const EditVideoDialog: React.FC<EditVideoDialogProps> = ({ open, videoId, onClos
         />
         <TextField
           margin="dense"
-          label="Categoría"
+          label="Category"
           type="text"
           fullWidth
           value={category}
@@ -85,8 +85,8 @@ const EditVideoDialog: React.FC<EditVideoDialogProps> = ({ open, videoId, onClos
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancelar</Button>
-        <Button onClick={handleUpdateVideo}>Actualizar video</Button>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleUpdateVideo}>Update video</Button>
       </DialogActions>
     </Dialog>
   );

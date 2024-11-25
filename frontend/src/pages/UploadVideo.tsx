@@ -79,6 +79,8 @@ const UploadVideo: React.FC = () => {
         </label>
         <label>
           Video File:
+          <label>
+          
           <div className="custom-file-upload">
             <button
               type="button"
@@ -95,6 +97,8 @@ const UploadVideo: React.FC = () => {
             onChange={handleFileChange}
             style={{ display: "none" }}
           />
+        </label>
+
         </label>
         <button type="button" onClick={handleUpload}>
           Upload

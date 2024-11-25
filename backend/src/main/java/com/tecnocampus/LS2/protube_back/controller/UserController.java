@@ -53,4 +53,14 @@ public class UserController {
         List<Map<String, Object>> comments = userService.getAllVideosByUsername(username);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{username}/delete")
+    public ResponseEntity<String> deleteUser(@PathVariable String username) {
+        Optional<User> user = userService.verifyNewUser(username);
+        if (user.isPresent()) {
+            userService.deleteUserByUsername(username);
+            return new ResponseEntity<>("User deleted successfully!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User not found.", HttpStatus.NOT_FOUND);
+    }
 }

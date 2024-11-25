@@ -7,7 +7,6 @@ import com.tecnocampus.LS2.protube_back.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +55,6 @@ public class UserService {
                 commentInfo.put("id", comment.getId());
                 commentInfo.put("text", comment.getText());
                 commentInfo.put("user", comment.getUser().getUsername());
-                commentInfo.put("likes", comment.getLikes());
-                commentInfo.put("dislikes", comment.getDislikes());
                 return commentInfo;
             }).collect(Collectors.toList());
         }
@@ -76,5 +73,10 @@ public class UserService {
             }).collect(Collectors.toList());
         }
         return List.of();
+    }
+
+    public void deleteUserByUsername(String username) {
+        Optional<User> userOpt = userRepository.findByUsername(username);
+        userOpt.ifPresent(userRepository::delete);
     }
 }

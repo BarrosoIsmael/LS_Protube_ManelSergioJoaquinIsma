@@ -1,20 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { Card, CardContent } from '@mui/material';
-import { getEnv } from "../utils/Env";
-import Avatar from '@mui/material/Avatar';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { Card, CardContent, Avatar, Typography } from '@mui/material';
+import { ThumbUp as ThumbUpIcon, ThumbDown as ThumbDownIcon } from '@mui/icons-material';
 import { useAuth } from "../context/AuthContext";
-import {getRandomColor, isColorDark } from '../utils/commentUtils';
+import { getEnv } from "../utils/Env";
+import { getRandomColor, isColorDark } from '../utils/commentUtils';
 import Comment from "../components/Comment";
 
 interface Comment {
   author: string;
   text: string;
   avatarColor?: string;
-  likes: number;
-  dislikes: number;
 }
 
 const VideoPlayer: React.FC = () => {
@@ -26,6 +22,7 @@ const VideoPlayer: React.FC = () => {
   const [newComment, setNewComment] = useState<string>("");
   const [videoLikes, setVideoLikes] = useState<number>(0);
   const [videoDislikes, setVideoDislikes] = useState<number>(0);
+  const [userLikeStatus, setUserLikeStatus] = useState<'like' | 'dislike' | null>(null);
   const { user } = useAuth();
   const avatarColorRef = useRef<string>(getRandomColor());
 
@@ -40,31 +37,100 @@ const VideoPlayer: React.FC = () => {
           if (videoResponse.ok) {
             const videoJson = await videoResponse.json();
             setVideoData(videoJson);
+            setVideoLikes(videoJson.likes);
+            setVideoDislikes(videoJson.dislikes);
           }
 
           if (commentsResponse.ok) {
             const commentsJson = await commentsResponse.json();
             setComments(commentsJson.map((comment: any) => ({
-              ...comment,
-              avatarColor: getRandomColor(),
-              likes: 0,
-              dislikes: 0,
+              author: comment.author,
+              text: comment.text,
+              avatarColor: comment.avatarColor || getRandomColor()
             })));
+          } else {
+            setComments([]);
           }
 
           if (videoMP4Response.ok) {
             const videoBlob = await videoMP4Response.blob();
-            const videoUrl = URL.createObjectURL(videoBlob);
-            setVideoMP4(videoUrl);
+            setVideoMP4(URL.createObjectURL(videoBlob));
           }
         } catch (error) {
-          console.error("Error fetching data:", error);
+          console.error('Error fetching video data:', error);
         }
       }
     };
 
     fetchData();
   }, [videoId]);
+
+  const handleLike = async () => {
+    if (!user) {
+      console.error('User must be logged in to like the video');
+      return;
+    }
+
+    try {
+      let newLikes = videoLikes;
+      let newDislikes = videoDislikes;
+
+      if (userLikeStatus === 'like') {
+        newLikes -= 1;
+        setUserLikeStatus(null);
+      } else {
+        if (userLikeStatus === 'dislike') {
+          newDislikes -= 1;
+        }
+        newLikes += 1;
+        setUserLikeStatus('like');
+      }
+
+      const response = await fetch(getEnv().API_BASE_URL + `/videos/${videoId}/like?isLike=true`, {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        setVideoLikes(newLikes);
+        setVideoDislikes(newDislikes);
+      }
+    } catch (error) {
+      console.error('Error liking the video:', error);
+    }
+  };
+
+  const handleDislike = async () => {
+    if (!user) {
+      return;
+    }
+
+    try {
+      let newLikes = videoLikes;
+      let newDislikes = videoDislikes;
+
+      if (userLikeStatus === 'dislike') {
+        newDislikes -= 1;
+        setUserLikeStatus(null);
+      } else {
+        if (userLikeStatus === 'like') {
+          newLikes -= 1;
+        }
+        newDislikes += 1;
+        setUserLikeStatus('dislike');
+      }
+
+      const response = await fetch(getEnv().API_BASE_URL + `/videos/${videoId}/like?isLike=false`, {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        setVideoLikes(newLikes);
+        setVideoDislikes(newDislikes);
+      }
+    } catch (error) {
+      console.error('Error disliking the video:', error);
+    }
+  };
 
   const handleAddComment = async () => {
     if (!user) {
@@ -83,11 +149,9 @@ const VideoPlayer: React.FC = () => {
 
         if (response.ok) {
           const newCommentData: Comment = {
-            author: user, // Usa el nombre de usuario del contexto de autenticación
+            author: user, 
             text: newComment,
             avatarColor: avatarColorRef.current,
-            likes: 0,
-            dislikes: 0,
           };
           setComments([newCommentData, ...comments]);
           setNewComment("");
@@ -99,9 +163,6 @@ const VideoPlayer: React.FC = () => {
       }
     }
   };
-
-  const handleVideoLike = () => setVideoLikes(videoLikes + 1);
-  const handleVideoDislike = () => setVideoDislikes(videoDislikes + 1);
 
   const truncateDescription = (text: string) => {
     return text.length > 300 ? text.slice(0, 300) + '...' : text;
@@ -122,11 +183,11 @@ const VideoPlayer: React.FC = () => {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">{videoData.title}</h2>
             <div className="flex items-center space-x-4">
-              <div onClick={handleVideoLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "16px"}}>
+              <div onClick={handleLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "16px", backgroundColor: userLikeStatus === 'like' ? 'green' : 'initial' }}>
                 <ThumbUpIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoLikes}</span>
               </div>
-              <div onClick={handleVideoDislike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
+              <div onClick={handleDislike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", backgroundColor: userLikeStatus === 'dislike' ? 'red' : 'initial' }}>
                 <ThumbDownIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoDislikes}</span>
               </div>
@@ -157,9 +218,11 @@ const VideoPlayer: React.FC = () => {
             <h3 className="text-lg font-bold">Comments</h3>
             <br />
             <div className="add-comment flex items-start space-x-4">
-              <Avatar sx={{ bgcolor: user ? avatarColorRef.current : 'grey.700', color: user ? (isColorDark(avatarColorRef.current) ? 'white' : 'black') : 'white' }}>
-                {user ? user.charAt(0) : null}
-              </Avatar>
+              {user && (
+                <Avatar sx={{ bgcolor: avatarColorRef.current, color: isColorDark(avatarColorRef.current) ? 'white' : 'black' }}>
+                  {user.charAt(0)}
+                </Avatar>
+              )}
               <div className="flex-1">
                 <input
                   type="text"
@@ -170,6 +233,11 @@ const VideoPlayer: React.FC = () => {
                   style={{ backgroundColor: "#424242", color: "white", minWidth: "350px" }}
                   disabled={!user}
                 />
+                <style>{`
+                  input::placeholder {
+                    color: white;
+                  }
+                `}</style>
                 {user && (
                   <button
                     onClick={handleAddComment}
@@ -181,30 +249,43 @@ const VideoPlayer: React.FC = () => {
               </div>
             </div>
             <br />
-            {comments.map((comment, index) => (
-              <div key={index} className="comment-container">
+            {comments.length === 0 ? (
+                <Typography 
+                align="center" 
+                variant="h6" 
+                sx={{ paddingTop: "30px", fontSize: "2rem" }}
+                >
+                No comments yet
+                </Typography>
+            ) : (
+              <>
+              {comments.map((comment, index) => (
+                <div key={index} className="comment-container">
                 <div className="flex items-start space-x-4">
                   <Avatar
-                    sx={{
-                      bgcolor: comment.avatarColor,
-                      color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black',
-                      marginBottom: "5px"
-                    }}
+                  sx={{
+                    bgcolor: comment.avatarColor,
+                    color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black',
+                    marginBottom: "5px"
+                  }}
                   >
-                    {comment.author.charAt(0)}
+                  {comment.author.charAt(0)}
                   </Avatar>
                   <p className="italic">@{comment.author}</p>
                   <Comment
-                    key={index}
-                    comment={comment}
-                    index={index}
-                    comments={comments}
-                    setComments={setComments}
+                  key={index}
+                  comment={comment}
+                  index={index}
+                  comments={comments}
+                  setComments={setComments}
                   />
                 </div>
                 <hr/>
-              </div>
-            ))}
+                </div>
+              ))}
+              </>
+            )}
+            
           </div>
         </div>
       </main>

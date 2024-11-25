@@ -68,9 +68,6 @@ public class VideoController {
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<Map<String, Object>>> getCommentsByVideoId(@PathVariable Long id) {
         List<Map<String, Object>> comments = videoService.getCommentsByVideoId(id);
-        if (comments.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);//asi petara, poner como el get de perfil
-        }
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
@@ -132,9 +129,38 @@ public class VideoController {
             videoService.uploadNewVideo(title, description, category, username);
             return new ResponseEntity<>("Video uploaded successfully!", HttpStatus.CREATED);
         } catch (Exception e) {
-            // Registrar el error para obtener más detalles
             e.printStackTrace();
             return new ResponseEntity<>("Failed to upload video.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/{id}/edit")
+    public ResponseEntity<String> editVideoById(@PathVariable Long id, @RequestParam String title, @RequestParam String description, @RequestParam String category) {
+        boolean success = videoService.editVideoById(id, title, description, category);
+        if (success) {
+            return new ResponseEntity<>("Video edited successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to edit video.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> deleteVideoById(@PathVariable Long id) {
+        boolean success = videoService.deleteVideoById(id);
+        if (success) {
+            return new ResponseEntity<>("Video deleted successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to delete video.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{id}/details")
+    public ResponseEntity<Map<String, Object>> getVideoDetailsById(@PathVariable Long id) {
+        Map<String, Object> videoDetails = videoService.getVideoDetailsById(id);
+        if (videoDetails != null) {
+            return new ResponseEntity<>(videoDetails, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

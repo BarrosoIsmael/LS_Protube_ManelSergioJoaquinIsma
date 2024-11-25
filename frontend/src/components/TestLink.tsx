@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 
-// Sample component, just to showcase a bit of 
-// react and typescript
+ 
+
 
 const STATUS = {
   HOVERED: "hovered",

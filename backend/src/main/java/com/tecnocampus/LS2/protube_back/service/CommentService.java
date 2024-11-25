@@ -15,24 +15,26 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     @Transactional
-    public void updateLikeStatus(Long commentId, boolean isLike) {
+    public boolean editCommentById(Long commentId, String text) {
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
         if (commentOpt.isPresent()) {
             Comment comment = commentOpt.get();
-            if (isLike) {
-                comment.addLike();
-            } else {
-                comment.addDislike();
-            }
+            comment.setText(text);
+            return true;
         }
+        return false;
     }
 
     @Transactional
-    public boolean editCommentById(Long commentId, String newText) {
+    public Optional<String> getCommentTextById(Long commentId) {
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
-        if (commentOpt.isPresent()) {
-            Comment comment = commentOpt.get();
-            comment.setText(newText);
+        return commentOpt.map(Comment::getText);
+    }
+
+    @Transactional
+    public boolean deleteCommentById(Long commentId) {
+        if (commentRepository.existsById(commentId)) {
+            commentRepository.deleteById(commentId);
             return true;
         }
         return false;

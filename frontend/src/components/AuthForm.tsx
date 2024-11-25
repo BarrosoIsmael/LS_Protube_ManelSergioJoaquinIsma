@@ -72,7 +72,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, buttonText, onSubmit, error 
   );
 };
 
-// Estilos extraídos en variables
+
 const containerStyles = {
   backgroundColor: "#2e2e2e",
   padding: 4,

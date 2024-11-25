@@ -1,26 +1,7 @@
-export const handleCommentLike = (comments: any[], index: number, setComments: (comments: any[]) => void) => {
-    const updatedComments = [...comments];
-    updatedComments[index].likes += 1;
-    setComments(updatedComments);
-};
-
-export const handleCommentDislike = (comments: any[], index: number, setComments: (comments: any[]) => void) => {
-    const updatedComments = [...comments];
-    updatedComments[index].dislikes += 1;
-    setComments(updatedComments);
-};
-
 export const formatComment = (comment: string) => {
     return comment.replace(/\n/g, '<br />').replace(/\u00a0/g, '&nbsp;');
 };
 
-export const handleCommentLikeWrapper = (comments: any[], index: number, setComments: (comments: any[]) => void) => {
-    handleCommentLike(comments, index, setComments);
-};
-
-export const handleCommentDislikeWrapper = (comments: any[], index: number, setComments: (comments: any[]) => void) => {
-    handleCommentDislike(comments, index, setComments);
-};
 
 export const getRandomColor = () => {
     const letters = '0123456789ABCDEF';

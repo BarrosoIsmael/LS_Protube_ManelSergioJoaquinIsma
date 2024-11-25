@@ -73,10 +73,9 @@ public class VideoService {
         Optional<Video> videoOpt = videoRepository.findById(id);
         return videoOpt.map(video -> video.getComments().stream().map(comment -> {
             Map<String, Object> commentInfo = new HashMap<>();
+            commentInfo.put("id", comment.getId());
             commentInfo.put("text", comment.getText());
             commentInfo.put("author", comment.getUser().getUsername());
-            commentInfo.put("likes", comment.getLikes());
-            commentInfo.put("dislikes", comment.getDislikes());
             return commentInfo;
         }).collect(Collectors.toList())).orElse(Collections.emptyList());
     }
@@ -169,7 +168,6 @@ public class VideoService {
 
     public void uploadNewVideo(String title, String description, String category, String username) throws Exception {
         try {
-            // Buscar o crear la categoría
             Category videoCategory = categoryRepository.findByName(category)
                     .orElseGet(() -> {
                         Category newCategory = new Category();
@@ -178,11 +176,9 @@ public class VideoService {
                         return newCategory;
                     });
 
-            // Buscar el usuario por username
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Crear el nuevo video
             Video newVideo = new Video();
             newVideo.setTitle(title);
             newVideo.setDescription(description);
@@ -192,10 +188,70 @@ public class VideoService {
             newVideo.setWidth(null);
             newVideo.setHeight(null);
 
-            // Guardar el video en la base de datos
             videoRepository.save(newVideo);
         } catch (Exception e) {
             throw new Exception("Error uploading new video: " + e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    public boolean editVideoById(Long videoId, String title, String description, String category) {
+        Optional<Video> videoOpt = videoRepository.findById(videoId);
+        if (videoOpt.isPresent()) {
+            Video video = videoOpt.get();
+            video.setTitle(title);
+            video.setDescription(description);
+
+            String formattedCategory = formatFirstUpper(category);
+
+            Category videoCategory = categoryRepository.findByName(formattedCategory)
+                    .orElseGet(() -> {
+                        Category newCategory = new Category();
+                        newCategory.setName(formattedCategory);
+                        categoryRepository.save(newCategory);
+                        return newCategory;
+                    });
+
+            video.setCategory(videoCategory);
+            return true;
+        }
+        return false;
+    }
+
+    private String formatFirstUpper(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+        return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
+    }
+
+    @Transactional
+    public boolean deleteVideoById(Long videoId) {
+        if (videoRepository.existsById(videoId)) {
+            videoRepository.deleteById(videoId);
+            try {
+                Files.deleteIfExists(Paths.get(videoDirectory, (videoId-1) + ".webp"));
+                Files.deleteIfExists(Paths.get(videoDirectory, (videoId-1) + ".mp4"));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public Map<String, Object> getVideoDetailsById(Long id) {
+        Optional<Video> videoOpt = videoRepository.findById(id);
+        if (videoOpt.isPresent()) {
+            Video video = videoOpt.get();
+            Map<String, Object> response = new HashMap<>();
+            response.put("title", video.getTitle());
+            response.put("description", video.getDescription() != null ? video.getDescription() : "");
+            response.put("category", video.getCategory() != null ? video.getCategory().getName() : "");
+            return response;
+        } else {
+            return null;
         }
     }
 }

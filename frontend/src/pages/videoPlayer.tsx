@@ -251,36 +251,36 @@ const VideoPlayer: React.FC = () => {
             <br />
             {comments.length === 0 ? (
                 <Typography 
-                align="center" 
-                variant="h6" 
-                sx={{ paddingTop: "30px", fontSize: "2rem" }}
+                  align="center" 
+                  variant="h6" 
+                  sx={{ paddingTop: "30px", fontSize: "2rem" }}
                 >
-                No comments yet
+                  No comments yet
                 </Typography>
             ) : (
               <>
               {comments.map((comment, index) => (
                 <div key={index} className="comment-container">
-                <div className="flex items-start space-x-4">
-                  <Avatar
-                  sx={{
-                    bgcolor: comment.avatarColor,
-                    color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black',
-                    marginBottom: "5px"
-                  }}
-                  >
-                  {comment.author.charAt(0)}
-                  </Avatar>
-                  <p className="italic">@{comment.author}</p>
-                  <Comment
-                  key={index}
-                  comment={comment}
-                  index={index}
-                  comments={comments}
-                  setComments={setComments}
-                  />
-                </div>
-                <hr/>
+                  <div className="flex items-start space-x-4">
+                    <Avatar
+                      sx={{
+                        bgcolor: comment.avatarColor,
+                        color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black',
+                        marginBottom: "5px"
+                      }}
+                    >
+                      {comment.author.charAt(0)}
+                    </Avatar>
+                    <p className="italic">@{comment.author}</p>
+                    <Comment
+                      key={index}
+                      comment={comment}
+                      index={index}
+                      comments={comments}
+                      setComments={setComments}
+                    />
+                  </div>
+                  <hr/>
                 </div>
               ))}
               </>

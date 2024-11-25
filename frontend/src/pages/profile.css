@@ -55,3 +55,9 @@
 .video-icon-buttons .MuiIconButton-root:last-child {
   margin-right: 0;
 }
+
+.no-content-message {
+  padding-top: 30px;
+  font-size: 2rem;
+  text-align: center;
+}

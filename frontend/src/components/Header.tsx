@@ -1,31 +1,23 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Typography, Button, Container, Box, Menu, MenuItem } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; 
 import { useAuth } from "../context/AuthContext";
+import { useHandleLogout } from "../utils/authUtils";
 
 const Header: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const navigate = useNavigate(); 
+  const handleLogout = useHandleLogout();
 
-  
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  
   const handleMenuClose = () => {
     setAnchorEl(null);
-  };
-
-  
-  const handleLogout = () => {
-    logout();
-    handleMenuClose();
-    navigate("/"); 
   };
 
   return (
@@ -49,8 +41,7 @@ const Header: React.FC = () => {
                   onClick={handleMenuOpen}
                   sx={{ textTransform: "none", fontWeight: "bold", display: "flex", alignItems: "center" }}
                 >
-                  <AccountCircleIcon sx={{ mr: 1 }} /> {}
-                  {user}
+                  <AccountCircleIcon sx={{ mr: 1 }} /> {user}
                 </Button>
                 <Menu
                   anchorEl={anchorEl}
@@ -65,7 +56,6 @@ const Header: React.FC = () => {
                     horizontal: "right",
                   }}
                 >
-                  {}
                   <MenuItem
                     component={Link}
                     to="/profile" 
@@ -73,8 +63,6 @@ const Header: React.FC = () => {
                   >
                     Profile
                   </MenuItem>
-
-                  {}
                   <MenuItem
                     component={Link}
                     to="/uploadvideo" 
@@ -82,9 +70,7 @@ const Header: React.FC = () => {
                   >
                     Upload Video
                   </MenuItem>
-
-                  {}
-                  <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
+                  <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                 </Menu>
               </>
             ) : (
@@ -117,7 +103,6 @@ const Header: React.FC = () => {
     </AppBar>
   );
 };
-
 
 const appBarStyles = {
   backgroundColor: "#1c1c1e",

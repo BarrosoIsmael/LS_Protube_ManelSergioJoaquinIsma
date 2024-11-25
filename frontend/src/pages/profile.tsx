@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Box, Typography, Grid, Paper, IconButton, Snackbar } from "@mui/material";
+import { Container, Box, Typography, Grid, Paper, IconButton, Snackbar, Button } from "@mui/material";
 import { getEnv } from "../utils/Env";
 import { useAuth } from "../context/AuthContext";
 import VideoCard from "../components/VideoCard";
@@ -10,6 +10,7 @@ import EditCommentDialog from "../components/EditCommentDialog";
 import DeleteCommentDialog from "../components/DeleteCommentDialog";
 import EditVideoDialog from "../components/EditVideoDialog";
 import DeleteVideoDialog from "../components/DeleteVideoDialog";
+import DeleteUserDialog from "../components/DeleteUserDialog";
 import "./profile.css";
 
 const Profile: React.FC = () => {
@@ -23,6 +24,8 @@ const Profile: React.FC = () => {
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
   const [editVideoSnackbarOpen, setEditVideoSnackbarOpen] = useState(false);
   const [deleteVideoSnackbarOpen, setDeleteVideoSnackbarOpen] = useState(false);
+  const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState(false);
+  const [deleteUserSnackbarOpen, setDeleteUserSnackbarOpen] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -120,6 +123,10 @@ const Profile: React.FC = () => {
     handleUpdateVideos();
   };
 
+  const handleDeleteUserSuccess = () => {
+    setDeleteUserSnackbarOpen(true);
+  };
+
   return (
     <Container maxWidth="lg" className="profile-container">
       <Box className="profile-box">
@@ -132,6 +139,14 @@ const Profile: React.FC = () => {
             User information
           </Typography>
           <Typography variant="body1">Username: {user}</Typography>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setDeleteUserDialogOpen(true)}
+            style={{ marginLeft: 'auto' }}
+          >
+            Delete User
+          </Button>
         </Paper>
 
         <Box className="section">
@@ -139,7 +154,9 @@ const Profile: React.FC = () => {
             Uploaded Videos
           </Typography>
           {videos.length === 0 ? (
-            <Typography>There are no videos</Typography>
+            <Typography className="no-content-message" variant="h6">
+              No videos yet
+            </Typography>
           ) : (
             <Grid container spacing={4}>
               {videos.map((video, index) => (
@@ -164,7 +181,9 @@ const Profile: React.FC = () => {
             My Comments
           </Typography>
           {comments.length === 0 ? (
-            <Typography>No comments</Typography>
+            <Typography className="no-content-message" variant="h6">
+              No comments yet
+            </Typography>
           ) : (
             <Grid container spacing={2} direction="column">
               {comments.map((comment, index) => (
@@ -223,6 +242,13 @@ const Profile: React.FC = () => {
           onDelete={handleDeleteVideoSuccess}
         />
       )}
+      {deleteUserDialogOpen && (
+        <DeleteUserDialog
+          open={deleteUserDialogOpen}
+          onClose={() => setDeleteUserDialogOpen(false)}
+          onDelete={handleDeleteUserSuccess}
+        />
+      )}
       <Snackbar
         open={editSnackbarOpen}
         autoHideDuration={6000}
@@ -246,6 +272,12 @@ const Profile: React.FC = () => {
         autoHideDuration={6000}
         onClose={() => setDeleteVideoSnackbarOpen(false)}
         message="Video successfully deleted"
+      />
+      <Snackbar
+        open={deleteUserSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setDeleteUserSnackbarOpen(false)}
+        message="User successfully deleted"
       />
     </Container>
   );

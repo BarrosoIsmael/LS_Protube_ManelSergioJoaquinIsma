@@ -68,9 +68,6 @@ public class VideoController {
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<Map<String, Object>>> getCommentsByVideoId(@PathVariable Long id) {
         List<Map<String, Object>> comments = videoService.getCommentsByVideoId(id);
-        if (comments.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);//asi petara, poner como el get de perfil
-        }
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 

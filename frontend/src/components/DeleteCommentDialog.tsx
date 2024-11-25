@@ -29,13 +29,13 @@ const DeleteCommentDialog: React.FC<DeleteCommentDialogProps> = ({ open, comment
   return (
     <>
       <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Eliminar Comentario</DialogTitle>
+        <DialogTitle>Delete Comment</DialogTitle>
         <DialogContent>
-          <Typography>¿Estás seguro de que deseas eliminar este comentario?</Typography>
+          <Typography>Are you sure you want to delete this comment?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleDeleteComment}>Eliminar comentario</Button>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={handleDeleteComment}>Delete comment</Button>
         </DialogActions>
       </Dialog>
     </>

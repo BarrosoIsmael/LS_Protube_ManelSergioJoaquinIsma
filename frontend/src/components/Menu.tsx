@@ -1,4 +1,4 @@
-// src/components/Menu.tsx
+
 import { Box, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import AccountCircle from "@mui/icons-material/AccountCircle";

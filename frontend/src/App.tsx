@@ -14,31 +14,31 @@ import "./App.css";
 const App: React.FC = () => {
   const location = useLocation();
 
-  // Determinar si estamos en login o register para ocultar el Header
+  
   const isLoginOrRegister = location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <>
-      {/* Mostrar el Header solo si no estamos en login/register */}
+      {}
       {!isLoginOrRegister && <Header />}
 
-      {/* Definición de rutas */}
+      {}
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/video/:videoId" element={<VideoPlayer />} />
-        <Route path="/uploadvideo" element={<UploadVideo />} /> {/* Ruta para UploadVideo */}
-        <Route path="/profile" element={<Profile />} /> {/* Nueva ruta para Perfil */}
+        <Route path="/uploadvideo" element={<UploadVideo />} /> {}
+        <Route path="/profile" element={<Profile />} /> {}
       </Routes>
 
-      {/* Botón flotante para volver al inicio */}
+      {}
       <ScrollToTopButton />
     </>
   );
 };
 
-// Envuelve `App` con `Router` y `AuthProvider` para el contexto y rutas
+
 const AppWrapper: React.FC = () => (
   <Router>
     <AuthProvider>

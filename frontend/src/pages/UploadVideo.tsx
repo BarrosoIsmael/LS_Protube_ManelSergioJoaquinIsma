@@ -79,7 +79,26 @@ const UploadVideo: React.FC = () => {
         </label>
         <label>
           Video File:
-          <input type="file" accept="video/*" onChange={handleFileChange} required />
+          <label>
+          
+          <div className="custom-file-upload">
+            <button
+              type="button"
+              onClick={() => document.getElementById("fileInput")?.click()}
+            >
+              Select File
+            </button>
+            <span>{selectedFile ? selectedFile.name : "No file selected"}</span>
+          </div>
+          <input
+            id="fileInput"
+            type="file"
+            accept="video/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
+        </label>
+
         </label>
         <button type="button" onClick={handleUpload}>
           Upload

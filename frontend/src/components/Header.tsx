@@ -3,29 +3,29 @@ import { AppBar, Toolbar, Typography, Button, Container, Box, Menu, MenuItem } f
 import { Link, useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Icono de usuario
+import AccountCircleIcon from "@mui/icons-material/AccountCircle"; 
 import { useAuth } from "../context/AuthContext";
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const navigate = useNavigate(); // Hook para redireccionar
+  const navigate = useNavigate(); 
 
-  // Función para abrir el menú
+  
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // Función para cerrar el menú
+  
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
-  // Función para cerrar sesión y redirigir a la homepage
+  
   const handleLogout = () => {
     logout();
     handleMenuClose();
-    navigate("/"); // Redirige a la página inicial
+    navigate("/"); 
   };
 
   return (
@@ -49,7 +49,7 @@ const Header: React.FC = () => {
                   onClick={handleMenuOpen}
                   sx={{ textTransform: "none", fontWeight: "bold", display: "flex", alignItems: "center" }}
                 >
-                  <AccountCircleIcon sx={{ mr: 1 }} /> {/* Icono de usuario al lado del nombre */}
+                  <AccountCircleIcon sx={{ mr: 1 }} /> {}
                   {user}
                 </Button>
                 <Menu
@@ -65,26 +65,26 @@ const Header: React.FC = () => {
                     horizontal: "right",
                   }}
                 >
-                  {/* Opción de Perfil */}
+                  {}
                   <MenuItem
                     component={Link}
-                    to="/profile" // Ruta hacia el perfil
+                    to="/profile" 
                     onClick={handleMenuClose}
                   >
-                    Perfil
+                    Profile
                   </MenuItem>
 
-                  {/* Opción de Subir Video */}
+                  {}
                   <MenuItem
                     component={Link}
-                    to="/uploadvideo" // Ruta hacia la subida de videos
+                    to="/uploadvideo" 
                     onClick={handleMenuClose}
                   >
-                    Subir Video
+                    Upload Video
                   </MenuItem>
 
-                  {/* Opción de Cerrar sesión */}
-                  <MenuItem onClick={handleLogout}>Cerrar Sesión</MenuItem>
+                  {}
+                  <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
                 </Menu>
               </>
             ) : (
@@ -118,7 +118,7 @@ const Header: React.FC = () => {
   );
 };
 
-// Estilos para el AppBar y los botones
+
 const appBarStyles = {
   backgroundColor: "#1c1c1e",
   boxShadow: "none",

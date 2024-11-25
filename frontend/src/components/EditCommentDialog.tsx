@@ -50,12 +50,12 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ open, commentId, 
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Editar Comentario</DialogTitle>
+      <DialogTitle>Edit Comment</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
-          label="Comentario"
+          label="Comment"
           type="text"
           fullWidth
           value={commentText}
@@ -63,8 +63,8 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ open, commentId, 
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancelar</Button>
-        <Button onClick={handleUpdateComment}>Actualizar comentario</Button>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleUpdateComment}>Update comment</Button>
       </DialogActions>
     </Dialog>
   );

@@ -29,13 +29,13 @@ const DeleteVideoDialog: React.FC<DeleteVideoDialogProps> = ({ open, videoId, on
   return (
     <>
       <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Eliminar Video</DialogTitle>
+        <DialogTitle>Delete Video</DialogTitle>
         <DialogContent>
-          <Typography>¿Estás seguro de que deseas eliminar este video?</Typography>
+          <Typography>Are you sure you want to delete this video?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleDeleteVideo}>Eliminar video</Button>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={handleDeleteVideo}>Delete video</Button>
         </DialogActions>
       </Dialog>
     </>

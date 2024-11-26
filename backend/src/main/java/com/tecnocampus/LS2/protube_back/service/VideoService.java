@@ -130,33 +130,11 @@ public class VideoService {
         return false;
     }
 
-    private Long getLastWebpId() throws IOException {
-        try (Stream<Path> paths = Files.list(Paths.get(videoDirectory))) {
-            return paths
-                    .filter(path -> path.toString().endsWith(".webp"))
-                    .map(path -> path.getFileName().toString().replace(".webp", ""))
-                    .mapToLong(Long::parseLong)
-                    .max()
-                    .orElse(0L);
-        }
-    }
-
     public void saveImage(MultipartFile file) throws IOException {
-        Long newId = getLastWebpId() + 1;
+        Long newId = videoRepository.findMaxId() - 1;
         Path newPath = Paths.get(videoDirectory, newId + ".webp");
 
         Files.copy(file.getInputStream(), newPath, StandardCopyOption.REPLACE_EXISTING);
-    }
-
-    private Long getLastMp4Id() throws IOException {
-        try (Stream<Path> paths = Files.list(Paths.get(videoDirectory))) {
-            return paths
-                    .filter(path -> path.toString().endsWith(".mp4"))
-                    .map(path -> path.getFileName().toString().replace(".mp4", ""))
-                    .mapToLong(Long::parseLong)
-                    .max()
-                    .orElse(0L);
-        }
     }
 
     public void saveVideo(MultipartFile file) throws IOException {

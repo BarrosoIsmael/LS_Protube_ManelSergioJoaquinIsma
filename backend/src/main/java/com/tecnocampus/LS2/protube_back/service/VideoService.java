@@ -160,7 +160,7 @@ public class VideoService {
     }
 
     public void saveVideo(MultipartFile file) throws IOException {
-        Long newId = getLastMp4Id() + 1;
+        Long newId = videoRepository.findMaxId() - 1;
         Path newPath = Paths.get(videoDirectory, newId + ".mp4");
 
         Files.copy(file.getInputStream(), newPath, StandardCopyOption.REPLACE_EXISTING);

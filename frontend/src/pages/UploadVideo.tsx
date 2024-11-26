@@ -23,23 +23,40 @@ const UploadVideo: React.FC = () => {
     }
 
     const formData = new FormData();
-    formData.append("file", selectedFile);
     formData.append("title", title);
     formData.append("description", description);
     formData.append("category", category);
     formData.append("username", user);
 
     try {
-      setUploadStatus("Uploading...");
-      const response = await fetch("/api/videos/uploadNewVideo", {
+      setUploadStatus("Uploading video metadata...");
+
+      // Primero, subimos los metadatos del video
+      const metadataResponse = await fetch("/api/videos/uploadNewVideo", {
         method: "POST",
         body: formData,
       });
 
-      if (response.ok) {
+      if (!metadataResponse.ok) {
+        setUploadStatus("Failed to upload video metadata.");
+        return;
+      }
+
+      setUploadStatus("Uploading video file...");
+
+      // Luego, subimos el archivo de video
+      const fileFormData = new FormData();
+      fileFormData.append("file", selectedFile);
+
+      const fileResponse = await fetch("/api/videos/uploadVideo", {
+        method: "POST",
+        body: fileFormData,
+      });
+
+      if (fileResponse.ok) {
         setUploadStatus("Video uploaded successfully!");
       } else {
-        setUploadStatus("Failed to upload the video.");
+        setUploadStatus("Failed to upload video.");
       }
     } catch (error) {
       console.error("Error uploading the video:", error);
@@ -79,8 +96,6 @@ const UploadVideo: React.FC = () => {
         </label>
         <label>
           Video File:
-          <label>
-          
           <div className="custom-file-upload">
             <button
               type="button"
@@ -97,8 +112,6 @@ const UploadVideo: React.FC = () => {
             onChange={handleFileChange}
             style={{ display: "none" }}
           />
-        </label>
-
         </label>
         <button type="button" onClick={handleUpload}>
           Upload

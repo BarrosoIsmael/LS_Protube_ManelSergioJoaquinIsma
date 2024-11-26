@@ -1,8 +1,9 @@
 package com.tecnocampus.LS2.protube_back.domain;
 
+import com.tecnocampus.LS2.protube_back.listener.UserDeletionListener;
 import jakarta.persistence.*;
-import lombok.Getter;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Entity
@@ -18,10 +19,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Video> videos;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
     public User() {
@@ -86,6 +87,11 @@ public class User {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 '}';
+    }
+
+    @PreRemove
+    private void preRemove() {
+        UserDeletionListener.deleteUserFiles(this);
     }
 
 }

@@ -24,7 +24,7 @@ public class Video {
     @ElementCollection
     private List<String> tags;
 
-    @OneToMany(mappedBy = "video")
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
     @ManyToOne

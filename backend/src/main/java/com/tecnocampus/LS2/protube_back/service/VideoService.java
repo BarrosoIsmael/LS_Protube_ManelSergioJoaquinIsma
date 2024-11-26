@@ -226,16 +226,20 @@ public class VideoService {
     public boolean deleteVideoById(Long videoId) {
         if (videoRepository.existsById(videoId)) {
             videoRepository.deleteById(videoId);
-            try {
-                Files.deleteIfExists(Paths.get(videoDirectory, (videoId-1) + ".webp"));
-                Files.deleteIfExists(Paths.get(videoDirectory, (videoId-1) + ".mp4"));
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return true;
+            return deleteVideoFiles(videoId);
         }
         return false;
+    }
+
+    public boolean deleteVideoFiles(Long videoId) {
+        try {
+            Files.deleteIfExists(Paths.get(videoDirectory, (videoId-1) + ".webp"));
+            Files.deleteIfExists(Paths.get(videoDirectory, (videoId-1) + ".mp4"));
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Map<String, Object> getVideoDetailsById(Long id) {

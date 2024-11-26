@@ -1,33 +1,11 @@
-.video-card {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    width: 250px; 
-    height: 140px;
-    margin: auto;
+.video-card-image:hover img {
+    opacity: 0; 
 }
 
-.video-card-image {
-    position: relative;
-    width: 250px; 
-    height: 140px;
-    padding-top: 56.25%; 
-    overflow: hidden;
-    border-radius: 8px;
+.video-card-image:hover video {
+    opacity: 1; 
 }
 
-.video-card-image img,
-.video-card-image video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    object-fit: cover;
-    border-radius: 8px;
-    width: 250px; 
-    height: 140px;
-}
 
 .video-card-content h3 {
     font-size: 1rem;

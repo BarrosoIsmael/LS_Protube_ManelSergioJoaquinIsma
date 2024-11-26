@@ -184,9 +184,6 @@ public class VideoService {
             newVideo.setDescription(description);
             newVideo.setCategory(videoCategory);
             newVideo.setUser(user);
-            newVideo.setDuration(null);
-            newVideo.setWidth(null);
-            newVideo.setHeight(null);
 
             videoRepository.save(newVideo);
         } catch (Exception e) {

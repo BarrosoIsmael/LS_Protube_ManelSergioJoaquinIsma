@@ -126,9 +126,6 @@ public class AppStartupRunner implements ApplicationRunner {
                 });
         
         Video video = new Video(
-                videoJson.getWidth(),
-                videoJson.getHeight(),
-                videoJson.getDuration(),
                 videoJson.getTitle(),
                 user,
                 videoJson.getMeta().getDescription(),

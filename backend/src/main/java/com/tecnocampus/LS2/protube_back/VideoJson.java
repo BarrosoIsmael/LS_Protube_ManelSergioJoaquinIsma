@@ -9,9 +9,6 @@ import java.util.List;
 @Setter
 public class VideoJson {
     private Long id;
-    private int width;
-    private int height;
-    private float duration;
     private String title;
     private String user;
     private Meta meta;

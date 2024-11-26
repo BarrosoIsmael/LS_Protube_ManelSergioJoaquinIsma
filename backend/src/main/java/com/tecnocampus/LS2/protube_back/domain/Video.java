@@ -11,15 +11,6 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true)
-    private Integer width;
-
-    @Column(nullable = true)
-    private Integer height;
-
-    @Column(nullable = true)
-    private Float duration;
-
     @Column(nullable = false)
     private String title;
 
@@ -49,10 +40,7 @@ public class Video {
     public Video() {
     }
 
-    public Video(int width, int height, float duration, String title, User user, String description, List<String> tags, Category category) {
-        this.width = width;
-        this.height = height;
-        this.duration = duration;
+    public Video(String title, User user, String description, List<String> tags, Category category) {
         this.title = title;
         this.user = user;
         this.description = description;
@@ -68,30 +56,6 @@ public class Video {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getWidth() {
-        return width;
-    }
-
-    public void setWidth(Integer width) {
-        this.width = width;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
-
-    public Float getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Float duration) {
-        this.duration = duration;
     }
 
     public String getTitle() {
@@ -182,9 +146,6 @@ public class Video {
     public String toString() {
         return "Video{" +
                 "id=" + id +
-                ", width=" + width +
-                ", height=" + height +
-                ", duration=" + duration +
                 ", title='" + title + '\'' +
                 ", user=" + user +
                 ", description='" + description + '\'' +

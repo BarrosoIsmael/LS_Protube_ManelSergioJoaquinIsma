@@ -56,8 +56,8 @@ public class VideoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getVideoById(@PathVariable Long id) {
-        Map<String, Object> video = videoService.getVideoById(id);
+    public ResponseEntity<Map<String, Object>> getAllVideoInfoById(@PathVariable Long id) {
+        Map<String, Object> video = videoService.getAllVideoInfoById(id);
         if (video != null) {
             return new ResponseEntity<>(video, HttpStatus.OK);
         } else {
@@ -66,8 +66,8 @@ public class VideoController {
     }
 
     @GetMapping("/{id}/comments")
-    public ResponseEntity<List<Map<String, Object>>> getCommentsByVideoId(@PathVariable Long id) {
-        List<Map<String, Object>> comments = videoService.getCommentsByVideoId(id);
+    public ResponseEntity<List<Map<String, Object>>> getCommentsById(@PathVariable Long id) {
+        List<Map<String, Object>> comments = videoService.getCommentsById(id);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
@@ -90,8 +90,8 @@ public class VideoController {
     }
 
     @PostMapping("/{id}/addComment")
-    public ResponseEntity<String> addCommentToVideo(@PathVariable Long id, @RequestParam String text, @RequestParam String username) {
-        boolean success = videoService.addCommentToVideo(id, text, username);
+    public ResponseEntity<String> addCommentById(@PathVariable Long id, @RequestParam String text, @RequestParam String username) {
+        boolean success = videoService.addCommentById(id, text, username);
         if (success) {
             return new ResponseEntity<>("Comment added successfully!", HttpStatus.CREATED);
         } else {

@@ -26,8 +26,8 @@ public class CommentController {
     }
 
     @GetMapping("/{id}/text")
-    public ResponseEntity<String> getCommentTextById(@PathVariable Long id) {
-        Optional<String> commentText = commentService.getCommentTextById(id);
+    public ResponseEntity<String> getContentById(@PathVariable Long id) {
+        Optional<String> commentText = commentService.getContentById(id);
         return commentText.map(s ->
                 new ResponseEntity<>(s, HttpStatus.OK)).orElseGet(() ->
                 new ResponseEntity<>("Comment not found.", HttpStatus.NOT_FOUND));

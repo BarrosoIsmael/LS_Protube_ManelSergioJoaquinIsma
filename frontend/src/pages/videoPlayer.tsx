@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { getEnv } from "../utils/Env";
 import { getRandomColor, isColorDark } from '../utils/commentUtils';
 import Comment from "../components/Comment";
+import './videoPlayer.css';
 
 interface Comment {
   author: string;
@@ -165,7 +166,7 @@ const VideoPlayer: React.FC = () => {
   };
 
   const truncateDescription = (text: string) => {
-    return text.length > 300 ? text.slice(0, 300) + '...' : text;
+    return text.length > 300 ? text.slice(0, 300) + ' <span class="read-more">... Read more</span>' : text;
   };
 
   if (!videoData) {
@@ -174,20 +175,20 @@ const VideoPlayer: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
-      <main className="flex-1 container px-4 py-6 mx-auto" style={{ maxWidth: "1200px" }}>
+      <main className="flex-1 container px-4 py-6">
         <div className="space-y-4">
           <div>
-            <video style={{ width: "100%" }} controls src={videoMP4} />
+            <video className="w-full" controls src={videoMP4} />
           </div>
 
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">{videoData.title}</h2>
             <div className="flex items-center space-x-4">
-              <div onClick={handleLike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "16px", backgroundColor: userLikeStatus === 'like' ? 'green' : 'initial' }}>
+              <div onClick={handleLike} className={`inline-flex items-center cursor-pointer mr-16 ${userLikeStatus === 'like' ? 'bg-green' : ''}`}>
                 <ThumbUpIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoLikes}</span>
               </div>
-              <div onClick={handleDislike} style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", backgroundColor: userLikeStatus === 'dislike' ? 'red' : 'initial' }}>
+              <div onClick={handleDislike} className={`inline-flex items-center cursor-pointer ${userLikeStatus === 'dislike' ? 'bg-red' : ''}`}>
                 <ThumbDownIcon fontSize="small" sx={{ color: "white" }} />
                 <span style={{ color: "white" }}>{videoDislikes}</span>
               </div>
@@ -199,25 +200,23 @@ const VideoPlayer: React.FC = () => {
             onClick={() => setDescriptionVisible(!descriptionVisible)}
           >
             <CardContent>
-              <p>
-                {descriptionVisible
-                  ? <>
-                      {videoData.description}
-                      <br />
-                      <br />
-                      {videoData.tags.map((tag: string, index: number) => (
-                        <span key={index}>#{tag}{index < videoData.tags.length - 1 ? ', ' : ''}</span>
-                      ))}
-                    </>
-                  : truncateDescription(videoData.description)}
-              </p>
+              <p dangerouslySetInnerHTML={{ __html: descriptionVisible ? videoData.description : truncateDescription(videoData.description) }} />
+              {descriptionVisible && (
+                <>
+                  <br />
+                  <br />
+                  {videoData.tags.map((tag: string, index: number) => (
+                    <span key={index}>#{tag}{index < videoData.tags.length - 1 ? ', ' : ''}</span>
+                  ))}
+                </>
+              )}
             </CardContent>
           </Card>
 
           <div className="comments-section mt-4">
             <h3 className="text-lg font-bold">Comments</h3>
             <br />
-            <div className="add-comment flex items-start space-x-4">
+            <div className="add-comment">
               {user && (
                 <Avatar sx={{ bgcolor: avatarColorRef.current, color: isColorDark(avatarColorRef.current) ? 'white' : 'black' }}>
                   {user.charAt(0)}
@@ -226,27 +225,21 @@ const VideoPlayer: React.FC = () => {
               <div className="flex-1">
                 <input
                   type="text"
-                  className="w-full p-2 rounded"
+                  className="w-full p-2 rounded bg-gray-700"
                   placeholder={user ? "Write a comment..." : "You must be logged in to add a comment."}
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  style={{ backgroundColor: "#424242", color: "white", minWidth: "350px" }}
                   disabled={!user}
                 />
-                <style>{`
-                  input::placeholder {
-                    color: white;
-                  }
-                `}</style>
-                {user && (
-                  <button
-                    onClick={handleAddComment}
-                    style={{ marginTop: "10px", backgroundColor: "#424242", color: "white", padding: "8px", borderRadius: "4px" }}
-                  >
-                    Add Comment
-                  </button>
-                )}
               </div>
+              {user && (
+                <button
+                  onClick={handleAddComment}
+                  className="bg-gray-700 text-white p-2 rounded"
+                >
+                  Add Comment
+                </button>
+              )}
             </div>
             <br />
             {comments.length === 0 ? (
@@ -280,7 +273,7 @@ const VideoPlayer: React.FC = () => {
                       setComments={setComments}
                     />
                   </div>
-                  <hr/>
+                  <hr className="hr"/>
                 </div>
               ))}
               </>

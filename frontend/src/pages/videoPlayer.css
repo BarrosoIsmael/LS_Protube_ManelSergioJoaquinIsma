@@ -1,0 +1,156 @@
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.bg-black {
+  background-color: black;
+}
+
+.text-white {
+  color: white;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.space-x-4 > * + * {
+  margin-left: 1rem;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.mr-16 {
+  margin-right: 1rem;
+}
+
+.bg-green {
+  background-color: green;
+}
+
+.bg-red {
+  background-color: red;
+}
+
+.comments-section {
+  margin-top: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.add-comment {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem; 
+}
+
+.w-full {
+  width: 100%;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.bg-gray-700 {
+  background-color: #424242;
+}
+
+.mt-10 {
+  margin-top: 2.5rem;
+}
+
+.p-8 {
+  padding: 2rem;
+}
+
+.rounded-4 {
+  border-radius: 0.25rem;
+}
+
+.comment-container {
+  margin-bottom: 1rem;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.hr {
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1rem 0;
+}
+
+.read-more {
+  font-weight: bold;
+}
+
+input::placeholder {
+  color: white;
+}
+
+input {
+  color: white;
+}

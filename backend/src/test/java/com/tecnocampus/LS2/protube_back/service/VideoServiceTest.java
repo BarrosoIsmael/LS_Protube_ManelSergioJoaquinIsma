@@ -199,28 +199,37 @@ public class VideoServiceTest {
         verify(commentRepository, times(1)).save(any(Comment.class));
     }
 
-
     @Test
-    public void testUploadNewVideo() throws Exception {
+    public void testUploadVideoInfo() throws Exception {
         // Arrange
         String title = "Test Title";
         String description = "Test Description";
         String category = "Test Category";
         String username = "testuser";
 
-        Category videoCategory = new Category();
-        videoCategory.setName(category);
-
         User user = new User();
         user.setUsername(username);
 
-        when(categoryRepository.findByName(category)).thenReturn(Optional.of(videoCategory));
+        Category videoCategory = new Category();
+        videoCategory.setName(category);
+
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(categoryRepository.findByName(category)).thenReturn(Optional.of(videoCategory));
+
+        Video video = new Video();
+        video.setId(1L);
+        when(videoRepository.save(any(Video.class))).thenAnswer(invocation -> {
+            Video v = invocation.getArgument(0);
+            v.setId(1L);
+            return v;
+        });
 
         // Act
-        videoService.uploadNewVideo(title, description, category, username);
+        Long videoId = videoService.uploadVideoInfo(title, description, category, username);
 
         // Assert
+        assertNotNull(videoId);
+        assertEquals(0L, videoId); // Since the method returns newVideo.getId() - 1
         verify(videoRepository, times(1)).save(any(Video.class));
     }
 

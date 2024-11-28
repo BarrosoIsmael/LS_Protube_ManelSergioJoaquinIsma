@@ -99,35 +99,21 @@ public class VideoController {
         }
     }
 
-    @PostMapping("/uploadImage")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        try {
-            videoService.saveImage(file);
-            return new ResponseEntity<>("Image uploaded successfully!", HttpStatus.CREATED);
-        } catch (IOException e) {
-            return new ResponseEntity<>("Failed to upload image.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PostMapping("/uploadVideo")
-    public ResponseEntity<String> uploadVideo(@RequestParam("file") MultipartFile file) {
-        try {
-            videoService.saveVideo(file);
-            return new ResponseEntity<>("Video uploaded successfully!", HttpStatus.CREATED);
-        } catch (IOException e) {
-            return new ResponseEntity<>("Failed to upload video.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/uploadNewVideo")
-    public ResponseEntity<String> uploadNewVideo(
+    public ResponseEntity<String> uploadVideo(
+            @RequestParam("imageFile") MultipartFile imageFile,
+            @RequestParam("videoFile") MultipartFile videoFile,
             @RequestParam String title,
             @RequestParam String description,
             @RequestParam String category,
             @RequestParam String username) {
         try {
-            videoService.uploadNewVideo(title, description, category, username);
+            Long videoId = videoService.uploadVideoInfo(title, description, category, username);
+            videoService.saveImage(imageFile, videoId);
+            videoService.saveVideo(videoFile, videoId);
             return new ResponseEntity<>("Video uploaded successfully!", HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Failed to upload files.", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Failed to upload video.", HttpStatus.INTERNAL_SERVER_ERROR);

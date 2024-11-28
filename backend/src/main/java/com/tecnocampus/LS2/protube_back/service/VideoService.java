@@ -130,21 +130,17 @@ public class VideoService {
         return false;
     }
 
-    public void saveImage(MultipartFile file) throws IOException {
-        Long newId = videoRepository.findMaxId() - 1;
-        Path newPath = Paths.get(videoDirectory, newId + ".webp");
-
+    public void saveImage(MultipartFile file, Long lastId) throws IOException {
+        Path newPath = Paths.get(videoDirectory, lastId + ".webp");
         Files.copy(file.getInputStream(), newPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public void saveVideo(MultipartFile file) throws IOException {
-        Long newId = videoRepository.findMaxId() - 1;
-        Path newPath = Paths.get(videoDirectory, newId + ".mp4");
-
+    public void saveVideo(MultipartFile file, Long lastId) throws IOException {
+        Path newPath = Paths.get(videoDirectory, lastId + ".mp4");
         Files.copy(file.getInputStream(), newPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public void uploadNewVideo(String title, String description, String category, String username) throws Exception {
+    public Long uploadVideoInfo(String title, String description, String category, String username) throws Exception {
         try {
             Category videoCategory = categoryRepository.findByName(category)
                     .orElseGet(() -> {
@@ -164,6 +160,7 @@ public class VideoService {
             newVideo.setUser(user);
 
             videoRepository.save(newVideo);
+            return newVideo.getId() - 1;
         } catch (Exception e) {
             throw new Exception("Error uploading new video: " + e.getMessage(), e);
         }

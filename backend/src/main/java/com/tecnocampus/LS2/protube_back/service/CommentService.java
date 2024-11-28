@@ -26,7 +26,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Optional<String> getCommentTextById(Long commentId) {
+    public Optional<String> getContentById(Long commentId) {
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
         return commentOpt.map(Comment::getText);
     }

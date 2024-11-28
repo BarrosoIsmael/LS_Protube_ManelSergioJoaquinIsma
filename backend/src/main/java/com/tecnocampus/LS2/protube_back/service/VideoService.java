@@ -69,7 +69,7 @@ public class VideoService {
         }).collect(Collectors.toList());
     }
 
-    public List<Map<String, Object>> getCommentsByVideoId(Long id) {
+    public List<Map<String, Object>> getCommentsById(Long id) {
         Optional<Video> videoOpt = videoRepository.findById(id);
         return videoOpt.map(video -> video.getComments().stream().map(comment -> {
             Map<String, Object> commentInfo = new HashMap<>();
@@ -80,7 +80,7 @@ public class VideoService {
         }).collect(Collectors.toList())).orElse(Collections.emptyList());
     }
 
-    public Map<String, Object> getVideoById(Long id) {
+    public Map<String, Object> getAllVideoInfoById(Long id) {
         Optional<Video> videoOpt = videoRepository.findById(id);
         if (videoOpt.isPresent()) {
             Video video = videoOpt.get();
@@ -116,7 +116,7 @@ public class VideoService {
         }
     }
 
-    public boolean addCommentToVideo(Long videoId, String text, String username) {
+    public boolean addCommentById(Long videoId, String text, String username) {
         Optional<Video> videoOpt = videoRepository.findById(videoId);
         Optional<User> userOpt = userRepository.findByUsername(username);
 

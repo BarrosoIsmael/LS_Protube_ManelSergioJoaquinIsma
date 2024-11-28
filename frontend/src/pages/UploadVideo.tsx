@@ -5,6 +5,7 @@ import "./UploadVideo.css";
 const UploadVideo: React.FC = () => {
   const { user } = useAuth();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [category, setCategory] = useState<string>("");
@@ -16,9 +17,15 @@ const UploadVideo: React.FC = () => {
     }
   };
 
+  const handleThumbnailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setThumbnailFile(event.target.files[0]);
+    }
+  };
+
   const handleUpload = async () => {
-    if (!selectedFile || !title || !description || !category || !user) {
-      setUploadStatus("Please fill out all fields and select a file to upload.");
+    if (!selectedFile || !thumbnailFile || !title || !description || !category || !user) {
+      setUploadStatus("Please fill out all fields and select files to upload.");
       return;
     }
 
@@ -27,39 +34,24 @@ const UploadVideo: React.FC = () => {
     formData.append("description", description);
     formData.append("category", category);
     formData.append("username", user);
+    formData.append("videoFile", selectedFile);
+    formData.append("imageFile", thumbnailFile);
 
     try {
-      setUploadStatus("Uploading video metadata...");
+      setUploadStatus("Uploading video and thumbnail...");
 
-      // Primero, subimos los metadatos del video
-      const metadataResponse = await fetch("/api/videos/uploadNewVideo", {
+      const response = await fetch("/api/videos/uploadVideo", {
         method: "POST",
         body: formData,
       });
 
-      if (!metadataResponse.ok) {
-        setUploadStatus("Failed to upload video metadata.");
-        return;
-      }
-
-      setUploadStatus("Uploading video file...");
-
-      // Luego, subimos el archivo de video
-      const fileFormData = new FormData();
-      fileFormData.append("file", selectedFile);
-
-      const fileResponse = await fetch("/api/videos/uploadVideo", {
-        method: "POST",
-        body: fileFormData,
-      });
-
-      if (fileResponse.ok) {
-        setUploadStatus("Video uploaded successfully!");
+      if (response.ok) {
+        setUploadStatus("Video and thumbnail uploaded successfully!");
       } else {
-        setUploadStatus("Failed to upload video.");
+        setUploadStatus("Failed to upload video and thumbnail.");
       }
     } catch (error) {
-      console.error("Error uploading the video:", error);
+      console.error("Error uploading the video and thumbnail:", error);
       setUploadStatus("An error occurred during the upload.");
     }
   };
@@ -113,8 +105,27 @@ const UploadVideo: React.FC = () => {
             style={{ display: "none" }}
           />
         </label>
+        <label>
+          Thumbnail File:
+          <div className="custom-file-upload">
+            <button
+              type="button"
+              onClick={() => document.getElementById("thumbnailInput")?.click()}
+            >
+              Select Thumbnail
+            </button>
+            <span>{thumbnailFile ? thumbnailFile.name : "No file selected"}</span>
+          </div>
+          <input
+            id="thumbnailInput"
+            type="file"
+            accept="image/*"
+            onChange={handleThumbnailChange}
+            style={{ display: "none" }}
+          />
+        </label>
         <button type="button" onClick={handleUpload}>
-          Upload
+          Upload Video
         </button>
       </form>
       {uploadStatus && (

@@ -1,15 +1,19 @@
 import React, { useState } from "react";
-import { AppBar, Toolbar, Typography, Button, Container, Box, Menu, MenuItem } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Container, Box, Menu, MenuItem, IconButton, TextField, InputAdornment } from "@mui/material";
 import { Link } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; 
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../context/AuthContext";
 import { useHandleLogout } from "../utils/authUtils";
 
 const Header: React.FC = () => {
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const handleLogout = useHandleLogout();
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -18,6 +22,14 @@ const Header: React.FC = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSearchToggle = () => {
+    setSearchOpen(!searchOpen);
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
   };
 
   return (
@@ -32,6 +44,30 @@ const Header: React.FC = () => {
           >
             Pro Tube
           </Typography>
+          <Box sx={searchContainerStyles}>
+            <IconButton color="inherit" onClick={handleSearchToggle}>
+              {searchOpen ? <CloseIcon /> : <SearchIcon />}
+            </IconButton>
+            {searchOpen && (
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                sx={searchFieldStyles}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton color="inherit">
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            )}
+          </Box>
           <Box sx={buttonContainerStyles}>
             {user ? (
               <>
@@ -117,6 +153,19 @@ const logoStyles = {
   textShadow: "1px 1px 2px #FFFFFF, -1px -1px 2px #FFFFFF, 1px -1px 2px #FFFFFF, -1px 1px 2px #FFFFFF",
   fontSize: "24px",
   flexGrow: 1,
+};
+
+const searchContainerStyles = {
+  display: "flex",
+  alignItems: "center",
+  marginLeft: "auto",
+  marginRight: "1rem",
+};
+
+const searchFieldStyles = {
+  marginLeft: "1rem",
+  backgroundColor: "white",
+  borderRadius: "4px",
 };
 
 const buttonContainerStyles = {

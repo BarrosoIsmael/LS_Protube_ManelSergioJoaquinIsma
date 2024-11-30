@@ -142,10 +142,12 @@ public class VideoService {
 
     public Long uploadVideoInfo(String title, String description, String category, String username) throws Exception {
         try {
-            Category videoCategory = categoryRepository.findByName(category)
+            String formattedCategory = formatFirstUpper(category);
+
+            Category videoCategory = categoryRepository.findByName(formattedCategory)
                     .orElseGet(() -> {
                         Category newCategory = new Category();
-                        newCategory.setName(category);
+                        newCategory.setName(formattedCategory);
                         categoryRepository.save(newCategory);
                         return newCategory;
                     });
@@ -164,7 +166,7 @@ public class VideoService {
         } catch (Exception e) {
             throw new Exception("Error uploading new video: " + e.getMessage(), e);
         }
-    }
+}
 
     @Transactional
     public boolean editVideoById(Long videoId, String title, String description, String category) {

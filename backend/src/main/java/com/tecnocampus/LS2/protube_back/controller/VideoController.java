@@ -121,7 +121,11 @@ public class VideoController {
     }
 
     @PostMapping("/{id}/edit")
-    public ResponseEntity<String> editVideoById(@PathVariable Long id, @RequestParam String title, @RequestParam String description, @RequestParam String category) {
+    public ResponseEntity<String> editVideoById(
+            @PathVariable Long id,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam String category) {
         boolean success = videoService.editVideoById(id, title, description, category);
         if (success) {
             return new ResponseEntity<>("Video edited successfully!", HttpStatus.OK);

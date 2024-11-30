@@ -27,8 +27,8 @@ const UploadVideo: React.FC = () => {
   };
 
   const handleUpload = async () => {
-    if (!selectedFile || !thumbnailFile || !title || !description || !category || !user) {
-      setUploadStatus("Please fill out all fields and select files to upload.");
+    if (!selectedFile || !thumbnailFile || !title || !description || !category.trim() || !user) {
+      setUploadStatus("Please fill out all fields, and select files to upload.");
       return;
     }
 
@@ -87,6 +87,7 @@ const UploadVideo: React.FC = () => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
+            className={!category.trim() ? "input-error" : ""}
           />
         </label>
         <label>
@@ -130,18 +131,12 @@ const UploadVideo: React.FC = () => {
             style={{ display: "none" }}
           />
         </label>
-        {/* <button type="button" onClick={handleUpload}>
-            Upload Video
-        </button> */}
+        
         <div className="custom-send-upload">
           <Button variant="contained" color="primary" onClick={handleUpload}>
             Upload Video
           </Button>
         </div>
-        
-        
-        
-        
       </form>
       {uploadStatus && (
         <p

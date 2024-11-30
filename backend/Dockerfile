@@ -10,8 +10,5 @@ COPY target/protube-back-0.0.1-SNAPSHOT.jar app.jar
 # Expone el puerto del backend
 EXPOSE 8080
 
-# Mount volume for the store directory
-VOLUME /store
-
 # Comando para iniciar la aplicación
 ENTRYPOINT ["java", "-jar", "app.jar"]

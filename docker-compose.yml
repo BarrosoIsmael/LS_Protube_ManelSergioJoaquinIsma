@@ -19,13 +19,9 @@ services:
     container_name: protube-app
     environment:
       ENV_PROTUBE_STORE_DIR: /store
-      ENV_PROTUBE_DB: ${ENV_PROTUBE_DB}
-      ENV_PROTUBE_DB_USER: ${ENV_PROTUBE_DB_USER}
-      ENV_PROTUBE_DB_PWD: ${ENV_PROTUBE_DB_PWD}
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${ENV_PROTUBE_DB}
       SPRING_DATASOURCE_USERNAME: ${ENV_PROTUBE_DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${ENV_PROTUBE_DB_PWD}
-      SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8080:8080"
     volumes:

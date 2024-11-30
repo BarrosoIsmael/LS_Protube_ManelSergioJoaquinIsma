@@ -1,5 +1,17 @@
 # Pro tube project
 
+## Documentacion adicional
+
+
+En aplication.properties la linea "spring.datasource.url=jdbc:postgresql://localhost:5432/${ENV_PROTUBE_DB}" es la dirección de la DB de prod para que al ejecutar "mvn spring-boot:run -P prod" funcione con normalidad, ya que sino, falla la conexion con la DB. En cambio, si de esta línea se cambia el puerto "5432" a "5433" la conexion será con la DB del container.
+
+Para crear los contenedores hay que ejecutar en la raiz del proyecto "docker-compose up --build".
+
+Para ver los contenedores en Docker Desktop hay que activar lo siguiente en configuracion:
+
+![image](https://github.com/user-attachments/assets/610eb812-d433-4f2b-ae26-05298cfa8280)
+
+
 ## Project
 The project consists of building a web application where the user can watch and comment videos uploaded by other registered users.
 

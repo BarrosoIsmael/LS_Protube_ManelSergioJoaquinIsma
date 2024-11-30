@@ -29,8 +29,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /home/jcatanzariti/protube/store:/store
-      # cambiar jcatanzariti por el nombre de usuario de tu maquina ubuntu
+      - ${ENV_PROTUBE_STORE_DIR}:/store
     depends_on:
       - db
 

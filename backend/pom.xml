@@ -12,6 +12,7 @@
 	<groupId>com.tecnocampus.LS2</groupId>
 	<artifactId>protube-back</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>protube-back</name>
 	<description>myyyyyy precious tube</description>
 	<url />
@@ -38,19 +39,23 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+			<version>3.3.3</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<version>3.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>3.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<version>3.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -65,6 +70,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<version>2.2.220</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -76,6 +82,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<version>3.3.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -122,13 +129,15 @@
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<configuration>
-							<excludes>
-								<exclude>
-									<groupId>org.projectlombok</groupId>
-									<artifactId>lombok</artifactId>
-								</exclude>
-							</excludes>
+							<mainClass>com.tecnocampus.LS2.protube_back.ProtubeBackApplication</mainClass>
 						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>repackage</goal> <!-- Este es clave para generar el JAR ejecutable -->
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 					<plugin>
 						<groupId>com.github.eirslett</groupId>

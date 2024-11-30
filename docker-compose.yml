@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      ENV_PROTUBE_STORE_DIR: /store
+      ENV_PROTUBE_DB: protube
+      ENV_PROTUBE_DB_USER: admin
+      ENV_PROTUBE_DB_PWD: 1234
+    volumes:
+      - /home/jcatanzariti/protube/store:/store
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4173:4173"
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: protube
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+volumes:
+  db_data:

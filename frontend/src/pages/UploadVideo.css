@@ -72,7 +72,7 @@
   
   .upload-video-container p.upload-status {
     font-weight: bold;
-    color: #28a745;
+    color: #ffffff;
   }
   
   .upload-video-container p.upload-error {
@@ -80,3 +80,76 @@
     color: #dc3545;
   }
   
+  .custom-file-upload button,
+  .upload button {
+    padding: 10px 25px;
+    background-color: #6c757d; 
+    color: #fff; 
+    border: 2px solid #5a6268; 
+    border-radius: 4px; 
+    font-size: 14px; 
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .custom-file-upload button:hover,
+  .upload button:hover {
+    background-color: #5a6268; 
+    border-color: #495057; 
+  }
+
+  .custom-file-upload button:active,
+  .upload button:active {
+    transform: translateY(2px); 
+  }
+
+  .custom-min-upload button,
+  .upload button {
+    max-width: 600px;
+    padding: 10px 25px;
+    background-color: #6c757d; 
+    color: #fff; 
+    border: 2px solid #5a6268; 
+    border-radius: 8px; 
+    font-size: 14px; 
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .custom-min-upload button:hover,
+  .upload button:hover {
+    background-color: #5a6268; 
+    border-color: #495057; 
+  }
+
+  .custom-min-upload button:active,
+  .upload button:active {
+    transform: translateY(2px); 
+  }
+
+  .custom-send-upload button,
+  .upload button {
+    width: 100%; 
+    padding: 12px 30px;
+    background-color: #0044cc; 
+    color: #fff; 
+    border: 2px solid #003399; 
+    border-radius: 8px; 
+    font-size: 14px; 
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .custom-send-upload button:hover,
+  .upload button:hover {
+    background-color: #003399; 
+    border-color: #002266; 
+  }
+
+  .custom-send-upload button:active,
+  .upload button:active {
+    transform: translateY(2px); 
+  }

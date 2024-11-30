@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { Button } from "@mui/material";
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import ImageIcon from '@mui/icons-material/Image';
 import "./UploadVideo.css";
 
 const UploadVideo: React.FC = () => {
@@ -89,13 +92,14 @@ const UploadVideo: React.FC = () => {
         <label>
           Video File:
           <div className="custom-file-upload">
-            <button
-              type="button"
+            <Button
+              variant="contained"
+              startIcon={<UploadFileIcon />}
               onClick={() => document.getElementById("fileInput")?.click()}
             >
               Select File
-            </button>
-            <span>{selectedFile ? selectedFile.name : "No file selected"}</span>
+            </Button>
+            <span>{selectedFile ? selectedFile.name : " No file selected"}</span>
           </div>
           <input
             id="fileInput"
@@ -105,16 +109,18 @@ const UploadVideo: React.FC = () => {
             style={{ display: "none" }}
           />
         </label>
+        
         <label>
           Thumbnail File:
-          <div className="custom-file-upload">
-            <button
-              type="button"
+          <div className="custom-min-upload">
+            <Button
+              variant="contained"
+              startIcon={<ImageIcon />}
               onClick={() => document.getElementById("thumbnailInput")?.click()}
             >
               Select Thumbnail
-            </button>
-            <span>{thumbnailFile ? thumbnailFile.name : "No file selected"}</span>
+            </Button>
+            <span>{thumbnailFile ? thumbnailFile.name : " No file selected"}</span>
           </div>
           <input
             id="thumbnailInput"
@@ -124,9 +130,18 @@ const UploadVideo: React.FC = () => {
             style={{ display: "none" }}
           />
         </label>
-        <button type="button" onClick={handleUpload}>
-          Upload Video
-        </button>
+        {/* <button type="button" onClick={handleUpload}>
+            Upload Video
+        </button> */}
+        <div className="custom-send-upload">
+          <Button variant="contained" color="primary" onClick={handleUpload}>
+            Upload Video
+          </Button>
+        </div>
+        
+        
+        
+        
       </form>
       {uploadStatus && (
         <p

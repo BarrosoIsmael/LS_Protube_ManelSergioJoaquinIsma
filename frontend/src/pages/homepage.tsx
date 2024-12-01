@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import VideoCard from "../components/VideoCard";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
@@ -8,6 +9,7 @@ import "./homepage.css";
 const Homepage: React.FC = () => {
   const [videos, setVideos] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -27,8 +29,13 @@ const Homepage: React.FC = () => {
       }
     };
 
-    fetchVideos();
-  }, []);
+    if (location.state && location.state.searchResults) {
+      setVideos(location.state.searchResults);
+      setLoading(false);
+    } else {
+      fetchVideos();
+    }
+  }, [location.state]);
 
   if (loading) {
     return (
@@ -42,17 +49,23 @@ const Homepage: React.FC = () => {
     <div className="homepage-background">
       <Container maxWidth="lg">
         <Box sx={{ backgroundColor: 'black', marginTop: 4 }}>
-          <Grid container spacing={4}>
-            {videos.map((video) => (
-              <Grid item xs={12} sm={6} md={3} key={video.id}>
-                <VideoCard
-                  title={video.title}
-                  user={video.user}
-                  id={video.id.toString()}
-                />
-              </Grid>
-            ))}
-          </Grid>
+          {videos.length === 0 ? (
+            <Typography className="no-content-message" variant="h6">
+              No videos found
+            </Typography>
+          ) : (
+            <Grid container spacing={4}>
+              {videos.map((video) => (
+                <Grid item xs={12} sm={6} md={3} key={video.id}>
+                  <VideoCard
+                    title={video.title}
+                    user={video.user}
+                    id={video.id.toString()}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Box>
       </Container>
     </div>

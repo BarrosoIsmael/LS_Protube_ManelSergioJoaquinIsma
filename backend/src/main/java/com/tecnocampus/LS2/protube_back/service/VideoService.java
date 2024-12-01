@@ -232,4 +232,14 @@ public class VideoService {
             return null;
         }
     }
+
+    public List<Map<String, Object>> searchVideosByTitle(String query) {
+        return videoRepository.findByTitleContainingIgnoreCase(query).stream().map(video -> {
+            Map<String, Object> videoInfo = new HashMap<>();
+            videoInfo.put("id", video.getId());
+            videoInfo.put("title", video.getTitle());
+            videoInfo.put("user", video.getUser().getUsername());
+            return videoInfo;
+        }).collect(Collectors.toList());
+    }
 }

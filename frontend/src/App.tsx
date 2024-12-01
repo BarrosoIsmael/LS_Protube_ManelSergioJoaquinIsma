@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
-import Homepage from "./pages/homepage";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import VideoPlayer from "./pages/videoPlayer";
-import UploadVideo from "./pages/UploadVideo";
-import Profile from "./pages/profile";
+import Homepage from "./pages/homepage/homepage";
+import Login from "./pages/auth-pages/login";
+import Register from "./pages/auth-pages/register";
+import VideoPlayer from "./pages/video-player/videoPlayer";
+import UploadVideo from "./pages/upload-video/uploadVideo";
+import Profile from "./pages/profile/profile";
 import { AuthProvider } from "./context/AuthContext";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import "./App.css";

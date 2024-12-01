@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { Card, CardContent, Avatar, Typography } from '@mui/material';
 import { ThumbUp as ThumbUpIcon, ThumbDown as ThumbDownIcon } from '@mui/icons-material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useAuth } from "../context/AuthContext";
-import { getEnv } from "../utils/Env";
-import { getRandomColor, isColorDark } from '../utils/commentUtils';
-import Comment from "../components/Comment";
+import { useAuth } from "../../context/AuthContext";
+import { getEnv } from "../../utils/Env";
+import { getRandomColor, isColorDark } from '../../utils/commentUtils';
+import Comment from "../../components/Comment";
 import './videoPlayer.css';
 
 interface Comment {
@@ -201,7 +201,8 @@ const VideoPlayer: React.FC = () => {
           </div>
 
           <Card
-            sx={{ bgcolor: 'grey.900', color: 'white', padding: '16px', marginTop: '10px', cursor: 'pointer' }}
+            className="card-custom"
+            sx={{ bgcolor: 'grey.900', color: 'white' }}
             onClick={() => setDescriptionVisible(!descriptionVisible)}
           >
             <CardContent>
@@ -251,7 +252,7 @@ const VideoPlayer: React.FC = () => {
                 <Typography 
                   align="center" 
                   variant="h6" 
-                  sx={{ paddingTop: "30px", fontSize: "2rem" }}
+                  className="typography-custom"
                 >
                   No comments yet
                 </Typography>
@@ -261,6 +262,7 @@ const VideoPlayer: React.FC = () => {
                 <div key={index} className="comment-container">
                   <div className="flex items-start space-x-4">
                     <Avatar
+                      className="avatar-custom"
                       sx={{
                         bgcolor: comment.avatarColor,
                         color: isColorDark(comment.avatarColor ?? '') ? 'white' : 'black',

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getEnv } from "../utils/Env";
+import { getEnv } from "../../utils/Env";
 
 interface VideoCardProps {
   title: string;

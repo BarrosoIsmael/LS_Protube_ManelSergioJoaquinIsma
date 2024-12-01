@@ -1,6 +1,6 @@
 import React from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from "@mui/material";
-import { getEnv } from "../utils/Env";
+import { getEnv } from "../../utils/Env";
 
 interface DeleteCommentDialogProps {
   open: boolean;

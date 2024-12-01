@@ -79,3 +79,7 @@
     align-items: center;
     height: 100vh;
 }
+
+.homepage-content {
+    margin-top: 20px;
+}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Typography, Button, Container, Box, Menu, MenuItem, IconButton, TextField, InputAdornment } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; 
@@ -8,6 +8,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../context/AuthContext";
 import { useHandleLogout } from "../utils/authUtils";
+import { getEnv } from "../utils/Env";
 
 const Header: React.FC = () => {
   const { user } = useAuth();
@@ -15,6 +16,7 @@ const Header: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const handleLogout = useHandleLogout();
+  const navigate = useNavigate();
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -30,6 +32,20 @@ const Header: React.FC = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+  };
+
+  const handleSearch = async () => {
+    try {
+      const response = await fetch(getEnv().API_BASE_URL + `/videos/search?query=${searchQuery}`);
+      if (response.ok) {
+        const videos = await response.json();
+        navigate("/", { state: { searchResults: videos } });
+      } else {
+        console.error("Error fetching search results");
+      }
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
   };
 
   return (
@@ -55,11 +71,16 @@ const Header: React.FC = () => {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={handleSearchChange}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
                 sx={searchFieldStyles}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton color="inherit">
+                      <IconButton color="inherit" onClick={handleSearch}>
                         <SearchIcon />
                       </IconButton>
                     </InputAdornment>

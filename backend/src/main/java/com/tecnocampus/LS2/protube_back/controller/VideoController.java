@@ -153,4 +153,10 @@ public class VideoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Map<String, Object>>> searchVideos(@RequestParam String query) {
+        List<Map<String, Object>> videos = videoService.searchVideosByTitle(query);
+        return new ResponseEntity<>(videos, HttpStatus.OK);
+    }
 }

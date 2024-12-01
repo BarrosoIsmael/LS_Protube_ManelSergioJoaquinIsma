@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ImageIcon from '@mui/icons-material/Image';
 import "./UploadVideo.css";
+import { getEnv } from "../utils/Env";
 
 const UploadVideo: React.FC = () => {
   const { user } = useAuth();
@@ -43,7 +44,7 @@ const UploadVideo: React.FC = () => {
     try {
       setUploadStatus("Uploading video and thumbnail...");
 
-      const response = await fetch("/api/videos/uploadVideo", {
+      const response = await fetch(getEnv().API_BASE_URL + "/videos/uploadVideo", {
         method: "POST",
         body: formData,
       });

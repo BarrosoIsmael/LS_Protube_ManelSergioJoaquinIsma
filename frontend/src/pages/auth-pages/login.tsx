@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthForm from "../components/AuthForm";
-import { useAuth } from "../context/AuthContext";
-import { getEnv } from "../utils/Env";
+import AuthForm from "../../components/AuthForm";
+import { useAuth } from "../../context/AuthContext";
+import { getEnv } from "../../utils/Env";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();

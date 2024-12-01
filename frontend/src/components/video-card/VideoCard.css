@@ -1,11 +1,10 @@
 .video-card-image:hover img {
-    opacity: 0; 
+    opacity: 0;
 }
 
 .video-card-image:hover video {
-    opacity: 1; 
+    opacity: 1;
 }
-
 
 .video-card-content h3 {
     font-size: 1rem;

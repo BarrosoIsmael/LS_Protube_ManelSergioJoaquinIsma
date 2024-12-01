@@ -1,8 +1,8 @@
 import React from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from "@mui/material";
-import { getEnv } from "../utils/Env";
-import { useAuth } from "../context/AuthContext";
-import { useHandleLogout } from "../utils/authUtils";
+import { getEnv } from "../../utils/Env";
+import { useAuth } from "../../context/AuthContext";
+import { useHandleLogout } from "../../utils/authUtils";
 
 interface DeleteUserDialogProps {
   open: boolean;

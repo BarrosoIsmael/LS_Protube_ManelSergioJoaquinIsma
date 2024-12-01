@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import Register from "../register";
+import Register from "../auth-pages/register";
 
 test("renders Register page with AuthForm", () => {
   render(

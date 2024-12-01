@@ -15,11 +15,13 @@
 }
 
 .user-info-paper {
-  background-color: #1e1e1e;
-  color: #ffffff;
   width: 100%;
   padding: 20px;
   margin-bottom: 20px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .section {
@@ -60,4 +62,8 @@
   padding-top: 30px;
   font-size: 2rem;
   text-align: center;
+}
+
+.delete-user-button {
+  margin-left: auto;
 }

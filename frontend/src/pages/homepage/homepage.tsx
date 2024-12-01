@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import VideoCard from "../components/VideoCard";
+import VideoCard from "../../components/video-card/VideoCard";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
-import { getEnv } from "../utils/Env";
+import { getEnv } from "../../utils/Env";
 import "./homepage.css";
 
 const Homepage: React.FC = () => {
@@ -46,9 +46,8 @@ const Homepage: React.FC = () => {
   }
 
   return (
-    <div className="homepage-background">
       <Container maxWidth="lg">
-        <Box sx={{ backgroundColor: 'black', marginTop: 4 }}>
+        <Box className="homepage-content">
           {videos.length === 0 ? (
             <Typography className="no-content-message" variant="h6">
               No videos found
@@ -68,7 +67,6 @@ const Homepage: React.FC = () => {
           )}
         </Box>
       </Container>
-    </div>
   );
 };
 

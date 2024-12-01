@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Box, Typography, Grid, Paper, IconButton, Snackbar, Button } from "@mui/material";
-import { getEnv } from "../utils/Env";
-import { useAuth } from "../context/AuthContext";
-import VideoCard from "../components/VideoCard";
+import { Container, Box, Typography, Grid, Paper, IconButton, Button } from "@mui/material";
+import { getEnv } from "../../utils/Env";
+import { useAuth } from "../../context/AuthContext";
+import VideoCard from "../../components/video-card/VideoCard";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Comment from "../components/Comment";
-import EditCommentDialog from "../components/EditCommentDialog";
-import DeleteCommentDialog from "../components/DeleteCommentDialog";
-import EditVideoDialog from "../components/EditVideoDialog";
-import DeleteVideoDialog from "../components/DeleteVideoDialog";
-import DeleteUserDialog from "../components/DeleteUserDialog";
+import Comment from "../../components/Comment";
+import ProfileDialogs from "../../components/dialogs/ProfileDialogs";
 import "./profile.css";
 
 const Profile: React.FC = () => {
@@ -87,6 +83,10 @@ const Profile: React.FC = () => {
     setDeleteVideoId(null);
   };
 
+  const handleCloseDeleteUserDialog = () => {
+    setDeleteUserDialogOpen(false);
+  };
+
   const handleUpdateComments = async () => {
     const commentsResponse = await fetch(getEnv().API_BASE_URL + `/users/${user}/comments`);
     if (commentsResponse.ok) {
@@ -134,16 +134,18 @@ const Profile: React.FC = () => {
           My Profile
         </Typography>
 
-        <Paper className="user-info-paper">
-          <Typography variant="h6" gutterBottom>
-            User information
-          </Typography>
-          <Typography variant="body1">Username: {user}</Typography>
+        <Paper className="user-info-paper" sx={{ bgcolor: 'grey.900', color: 'white' }}>
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              User information
+            </Typography>
+            <Typography variant="body1">Username: {user}</Typography>
+          </Box>
           <Button
             variant="contained"
             color="secondary"
             onClick={() => setDeleteUserDialogOpen(true)}
-            style={{ marginLeft: 'auto' }}
+            className="delete-user-button"
           >
             Delete User
           </Button>
@@ -161,16 +163,16 @@ const Profile: React.FC = () => {
             <Grid container spacing={4}>
               {videos.map((video, index) => (
                 <Grid item xs={12} sm={6} md={3} key={video.id}>
-                <VideoCard title={video.title} user={""} id={video.id.toString()} />
-                <Box className="video-icon-buttons">
-                  <IconButton onClick={() => handleEditVideo(index)}>
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteVideo(index)}>
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </Box>
-              </Grid>
+                  <VideoCard title={video.title} user={""} id={video.id.toString()} />
+                  <Box className="video-icon-buttons">
+                    <IconButton onClick={() => handleEditVideo(index)}>
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteVideo(index)}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </Grid>
               ))}
             </Grid>
           )}
@@ -210,74 +212,27 @@ const Profile: React.FC = () => {
           )}
         </Box>
       </Box>
-      {editCommentId !== null && (
-        <EditCommentDialog
-          open={editCommentId !== null}
-          commentId={editCommentId}
-          onClose={handleCloseEditDialog}
-          onUpdate={handleEditSuccess}
-        />
-      )}
-      {deleteCommentId !== null && (
-        <DeleteCommentDialog
-          open={deleteCommentId !== null}
-          commentId={deleteCommentId}
-          onClose={handleCloseDeleteDialog}
-          onDelete={handleDeleteSuccess}
-        />
-      )}
-      {editVideoId !== null && (
-        <EditVideoDialog
-          open={editVideoId !== null}
-          videoId={editVideoId}
-          onClose={handleCloseEditVideoDialog}
-          onUpdate={handleEditVideoSuccess}
-        />
-      )}
-      {deleteVideoId !== null && (
-        <DeleteVideoDialog
-          open={deleteVideoId !== null}
-          videoId={deleteVideoId}
-          onClose={handleCloseDeleteVideoDialog}
-          onDelete={handleDeleteVideoSuccess}
-        />
-      )}
-      {deleteUserDialogOpen && (
-        <DeleteUserDialog
-          open={deleteUserDialogOpen}
-          onClose={() => setDeleteUserDialogOpen(false)}
-          onDelete={handleDeleteUserSuccess}
-        />
-      )}
-      <Snackbar
-        open={editSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setEditSnackbarOpen(false)}
-        message="Comment edited successfully"
-      />
-      <Snackbar
-        open={deleteSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setDeleteSnackbarOpen(false)}
-        message="Comment successfully deleted"
-      />
-      <Snackbar
-        open={editVideoSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setEditVideoSnackbarOpen(false)}
-        message="Successfully edited video"
-      />
-      <Snackbar
-        open={deleteVideoSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setDeleteVideoSnackbarOpen(false)}
-        message="Video successfully deleted"
-      />
-      <Snackbar
-        open={deleteUserSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setDeleteUserSnackbarOpen(false)}
-        message="User successfully deleted"
+      <ProfileDialogs
+        editCommentId={editCommentId}
+        deleteCommentId={deleteCommentId}
+        editVideoId={editVideoId}
+        deleteVideoId={deleteVideoId}
+        deleteUserDialogOpen={deleteUserDialogOpen}
+        editSnackbarOpen={editSnackbarOpen}
+        deleteSnackbarOpen={deleteSnackbarOpen}
+        editVideoSnackbarOpen={editVideoSnackbarOpen}
+        deleteVideoSnackbarOpen={deleteVideoSnackbarOpen}
+        deleteUserSnackbarOpen={deleteUserSnackbarOpen}
+        handleCloseEditDialog={handleCloseEditDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        handleCloseEditVideoDialog={handleCloseEditVideoDialog}
+        handleCloseDeleteVideoDialog={handleCloseDeleteVideoDialog}
+        handleCloseDeleteUserDialog={handleCloseDeleteUserDialog}
+        handleEditSuccess={handleEditSuccess}
+        handleDeleteSuccess={handleDeleteSuccess}
+        handleEditVideoSuccess={handleEditVideoSuccess}
+        handleDeleteVideoSuccess={handleDeleteVideoSuccess}
+        handleDeleteUserSuccess={handleDeleteUserSuccess}
       />
     </Container>
   );

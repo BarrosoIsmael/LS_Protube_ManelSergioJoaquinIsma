@@ -165,7 +165,6 @@ input {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%;
-  /* 16:9 aspect ratio */
   height: 0;
   overflow: hidden;
 }
@@ -176,4 +175,19 @@ input {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.card-custom {
+  padding: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.typography-custom {
+  padding-top: 30px;
+  font-size: 2rem;
+}
+
+.avatar-custom {
+  margin-bottom: 5px;
 }

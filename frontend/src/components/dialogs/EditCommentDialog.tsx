@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
-import { getEnv } from "../utils/Env";
+import { getEnv } from "../../utils/Env";
 
 interface EditCommentDialogProps {
   open: boolean;

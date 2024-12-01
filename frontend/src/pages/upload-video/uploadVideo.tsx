@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { Button } from "@mui/material";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ImageIcon from '@mui/icons-material/Image';
-import "./UploadVideo.css";
-import { getEnv } from "../utils/Env";
+import "./uploadVideo.css";
+import { getEnv } from "../../utils/Env";
 
 const UploadVideo: React.FC = () => {
   const { user } = useAuth();
@@ -108,7 +108,7 @@ const UploadVideo: React.FC = () => {
             type="file"
             accept="video/*"
             onChange={handleFileChange}
-            style={{ display: "none" }}
+            className="hidden"
           />
         </label>
         
@@ -129,7 +129,7 @@ const UploadVideo: React.FC = () => {
             type="file"
             accept="image/*"
             onChange={handleThumbnailChange}
-            style={{ display: "none" }}
+            className="hidden"
           />
         </label>
         

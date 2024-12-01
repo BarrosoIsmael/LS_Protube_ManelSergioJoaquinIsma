@@ -182,8 +182,8 @@ const VideoPlayer: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-black text-white">
       <main className="flex-1 container px-4 py-6">
         <div className="space-y-4">
-          <div>
-            <video className="w-full" controls src={videoMP4} />
+          <div className="video-container">
+            <video className="w-full h-full" controls src={videoMP4} />
           </div>
 
           <div className="flex justify-between items-center">

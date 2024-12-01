@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Card, CardContent, Avatar, Typography } from '@mui/material';
 import { ThumbUp as ThumbUpIcon, ThumbDown as ThumbDownIcon } from '@mui/icons-material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useAuth } from "../context/AuthContext";
 import { getEnv } from "../utils/Env";
 import { getRandomColor, isColorDark } from '../utils/commentUtils';
@@ -170,7 +171,11 @@ const VideoPlayer: React.FC = () => {
   };
 
   if (!videoData) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-container">
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (

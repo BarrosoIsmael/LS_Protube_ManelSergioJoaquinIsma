@@ -10,11 +10,11 @@
 }
 
 .video-card-image {
-    position: relative; 
+    position: relative;
     width: 250px;
     height: 140px;
     border-radius: 8px;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 .video-card-image img {
@@ -25,8 +25,8 @@
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
-    transition: opacity 0.3s ease; 
-    z-index: 1; 
+    transition: opacity 0.3s ease;
+    z-index: 1;
 }
 
 .video-card-image video {
@@ -37,10 +37,10 @@
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
-    opacity: 0; 
-    transition: opacity 0.3s ease; 
-    z-index: 2; 
-    pointer-events: none; 
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+    pointer-events: none;
 }
 
 .video-card-content h3 {
@@ -58,11 +58,24 @@
 }
 
 .video-card-image:hover video {
-    opacity: 1; 
+    opacity: 1;
 }
 
 .video-card-content p {
     font-size: 0.875rem;
     color: #ffffff;
     margin: 0;
+}
+
+.no-content-message {
+    padding-top: 30px;
+    font-size: 5rem;
+    text-align: center;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }

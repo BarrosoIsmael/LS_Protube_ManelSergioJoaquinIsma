@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import VideoCard from "../components/VideoCard";
-import { Box, Container, Grid } from "@mui/material";
-import "./homepage.css";
+import { Box, Container, Grid, Typography } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 import { getEnv } from "../utils/Env";
+import "./homepage.css";
 
 const Homepage: React.FC = () => {
   const [videos, setVideos] = useState<any[]>([]);
@@ -30,7 +31,11 @@ const Homepage: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-container">
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (

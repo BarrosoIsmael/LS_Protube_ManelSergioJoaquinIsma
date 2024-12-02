@@ -2,6 +2,7 @@
 
 ## Documentacion adicional
 
+#### DOCKER
 
 En aplication.properties la linea "spring.datasource.url=jdbc:postgresql://localhost:5432/${ENV_PROTUBE_DB}" es la dirección de la DB de prod para que al ejecutar "mvn spring-boot:run -P prod" funcione con normalidad, ya que sino, falla la conexion con la DB. En cambio, si de esta línea se cambia el puerto "5432" a "5433" la conexion será con la DB del container. Solo se necesita tener puesto el puerto 5433 para crear el contenedor, una vez hecho se puede volver a poner en 5432
 

@@ -12,6 +12,36 @@ Para ver los contenedores en Docker Desktop hay que activar lo siguiente en conf
 
 ![image](https://github.com/user-attachments/assets/610eb812-d433-4f2b-ae26-05298cfa8280)
 
+#### BUSCADOR
+Hemos implementado un buscador en el header de nuestra web para facilitar que los usuarios encuentren cualquier video de manera rápida y eficiente.
+Características clave:
+    Acceso directo: El buscador está ubicado en el header, accesible desde cualquier página.
+    Resultados instantáneos: Ofrece sugerencias en tiempo real mientras el usuario escribe.
+    Filtrado inteligente: Permite buscar por título
+
+#### LIKE Y DISLIKE
+Hemos implementado un sistema de likes y dislikes en nuestra web para los videos con el objetivo de mejorar la interacción de los usuarios y proporcionar una métrica útil para evaluar el contenido.
+
+#### EJECUTAR VIDEOS
+Hemos implementado una funcionalidad que permite que los videos se ejecuten automáticamente al colocar el ratón sobre ellos.
+Detalles de la funcionalidad:
+    Reproducción automática: Al pasar el cursor por encima de un video, este comienza a reproducirse automáticamente sin necesidad de hacer clic.
+    Silencio predeterminado: Los videos se reproducen sin sonido para no interrumpir la experiencia del usuario.
+    Interactividad mejorada: Los usuarios pueden explorar rápidamente el contenido de los videos antes de decidir si quieren verlo completo.
+    
+#### CAMBIO DEL TEXTO LOADING POR VÍDEO DE CARGA
+Hemos reemplazado el texto "Loading" por un video de carga al navegar entre pantallas de nuestra web, con el objetivo de hacer la experiencia más visual y atractiva.
+Detalles del cambio:
+    Elementos visuales dinámicos: En lugar de un texto estático, se muestra un video corto que mantiene la atención del usuario durante los tiempos de carga.
+    Transición fluida: El video se integra en la web y crea una sensación de continuidad mientras se cargan los recursos de la nueva pantalla.
+    Experiencia personalizada: El contenido del video puede reflejar la temática de la web, reforzando la identidad visual y mejorando la percepción de calidad.
+    
+#### CATEGORIAS
+Hemos diseñado un sistema inteligente para la gestión de categorías al subir o editar videos, que interactúa directamente con nuestra base de datos para mantenerla actualizada y consistente.
+Funcionamiento:
+    Validación de categorías existentes: Al agregar o editar un video, si el usuario selecciona una categoría existente (por ejemplo, Music), esta se asocia al video sin duplicarla en la base de datos.
+    Creación automática de nuevas categorías: Si el usuario introduce una categoría que no existe en la base de datos, esta se crea automáticamente y se guarda como una nueva opción disponible para futuros videos.
+    Base de datos dinámica: El sistema asegura que las categorías siempre estén actualizadas y que no haya duplicados, optimizando la gestión del contenido.
 
 ## Project
 The project consists of building a web application where the user can watch and comment videos uploaded by other registered users.

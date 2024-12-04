@@ -72,7 +72,7 @@
 
 .upload-video-container p.upload-status {
   font-weight: bold;
-  color: #ffffff;
+  color: #00d82f;
 }
 
 .upload-video-container p.upload-error {
@@ -86,7 +86,7 @@
   background-color: #6c757d;
   color: #fff;
   border: 2px solid #5a6268;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
@@ -176,4 +176,8 @@
 .upload-error {
   font-weight: bold;
   color: #dc3545;
+}
+
+.file-name {
+  margin-left: 10px;
 }

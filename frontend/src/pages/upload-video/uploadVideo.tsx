@@ -60,6 +60,15 @@ const UploadVideo: React.FC = () => {
     }
   };
 
+  const truncateFileName = (fileName: string) => {
+    const maxLength = 20;
+    if (fileName.length > maxLength) {
+      const extension = fileName.slice(fileName.lastIndexOf('.'));
+      return ` ${fileName.slice(0, 10)}...${extension}`;
+    }
+    return ` ${fileName}`;
+  };
+
   return (
     <div className="upload-video-container">
       <h2>Upload a Video</h2>
@@ -101,7 +110,7 @@ const UploadVideo: React.FC = () => {
             >
               Select File
             </Button>
-            <span>{selectedFile ? selectedFile.name : " No file selected"}</span>
+            <span className="file-name">{selectedFile ? truncateFileName(selectedFile.name) : " No file selected"}</span>
           </div>
           <input
             id="fileInput"
@@ -122,7 +131,7 @@ const UploadVideo: React.FC = () => {
             >
               Select Thumbnail
             </Button>
-            <span>{thumbnailFile ? thumbnailFile.name : " No file selected"}</span>
+            <span className="file-name">{thumbnailFile ? truncateFileName(thumbnailFile.name) : " No file selected"}</span>
           </div>
           <input
             id="thumbnailInput"
@@ -142,7 +151,9 @@ const UploadVideo: React.FC = () => {
       {uploadStatus && (
         <p
           className={
-            uploadStatus.startsWith("Error") || uploadStatus.startsWith("Failed")
+            uploadStatus.startsWith("Error") || 
+            uploadStatus.startsWith("Failed") || 
+            uploadStatus === "Please fill out all fields, and select files to upload."
               ? "upload-error"
               : "upload-status"
           }

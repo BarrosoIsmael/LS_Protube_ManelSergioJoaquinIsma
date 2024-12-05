@@ -107,6 +107,10 @@ public class VideoController {
             @RequestParam String description,
             @RequestParam String category,
             @RequestParam String username) {
+        List<Map<String, Object>> existingVideos = videoService.searchVideosByTitle(title);
+        if (!existingVideos.isEmpty()) {
+            return new ResponseEntity<>("Video Title already exists.", HttpStatus.CONFLICT);
+        }
         try {
             Long videoId = videoService.uploadVideoInfo(title, description, category, username);
             videoService.saveImage(imageFile, videoId);

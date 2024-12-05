@@ -285,5 +285,37 @@ public class VideoServiceTest {
         assertEquals("Test Description", videoDetails.get("description"));
         assertEquals("Test Category", videoDetails.get("category"));
     }
+    @Test
+    public void testSearchVideosByTitle() {
+        // Arrange
+        String query = "Test";
+        Video video1 = new Video();
+        video1.setId(1L);
+        video1.setTitle("Test Video 1");
+        User user1 = new User();
+        user1.setUsername("user1");
+        video1.setUser(user1);
+
+        Video video2 = new Video();
+        video2.setId(2L);
+        video2.setTitle("Another Test Video");
+        User user2 = new User();
+        user2.setUsername("user2");
+        video2.setUser(user2);
+
+        when(videoRepository.findByTitleContainingIgnoreCase(query)).thenReturn(Arrays.asList(video1, video2));
+
+        // Act
+        List<Map<String, Object>> result = videoService.searchVideosByTitle(query);
+
+        // Assert
+        assertEquals(2, result.size());
+        assertEquals(1L, result.get(0).get("id"));
+        assertEquals("Test Video 1", result.get(0).get("title"));
+        assertEquals("user1", result.get(0).get("user"));
+        assertEquals(2L, result.get(1).get("id"));
+        assertEquals("Another Test Video", result.get(1).get("title"));
+        assertEquals("user2", result.get(1).get("user"));
+    }
 
 }

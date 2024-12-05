@@ -181,3 +181,8 @@
 .file-name {
   margin-left: 10px;
 }
+
+.centered-container {
+  display: flex;
+  justify-content: center;
+}

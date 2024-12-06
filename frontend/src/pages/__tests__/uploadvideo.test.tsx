@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 import UploadVideo from '../upload-video/uploadVideo';
 import { AuthProvider } from '../../context/AuthContext';
 
@@ -16,9 +17,11 @@ describe('UploadVideo', () => {
 
   beforeEach(() => {
     render(
-      <AuthProvider>
-        <UploadVideo />
-      </AuthProvider>
+      <MemoryRouter>
+        <AuthProvider>
+          <UploadVideo />
+        </AuthProvider>
+      </MemoryRouter>
     );
   });
 
@@ -26,8 +29,8 @@ describe('UploadVideo', () => {
     expect(screen.getByLabelText(/Title:/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Description:/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Category:/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Video File:/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Thumbnail File:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Select File/i)).toBeInTheDocument();
+    expect(screen.getByText(/Select Thumbnail/i)).toBeInTheDocument();
     expect(screen.getByText(/Upload Video/i)).toBeInTheDocument();
   });
 
@@ -41,8 +44,8 @@ describe('UploadVideo', () => {
     fireEvent.change(screen.getByLabelText(/Category:/i), { target: { value: 'Test Category' } });
 
     // Simular selección de archivos
-    const videoInput = screen.getByLabelText(/Video File:/i).nextElementSibling as HTMLInputElement;
-    const thumbnailInput = screen.getByLabelText(/Thumbnail File:/i).nextElementSibling as HTMLInputElement;
+    const videoInput = screen.getByLabelText(/Video File \(100MB max\):/i).nextElementSibling as HTMLInputElement;
+    const thumbnailInput = screen.getByLabelText(/Thumbnail File \(100MB max\):/i).nextElementSibling as HTMLInputElement;
 
     fireEvent.change(videoInput, { target: { files: [videoFile] } });
     fireEvent.change(thumbnailInput, { target: { files: [thumbnailFile] } });
@@ -51,7 +54,7 @@ describe('UploadVideo', () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({}),
+        text: () => Promise.resolve('Video and thumbnail uploaded successfully!'),
       })
     ) as jest.Mock;
 
@@ -59,8 +62,8 @@ describe('UploadVideo', () => {
     fireEvent.click(screen.getByText(/Upload Video/i));
 
     // Esperar que el estado de subida sea actualizado
-    await screen.findByRole('alert');
-
+    const statusMessage = await screen.findByRole('alert');
+    expect(statusMessage).toHaveClass('upload-error');
   });
 
   it('shows error message on upload failure', async () => {
@@ -68,7 +71,7 @@ describe('UploadVideo', () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
-        json: () => Promise.resolve({}),
+        text: () => Promise.resolve('Failed to upload video and thumbnail.'),
       })
     ) as jest.Mock;
 
@@ -80,8 +83,8 @@ describe('UploadVideo', () => {
     const videoFile = new File(['video content'], 'testVideo.mp4', { type: 'video/mp4' });
     const thumbnailFile = new File(['image content'], 'testThumbnail.png', { type: 'image/png' });
 
-    const videoInput = screen.getByLabelText(/Video File:/i).nextElementSibling as HTMLInputElement;
-    const thumbnailInput = screen.getByLabelText(/Thumbnail File:/i).nextElementSibling as HTMLInputElement;
+    const videoInput = screen.getByLabelText(/Video File \(100MB max\):/i).nextElementSibling as HTMLInputElement;
+    const thumbnailInput = screen.getByLabelText(/Thumbnail File \(100MB max\):/i).nextElementSibling as HTMLInputElement;
 
     fireEvent.change(videoInput, { target: { files: [videoFile] } });
     fireEvent.change(thumbnailInput, { target: { files: [thumbnailFile] } });
@@ -90,7 +93,6 @@ describe('UploadVideo', () => {
 
     // Esperar mensaje de error
     const statusMessage = await screen.findByRole('alert');
-    console.log(statusMessage.textContent);
-    expect(statusMessage).toHaveClass('upload-error');
+    expect(statusMessage.textContent).toBe('Error: Please fill out all fields, and select files to upload.');
   });
 });

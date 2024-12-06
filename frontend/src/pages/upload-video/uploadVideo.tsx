@@ -32,7 +32,7 @@ const UploadVideo: React.FC = () => {
 
   const handleUpload = async () => {
     if (!selectedFile || !thumbnailFile || !title || !description || !category.trim() || !user) {
-      setUploadStatus("Please fill out all fields, and select files to upload.");
+      setUploadStatus("Error: Please fill out all fields, and select files to upload.");
       return;
     }
 
@@ -57,11 +57,11 @@ const UploadVideo: React.FC = () => {
         setUploadStatus(await response.text());
         navigate("/profile");
       } else {
-        setUploadStatus(await response.text());
+        setUploadStatus("Failed: " + await response.text());
       }
     } catch (error) {
       console.error("Error uploading the video and thumbnail:", error);
-      setUploadStatus("An error occurred during the upload.");
+      setUploadStatus("Error: An error occurred during the upload.");
     } finally {
       setIsLoading(false);
     }
@@ -162,9 +162,16 @@ const UploadVideo: React.FC = () => {
         </div>
       </form>
       {uploadStatus && (
-        <div role="alert" className={uploadStatus.includes("successfully") ? "upload-status" : "upload-error"}>
+        <p
+          role="alert"
+          className={
+            uploadStatus.startsWith("Error") || uploadStatus.startsWith("Failed")
+              ? "upload-error"
+              : "upload-status"
+          }
+        >
           {uploadStatus}
-        </div>
+        </p>
       )}
     </div>
   );

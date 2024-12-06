@@ -2,51 +2,90 @@
 
 ## Documentacion adicional
 
-#### DOCKER
+### DOCKER
 
-En aplication.properties la linea "spring.datasource.url=jdbc:postgresql://localhost:5432/${ENV_PROTUBE_DB}" es la dirección de la DB de prod para que al ejecutar "mvn spring-boot:run -P prod" funcione con normalidad, ya que sino, falla la conexion con la DB. En cambio, si de esta línea se cambia el puerto "5432" a "5433" la conexion será con la DB del container. Solo se necesita tener puesto el puerto 5433 para crear el contenedor, una vez hecho se puede volver a poner en 5432
+#### Pasos previos
 
-Para crear los contenedores hay que ejecutar en la raiz del proyecto "docker-compose up --build".
+Antes de nada hay que asegurarse de ejecutar estos comandos en el directorio /backend con la ultima version del proyecto:
+- mvn clean install -Pprod
+- mvn clean package -Pprod
+
+#### Instalar y configurar Docker
+
+Para instalar Docker en Ubuntu hay que ejecutar los siguientes comandos en la terminal:
+- sudo apt update
+- sudo apt install docker
+- sudo usermod -aG docker $USER
+- newgrp docker
+
+#### Ejecutar contenedores
+
+Para crear los contenedores hay que ejecutar este comando en la raiz del proyecto:
+- docker-compose up --build
+
+#### Ver contenedores
 
 Para ver los contenedores en Docker Desktop hay que activar lo siguiente en configuracion:
 
 ![image](https://github.com/user-attachments/assets/610eb812-d433-4f2b-ae26-05298cfa8280)
 
-#### BUSCADOR
-Hemos implementado un buscador en el header de nuestra web para facilitar que los usuarios encuentren cualquier video de manera rápida y eficiente.
+#### Acceder a la aplicacion
 
-Características clave:
-    - Acceso directo: El buscador está ubicado en el header, accesible desde cualquier página.
-    - Resultados instantáneos: Ofrece sugerencias en tiempo real mientras el usuario escribe.
-    - Filtrado inteligente: Permite buscar por título
+Para acceder a la aplicacion se utiliza la misma direccion que el perfil prod.
 
-#### LIKE Y DISLIKE
+#### Acceder a la base de datos
+
+Para diferenciar la base de datos del perfil prod y la del contenedor de docker, se ha configurado el puerto 5433 para la base de datos de docker. Por lo que en caso de acceder a la DB se necesitará introducir la misma configuracion que la DB de producccion pero solo cambiando el puerto, indicado en la imagen (ejemplo con DBeaver):
+
+![img.png](resources/docker_db_configuration.png)
+
+#### Eliminar contenedores y datos
+
+Una vez que ya no se necesiten los contenedores hay que ejecutar este comando en la raiz del proyecto:
+- docker-compose down -v
+
+---
+### BUSCADOR
+Hemos implementado un buscador en el header de nuestra web para facilitar que los usuarios encuentren cualquier video mediante el titulo de manera rápida y eficiente.
+
+- Características clave:
+  - Acceso directo: El buscador está ubicado en el header, accesible desde cualquier página que lo disponga.
+  - Filtrado inteligente: Permite buscar cualquier video escribiendo cualquier cadena de texto que contenga el título del video deseado.
+
+---
+### LIKE Y DISLIKE
 Hemos implementado un sistema de likes y dislikes en nuestra web para los videos con el objetivo de mejorar la interacción de los usuarios y proporcionar una métrica útil para evaluar el contenido.
+- Características clave:
+    - Donde encontrarlos: En la pagina de un video, justo debajo a la derecha del reproductor, se encuentran los botones de like y dislike.
+    - Interacción sencilla: Los usuarios pueden dar like o dislike a un video con un solo clic en los botones correspondientes.
+    - Visualización de likes: Los likes y dislikes de cada video se muestran en tiempo real para que los usuarios puedan ver la popularidad del contenido.
+    - Feedback visual: Los botones de like y dislike cambian de color al hacer clic para proporcionar un feedback visual inmediato al usuario.
 
-#### EJECUTAR VIDEOS
+---
+### EJECUTAR VIDEOS
 Hemos implementado una funcionalidad que permite que los videos se ejecuten automáticamente al colocar el ratón sobre ellos.
 
-Detalles de la funcionalidad:
+- Detalles de la funcionalidad:
+    - Donde ver la funcionalidad: La funcionalidad está disponible en la página principal y en la de perfil de usuario si es que tiene videos subidos.
     - Reproducción automática: Al pasar el cursor por encima de un video, este comienza a reproducirse automáticamente sin necesidad de hacer clic.
-    - Silencio predeterminado: Los videos se reproducen sin sonido para no interrumpir la experiencia del usuario.
-    - Interactividad mejorada: Los usuarios pueden explorar rápidamente el contenido de los videos antes de decidir si quieren verlo completo.
-    
-#### CAMBIO DEL TEXTO LOADING POR VÍDEO DE CARGA
-Hemos reemplazado el texto "Loading" por un video de carga al navegar entre pantallas de nuestra web, con el objetivo de hacer la experiencia más visual y atractiva.
+    - Silencio predeterminado: Los videos se reproducen sin sonido para no interrumpir la experiencia del usuario. 
+    - Pausa al alejar el cursor: Si el usuario retira el cursor del video, este se pausa automáticamente para evitar distracciones innecesarias.
 
-Detalles del cambio:
-    - Elementos visuales dinámicos: En lugar de un texto estático, se muestra un video corto que mantiene la atención del usuario durante los tiempos de carga.
-    - Transición fluida: El video se integra en la web y crea una sensación de continuidad mientras se cargan los recursos de la nueva pantalla.
-    - Experiencia personalizada: El contenido del video puede reflejar la temática de la web, reforzando la identidad visual y mejorando la percepción de calidad.
-    
-#### CATEGORIAS
+---
+### USO DE COMPONENTE DE CARGA
+- Hemos reemplazado el texto "Loading" por un video de carga al navegar entre pantallas de nuestra web, con el objetivo de hacer la experiencia más visual y atractiva.
+- Tambien se ha aplicado en el formulario de subida de video, al hacer clic en el botón de "Upload video" que hace submit del formulario, este se convierte en un componente de carga para indicar al usuario que la subida del video está en proceso.
+
+---
+### CATEGORIAS
 Hemos diseñado un sistema inteligente para la gestión de categorías al subir o editar videos, que interactúa directamente con nuestra base de datos para mantenerla actualizada y consistente.
 
-Funcionamiento:
-    - Validación de categorías existentes: Al agregar o editar un video, si el usuario selecciona una categoría existente (por ejemplo, Music), esta se asocia al video sin duplicarla en la base de datos.
+- Funcionamiento:
+    - Validación de categorías existentes: Al agregar o editar un video, si el usuario indica una categoría existente (por ejemplo, Music), esta se asocia al video sin duplicarla en la base de datos.
     - Creación automática de nuevas categorías: Si el usuario introduce una categoría que no existe en la base de datos, esta se crea automáticamente y se guarda como una nueva opción disponible para futuros videos.
     - Base de datos dinámica: El sistema asegura que las categorías siempre estén actualizadas y que no haya duplicados, optimizando la gestión del contenido.
 
+---
 ## Project
 The project consists of building a web application where the user can watch and comment videos uploaded by other registered users.
 

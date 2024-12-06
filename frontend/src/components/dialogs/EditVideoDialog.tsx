@@ -13,6 +13,7 @@ const EditVideoDialog: React.FC<EditVideoDialogProps> = ({ open, videoId, onClos
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -33,6 +34,10 @@ const EditVideoDialog: React.FC<EditVideoDialogProps> = ({ open, videoId, onClos
       fetchVideoDetails();
     }
   }, [open, videoId]);
+
+  useEffect(() => {
+    setIsFormValid(title.trim() !== "" && description.trim() !== "" && category.trim() !== "");
+  }, [title, description, category]);
 
   const handleUpdateVideo = async () => {
     const formData = new FormData();
@@ -86,7 +91,7 @@ const EditVideoDialog: React.FC<EditVideoDialogProps> = ({ open, videoId, onClos
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleUpdateVideo}>Update video</Button>
+        <Button onClick={handleUpdateVideo} disabled={!isFormValid}>Update video</Button>
       </DialogActions>
     </Dialog>
   );

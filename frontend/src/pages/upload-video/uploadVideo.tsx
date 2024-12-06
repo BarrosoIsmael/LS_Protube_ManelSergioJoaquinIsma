@@ -108,7 +108,7 @@ const UploadVideo: React.FC = () => {
           />
         </label>
         <label>
-          Video File:
+          Video File (100MB max):
           <div className="custom-file-upload">
             <Button
               variant="contained"
@@ -129,7 +129,7 @@ const UploadVideo: React.FC = () => {
         </label>
         
         <label>
-          Thumbnail File:
+          Thumbnail File (100MB max):
           <div className="custom-min-upload">
             <Button
               variant="contained"

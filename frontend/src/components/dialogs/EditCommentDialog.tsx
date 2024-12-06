@@ -11,6 +11,7 @@ interface EditCommentDialogProps {
 
 const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ open, commentId, onClose, onUpdate }) => {
   const [commentText, setCommentText] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     const fetchCommentText = async () => {
@@ -29,6 +30,10 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ open, commentId, 
       fetchCommentText();
     }
   }, [open, commentId]);
+
+  useEffect(() => {
+    setIsFormValid(commentText.trim() !== "");
+  }, [commentText]);
 
   const handleUpdateComment = async () => {
     const formData = new FormData();
@@ -64,7 +69,7 @@ const EditCommentDialog: React.FC<EditCommentDialogProps> = ({ open, commentId, 
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleUpdateComment}>Update comment</Button>
+        <Button onClick={handleUpdateComment} disabled={!isFormValid}>Update comment</Button>
       </DialogActions>
     </Dialog>
   );

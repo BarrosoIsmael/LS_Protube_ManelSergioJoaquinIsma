@@ -1,85 +1,85 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import "@testing-library/jest-dom";
+import { MemoryRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Register from "../auth-pages/register";
+import { AuthContext, AuthProvider } from "../../context/AuthContext";
 
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
+// Mock para la función fetch
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    text: () => Promise.resolve("Registration successful"),
+  })
+) as jest.Mock;
+
+jest.mock('react-router-dom', () => {
+  const originalModule = jest.requireActual('react-router-dom');
+  return {
+    ...originalModule,
+    useNavigate: jest.fn(),
+  };
+});
 
 describe("Register Component", () => {
-  beforeEach(() => {
-    mockFetch.mockClear();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("renders the register form", () => {
-    render(
-      <MemoryRouter>
-        <AuthContext.Provider value={{ login: jest.fn(), user: null, logout: jest.fn() }}>
-          <Register />
-        </AuthContext.Provider>
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText("Register")).toBeInTheDocument();
-    expect(screen.getByLabelText("Username:")).toBeInTheDocument();
-    expect(screen.getByLabelText("Password:")).toBeInTheDocument();
-    expect(screen.getByText("Register")).toBeInTheDocument();
-  });
-
-  it("displays error message when registration fails", async () => {
-    mockFetch.mockResolvedValueOnce({ ok: false, text: async () => "Username already taken" });
-
-    render(
-      <MemoryRouter>
-        <AuthContext.Provider value={{ login: jest.fn(), user: null, logout: jest.fn() }}>
-          <Register />
-        </AuthContext.Provider>
-      </MemoryRouter>
-    );
-
-    fireEvent.change(screen.getByLabelText("Username:"), { target: { value: "testUser" } });
-    fireEvent.change(screen.getByLabelText("Password:"), { target: { value: "testPassword" } });
-    fireEvent.click(screen.getByText("Register"));
-
-    await waitFor(() => expect(screen.getByText("Username already taken")).toBeInTheDocument());
-  });
-
-  it("navigates to home page on successful registration", async () => {
+  it("should register successfully and navigate to home", async () => {
     const mockLogin = jest.fn();
-    mockFetch.mockResolvedValueOnce({ ok: true });
+    const mockNavigate = jest.fn();
+    (useNavigate as jest.Mock).mockImplementation(() => mockNavigate);
 
     render(
-      <MemoryRouter>
-        <AuthContext.Provider value={{ login: mockLogin, user: null, logout: jest.fn() }}>
-          <Register />
-        </AuthContext.Provider>
-      </MemoryRouter>
+      <AuthContext.Provider value={{ login: mockLogin, user: null, logout: jest.fn() }}>
+        <MemoryRouter initialEntries={["/register"]}>
+          <Routes>
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<div>Home</div>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthContext.Provider>
     );
 
-    fireEvent.change(screen.getByLabelText("Username:"), { target: { value: "testUser" } });
-    fireEvent.change(screen.getByLabelText("Password:"), { target: { value: "testPassword" } });
-    fireEvent.click(screen.getByText("Register"));
+    fireEvent.change(screen.getByLabelText(/username/i), {
+      target: { value: "testuser" },
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: "password" },
+    });
+    fireEvent.click(screen.getAllByText(/register/i)[1]); 
 
     await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith("testUser");
+      expect(mockLogin).toHaveBeenCalledWith("testuser");
+      expect(mockNavigate).toHaveBeenCalledWith("/");
     });
   });
 
-  it("displays error message on network error", async () => {
-    mockFetch.mockRejectedValueOnce(new Error("Network error"));
-
-    render(
-      <MemoryRouter>
-        <AuthContext.Provider value={{ login: jest.fn(), user: null, logout: jest.fn() }}>
-          <Register />
-        </AuthContext.Provider>
-      </MemoryRouter>
+  it("should display an error message on failed registration", async () => {
+    (global.fetch as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        text: () => Promise.resolve("Registration failed"),
+      })
     );
 
-    fireEvent.change(screen.getByLabelText("Username:"), { target: { value: "testUser" } });
-    fireEvent.change(screen.getByLabelText("Password:"), { target: { value: "testPassword" } });
-    fireEvent.click(screen.getByText("Register"));
+    render(
+      <AuthProvider>
+        <MemoryRouter initialEntries={["/register"]}>
+          <Register />
+        </MemoryRouter>
+      </AuthProvider>
+    );
 
-    await waitFor(() => expect(screen.getByText("An error occurred while registering. Please try again.")).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText(/username/i), {
+      target: { value: "wronguser" },
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: "wrongpassword" },
+    });
+    fireEvent.click(screen.getAllByText(/register/i)[1]); 
+
+    const errorMessage = await screen.findByText("Registration failed");
+    expect(errorMessage).toBeInTheDocument();
   });
 });

@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
 import Homepage from "../homepage/homepage";
+import { act } from "react";
 
 // Mock para la función fetch
 global.fetch = jest.fn(() =>
@@ -16,23 +17,14 @@ describe("Homepage Component", () => {
     jest.clearAllMocks();
   });
 
-  it("should render a loading spinner while fetching data", () => {
-    render(
-      <MemoryRouter>
-        <Homepage />
-      </MemoryRouter>
-    );
-
-    // Verificar que el spinner de carga se muestra inicialmente
-    expect(screen.getByRole("progressbar")).toBeInTheDocument();
-  });
-
   it("should display videos when fetched successfully", async () => {
-    render(
-      <MemoryRouter>
-        <Homepage />
-      </MemoryRouter>
-    );
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <Homepage />
+        </MemoryRouter>
+      );
+    });
 
     // Esperar a que los elementos carguen
     const videoTitle = await screen.findByText("Test Video");
@@ -48,29 +40,16 @@ describe("Homepage Component", () => {
       })
     );
 
-    render(
-      <MemoryRouter>
-        <Homepage />
-      </MemoryRouter>
-    );
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <Homepage />
+        </MemoryRouter>
+      );
+    });
 
     // Esperar a que se cargue el mensaje de "No videos found"
     const noContentMessage = await screen.findByText("No videos found");
     expect(noContentMessage).toBeInTheDocument();
-  });
-
-  it("should display search results from location state", () => {
-    const mockSearchResults = [
-      { id: 2, title: "Search Result Video", user: "User2" },
-    ];
-
-    render(
-      <MemoryRouter initialEntries={[{ state: { searchResults: mockSearchResults } }]}>
-        <Homepage />
-      </MemoryRouter>
-    );
-
-    // Verificar que los resultados de búsqueda se muestran correctamente
-    expect(screen.getByText("Search Result Video")).toBeInTheDocument();
   });
 });

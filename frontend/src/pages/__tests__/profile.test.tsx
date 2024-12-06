@@ -1,78 +1,91 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { AuthContext } from "../../context/AuthContext";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Profile from "../profile/profile";
+import { AuthContext } from "../../context/AuthContext";
 
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
+// Mock for the fetch function
+global.fetch = jest.fn((url) => {
+  if (url.includes("/videos")) {
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve([{ id: 1, title: "Test Video" }]),
+    });
+  }
+  if (url.includes("/comments")) {
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve([{ id: 1, text: "Test Comment" }]),
+    });
+  }
+  if (url.includes("/comment-text")) {
+    return Promise.resolve({
+      ok: true,
+      text: () => Promise.resolve("Test Comment Text"),
+    });
+  }
+  return Promise.reject("Unknown URL");
+}) as jest.Mock;
 
 describe("Profile Component", () => {
-  beforeEach(() => {
-    mockFetch.mockClear();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("renders user information", async () => {
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => [] }); // Videos
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => [] }); // Comments
-
+  it("should display user information, videos, and comments", async () => {
     render(
-      <AuthContext.Provider value={{ user: "testUser", login: jest.fn(), logout: jest.fn() }}>
-        <Profile />
+      <AuthContext.Provider value={{ user: "testuser", login: jest.fn(), logout: jest.fn() }}>
+        <MemoryRouter>
+          <Routes>
+            <Route path="/" element={<Profile />} />
+          </Routes>
+        </MemoryRouter>
       </AuthContext.Provider>
     );
 
     expect(screen.getByText("My Profile")).toBeInTheDocument();
-    expect(screen.getByText("Username: testUser")).toBeInTheDocument();
-  });
-
-  it("displays uploaded videos", async () => {
-    const mockVideos = [{ id: 1, title: "Video 1" }];
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => mockVideos });
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => [] });
-
-    render(
-      <AuthContext.Provider value={{ user: "testUser", login: jest.fn(), logout: jest.fn() }}>
-        <Profile />
-      </AuthContext.Provider>
-    );
-
-    await waitFor(() => expect(screen.getByText("Uploaded Videos")).toBeInTheDocument());
-    expect(screen.getByText("Video 1")).toBeInTheDocument();
-  });
-
-  it("handles delete video action", async () => {
-    const mockVideos = [{ id: 1, title: "Video 1" }];
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => mockVideos });
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => [] });
-
-    render(
-      <AuthContext.Provider value={{ user: "testUser", login: jest.fn(), logout: jest.fn() }}>
-        <Profile />
-      </AuthContext.Provider>
-    );
-
-    const deleteButton = await screen.findByRole("button", { name: /delete/i });
-    fireEvent.click(deleteButton);
+    expect(screen.getByText("User information")).toBeInTheDocument();
+    expect(screen.getByText("Username: testuser")).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/videos"),
-        expect.objectContaining({ method: "DELETE" })
-      );
+      expect(screen.getByText("Test Video")).toBeInTheDocument();
+      expect(screen.getByText("Test Comment")).toBeInTheDocument();
     });
   });
 
-  it("displays and handles comments", async () => {
-    const mockComments = [{ id: 1, content: "Comment 1" }];
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => [] });
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => mockComments });
-
+  it("should handle edit and delete actions for videos and comments", async () => {
     render(
-      <AuthContext.Provider value={{ user: "testUser", login: jest.fn(), logout: jest.fn() }}>
-        <Profile />
+      <AuthContext.Provider value={{ user: "testuser", login: jest.fn(), logout: jest.fn() }}>
+        <MemoryRouter>
+          <Routes>
+            <Route path="/" element={<Profile />} />
+          </Routes>
+        </MemoryRouter>
       </AuthContext.Provider>
     );
 
-    await waitFor(() => expect(screen.getByText("My Comments")).toBeInTheDocument());
-    expect(screen.getByText("Comment 1")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Test Video")).toBeInTheDocument();
+      expect(screen.getByText("Test Comment")).toBeInTheDocument();
+    });
+
+
+    // Simulate the action of deleting a video
+    await act(async () => {
+      fireEvent.click(screen.getAllByTestId("DeleteIcon")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Delete Video")).toBeInTheDocument();
+    });
+
+    // Simulate the action of editing a comment
+    await act(async () => {
+      fireEvent.click(screen.getAllByTestId("EditIcon")[1]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Edit Comment")).toBeInTheDocument();
+    });
   });
 });

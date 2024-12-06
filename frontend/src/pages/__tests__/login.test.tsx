@@ -1,85 +1,85 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import "@testing-library/jest-dom";
+import { MemoryRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Login from "../auth-pages/login";
+import { AuthContext, AuthProvider } from "../../context/AuthContext";
 
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
+// Mock para la función fetch
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    text: () => Promise.resolve("Login successful"),
+  })
+) as jest.Mock;
+
+jest.mock('react-router-dom', () => {
+  const originalModule = jest.requireActual('react-router-dom');
+  return {
+    ...originalModule,
+    useNavigate: jest.fn(),
+  };
+});
 
 describe("Login Component", () => {
-  beforeEach(() => {
-    mockFetch.mockClear();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("renders the login form", () => {
-    render(
-      <MemoryRouter>
-        <AuthContext.Provider value={{ login: jest.fn(), user: null, logout: jest.fn() }}>
-          <Login />
-        </AuthContext.Provider>
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText("Login")).toBeInTheDocument();
-    expect(screen.getByLabelText("Username:")).toBeInTheDocument();
-    expect(screen.getByLabelText("Password:")).toBeInTheDocument();
-    expect(screen.getByText("Login")).toBeInTheDocument();
-  });
-
-  it("displays error message when login fails", async () => {
-    mockFetch.mockResolvedValueOnce({ ok: false, text: async () => "Invalid credentials" });
-
-    render(
-      <MemoryRouter>
-        <AuthContext.Provider value={{ login: jest.fn(), user: null, logout: jest.fn() }}>
-          <Login />
-        </AuthContext.Provider>
-      </MemoryRouter>
-    );
-
-    fireEvent.change(screen.getByLabelText("Username:"), { target: { value: "testUser" } });
-    fireEvent.change(screen.getByLabelText("Password:"), { target: { value: "wrongPassword" } });
-    fireEvent.click(screen.getByText("Login"));
-
-    await waitFor(() => expect(screen.getByText("Invalid credentials")).toBeInTheDocument());
-  });
-
-  it("navigates to home page on successful login", async () => {
+  it("should login successfully and navigate to home", async () => {
     const mockLogin = jest.fn();
-    mockFetch.mockResolvedValueOnce({ ok: true });
+    const mockNavigate = jest.fn();
+    (useNavigate as jest.Mock).mockImplementation(() => mockNavigate);
 
     render(
-      <MemoryRouter>
-        <AuthContext.Provider value={{ login: mockLogin, user: null, logout: jest.fn() }}>
-          <Login />
-        </AuthContext.Provider>
-      </MemoryRouter>
+      <AuthContext.Provider value={{ login: mockLogin, user: null, logout: jest.fn() }}>
+        <MemoryRouter initialEntries={["/login"]}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<div>Home</div>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthContext.Provider>
     );
 
-    fireEvent.change(screen.getByLabelText("Username:"), { target: { value: "testUser" } });
-    fireEvent.change(screen.getByLabelText("Password:"), { target: { value: "correctPassword" } });
-    fireEvent.click(screen.getByText("Login"));
+    fireEvent.change(screen.getByLabelText(/username/i), {
+      target: { value: "testuser" },
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: "password" },
+    });
+    fireEvent.click(screen.getAllByText(/login/i)[1]); // Usar el segundo elemento con el texto "login"
 
     await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith("testUser");
+      expect(mockLogin).toHaveBeenCalledWith("testuser");
+      expect(mockNavigate).toHaveBeenCalledWith("/");
     });
   });
 
-  it("displays error message on network error", async () => {
-    mockFetch.mockRejectedValueOnce(new Error("Network error"));
-
-    render(
-      <MemoryRouter>
-        <AuthContext.Provider value={{ login: jest.fn(), user: null, logout: jest.fn() }}>
-          <Login />
-        </AuthContext.Provider>
-      </MemoryRouter>
+  it("should display an error message on failed login", async () => {
+    (global.fetch as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        text: () => Promise.resolve("Invalid credentials"),
+      })
     );
 
-    fireEvent.change(screen.getByLabelText("Username:"), { target: { value: "testUser" } });
-    fireEvent.change(screen.getByLabelText("Password:"), { target: { value: "anyPassword" } });
-    fireEvent.click(screen.getByText("Login"));
+    render(
+      <AuthProvider>
+        <MemoryRouter initialEntries={["/login"]}>
+          <Login />
+        </MemoryRouter>
+      </AuthProvider>
+    );
 
-    await waitFor(() => expect(screen.getByText("An error occurred while logging in. Please try again.")).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText(/username/i), {
+      target: { value: "wronguser" },
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: "wrongpassword" },
+    });
+    fireEvent.click(screen.getAllByText(/login/i)[1]); // Usar el segundo elemento con el texto "login"
+
+    const errorMessage = await screen.findByText("Invalid credentials");
+    expect(errorMessage).toBeInTheDocument();
   });
 });

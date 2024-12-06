@@ -33,6 +33,11 @@
   margin-top: 10px;
 }
 
+.comment-grid{
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
 .comment-item {
   display: flex;
   align-items: center;
@@ -40,6 +45,7 @@
   background-color: #2a2a2a;
   padding: 10px;
   margin: 10px 0;
+  margin-top: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -87,12 +93,30 @@
 }
 
 .delete-user-button {
-  margin-left: auto;
+  width: 15%;
+  padding: 12px 30px;
+  background-color: red;
+  color: #fff;
+  border: 2px solid darkred;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.profile-container .section-divider {
+.delete-user-button:hover {
+  background-color: darkred;
+  border-color: #8b0000;
+}
+
+.delete-user-button:active {
+  transform: translateY(2px);
+}
+
+.hr {
   border: 0;
-  border-top: 2px solid white;
+  border-top: 1px solid white;
   margin: 20px 0;
 }
 

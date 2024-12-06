@@ -198,7 +198,7 @@ const Profile: React.FC = () => {
               <hr className="hr"/>
             </Typography>
           ) : (
-            <Grid container spacing={2} direction="column">
+            <Grid container spacing={2} direction="column" className="comment-grid">
               {comments.map((comment, index) => (
                 <Box key={index} className="comment-item" display="flex" alignItems="center">
                   <Box flexGrow={1}>

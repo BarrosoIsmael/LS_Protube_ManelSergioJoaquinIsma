@@ -162,17 +162,9 @@ const UploadVideo: React.FC = () => {
         </div>
       </form>
       {uploadStatus && (
-        <p
-          className={
-            uploadStatus.startsWith("Error") || 
-            uploadStatus.startsWith("Failed") || 
-            uploadStatus === "Please fill out all fields, and select files to upload."
-              ? "upload-error"
-              : "upload-status"
-          }
-        >
+        <div role="alert" className={uploadStatus.includes("successfully") ? "upload-status" : "upload-error"}>
           {uploadStatus}
-        </p>
+        </div>
       )}
     </div>
   );

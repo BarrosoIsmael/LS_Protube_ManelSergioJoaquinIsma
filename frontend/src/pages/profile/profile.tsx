@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import VideoCard from "../../components/video-card/VideoCard";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Comment from "../../components/Comment";
 import ProfileDialogs from "../../components/dialogs/ProfileDialogs";
 import "./profile.css";
@@ -135,17 +136,22 @@ const Profile: React.FC = () => {
         </Typography>
 
         <Paper className="user-info-paper" sx={{ bgcolor: 'grey.900', color: 'white' }}>
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              User information
-            </Typography>
-            <Typography variant="body1">Username: {user}</Typography>
+          <Box display="flex" alignItems="center">
+            <AccountCircleIcon className="user-icon" sx={{ fontSize: '6rem' }}/>  
+            <Box>
+              <Typography variant="h6" gutterBottom className="user-info-title">
+                User information
+              </Typography>
+              <Typography variant="body1" className="username">Username: {user}</Typography>
+            </Box>
           </Box>
           <Button
             variant="contained"
             color="secondary"
             onClick={() => setDeleteUserDialogOpen(true)}
             className="delete-user-button"
+            startIcon={<DeleteIcon />} 
+            sx={{ backgroundColor: 'red' }}
           >
             Delete User
           </Button>
@@ -157,18 +163,21 @@ const Profile: React.FC = () => {
           </Typography>
           {videos.length === 0 ? (
             <Typography className="no-content-message" variant="h6">
-              No videos yet
+              <hr className="hr"/>
+              No videos yet ​😞​
+              <hr className="hr"/>
             </Typography>
+            
           ) : (
             <Grid container spacing={4}>
               {videos.map((video, index) => (
                 <Grid item xs={12} sm={6} md={3} key={video.id}>
                   <VideoCard title={video.title} user={""} id={video.id.toString()} />
                   <Box className="video-icon-buttons">
-                    <IconButton onClick={() => handleEditVideo(index)}>
+                    <IconButton className="edit-icon" onClick={() => handleEditVideo(index)}>
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton onClick={() => handleDeleteVideo(index)}>
+                    <IconButton className="delete-icon" onClick={() => handleDeleteVideo(index)}>
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </Box>
@@ -184,10 +193,12 @@ const Profile: React.FC = () => {
           </Typography>
           {comments.length === 0 ? (
             <Typography className="no-content-message" variant="h6">
-              No comments yet
+              <hr className="hr"/>
+              No comments yet 😞
+              <hr className="hr"/>
             </Typography>
           ) : (
-            <Grid container spacing={2} direction="column">
+            <Grid container spacing={2} direction="column" className="comment-grid">
               {comments.map((comment, index) => (
                 <Box key={index} className="comment-item" display="flex" alignItems="center">
                   <Box flexGrow={1}>
@@ -199,10 +210,10 @@ const Profile: React.FC = () => {
                     />
                   </Box>
                   <Box display="flex" flexDirection="column">
-                    <IconButton onClick={() => handleEditComment(index)}>
+                    <IconButton className="edit-icon" onClick={() => handleEditComment(index)}>
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton onClick={() => handleDeleteComment(index)}>
+                    <IconButton className="delete-icon" onClick={() => handleDeleteComment(index)}>
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </Box>

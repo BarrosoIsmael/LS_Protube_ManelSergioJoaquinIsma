@@ -1,19 +1,22 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ImageIcon from '@mui/icons-material/Image';
+import { useNavigate } from "react-router-dom";
 import "./uploadVideo.css";
 import { getEnv } from "../../utils/Env";
 
 const UploadVideo: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [uploadStatus, setUploadStatus] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -42,6 +45,7 @@ const UploadVideo: React.FC = () => {
     formData.append("imageFile", thumbnailFile);
 
     try {
+      setIsLoading(true);
       setUploadStatus("Uploading video and thumbnail...");
 
       const response = await fetch(getEnv().API_BASE_URL + "/videos/uploadVideo", {
@@ -50,14 +54,26 @@ const UploadVideo: React.FC = () => {
       });
 
       if (response.ok) {
-        setUploadStatus("Video and thumbnail uploaded successfully!");
+        setUploadStatus(await response.text());
+        navigate("/profile");
       } else {
-        setUploadStatus("Failed to upload video and thumbnail.");
+        setUploadStatus(await response.text());
       }
     } catch (error) {
       console.error("Error uploading the video and thumbnail:", error);
       setUploadStatus("An error occurred during the upload.");
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const truncateFileName = (fileName: string) => {
+    const maxLength = 20;
+    if (fileName.length > maxLength) {
+      const extension = fileName.slice(fileName.lastIndexOf('.'));
+      return ` ${fileName.slice(0, 10)}...${extension}`;
+    }
+    return ` ${fileName}`;
   };
 
   return (
@@ -92,7 +108,7 @@ const UploadVideo: React.FC = () => {
           />
         </label>
         <label>
-          Video File:
+          Video File (100MB max):
           <div className="custom-file-upload">
             <Button
               variant="contained"
@@ -101,7 +117,7 @@ const UploadVideo: React.FC = () => {
             >
               Select File
             </Button>
-            <span>{selectedFile ? selectedFile.name : " No file selected"}</span>
+            <span className="file-name">{selectedFile ? truncateFileName(selectedFile.name) : " No file selected"}</span>
           </div>
           <input
             id="fileInput"
@@ -113,7 +129,7 @@ const UploadVideo: React.FC = () => {
         </label>
         
         <label>
-          Thumbnail File:
+          Thumbnail File (100MB max):
           <div className="custom-min-upload">
             <Button
               variant="contained"
@@ -122,7 +138,7 @@ const UploadVideo: React.FC = () => {
             >
               Select Thumbnail
             </Button>
-            <span>{thumbnailFile ? thumbnailFile.name : " No file selected"}</span>
+            <span className="file-name">{thumbnailFile ? truncateFileName(thumbnailFile.name) : " No file selected"}</span>
           </div>
           <input
             id="thumbnailInput"
@@ -134,9 +150,15 @@ const UploadVideo: React.FC = () => {
         </label>
         
         <div className="custom-send-upload">
-          <Button variant="contained" color="primary" onClick={handleUpload}>
-            Upload Video
-          </Button>
+            <div className="centered-container">
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <Button variant="contained" color="primary" onClick={handleUpload}>
+              Upload Video
+              </Button>
+            )}
+            </div>
         </div>
       </form>
       {uploadStatus && (

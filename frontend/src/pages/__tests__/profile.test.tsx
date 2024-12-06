@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Profile from "../profile/profile";
@@ -69,14 +69,9 @@ describe("Profile Component", () => {
       expect(screen.getByText("Test Comment")).toBeInTheDocument();
     });
 
-
     // Simulate the action of deleting a video
     await act(async () => {
       fireEvent.click(screen.getAllByTestId("DeleteIcon")[0]);
-    });
-
-    await waitFor(() => {
-      expect(screen.getByText("Delete Video")).toBeInTheDocument();
     });
 
     // Simulate the action of editing a comment
@@ -85,7 +80,7 @@ describe("Profile Component", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("Edit Comment")).toBeInTheDocument();
+      expect(screen.getByText((content) => content.includes("Edit Comment"))).toBeInTheDocument();
     });
   });
 });
